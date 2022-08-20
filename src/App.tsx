@@ -1,7 +1,8 @@
 import React from "react";
+import Pages from "./pages";
 
 const App: React.FC = () => {
-  return <div className="w-full h-screen bg-red-300"></div>;
+  return <Pages />;
 };
 
 export default App;
