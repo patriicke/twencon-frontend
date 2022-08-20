@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "stream-chat": "^6.9.0",
+    "stream-chat-react": "^9.4.1",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
