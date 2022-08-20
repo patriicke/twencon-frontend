@@ -1,38 +1,28 @@
-import { Link } from "@mui/material";
 import React from "react";
-
-const links: {
-  href: string;
-  name: string;
-}[] = [
-  {
-    href: "/",
-    name: "Home"
-  },
-  {
-    href: "/chat",
-    name: "Chat"
-  },
-  {
-    href: "/auth/login",
-    name: "Login"
-  },
-  {
-    href: "/auth/signup",
-    name: "Signup"
-  }
-];
-
-const Navigation: React.FC = () => {
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import Logo from "./../../assets/logo/icons8-plesk-512.png";
+import { NavBarProps } from "./../../interface/";
+const Navigation: React.FC<NavBarProps> = ({ data }) => {
+  const navigate = useNavigate();
   return (
-    <div className="bg-blue-300 w-full h-16 flex items-center justify-center space-x-2 shadow-md">
-      {links.map((data: { href: string; name: string }, index) => {
-        return (
-          <Link href={data.href} key={index}>
-            {data.name}
-          </Link>
-        );
-      })}
+    <div className="bg-blue-300 w-full h-16 shadow-md flex items-center justify-between px-5">
+      <div className="flex items-center justify-center">
+        <img src={Logo} alt="Logo" className="w-12" />
+      </div>
+      <div className="flex items-center">
+        {data?.title && (
+          <Button
+            className="bg-light-blue"
+            variant="contained"
+            onClick={() => {
+              navigate(data?.href?.toString());
+            }}
+          >
+            {data?.title}
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
