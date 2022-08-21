@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -6,7 +5,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
-export default function Footer() {
+const Footer = () => {
   const userNavs = [
     {
       link: "https://www.facebook.com/profile.php?id=100076022093184",
@@ -68,7 +67,7 @@ export default function Footer() {
             <div className="text-[0.7em] flex items-center sm:space-x-1 flex-wrap">
               <div className="0.7rem">Email:</div>
               <Button
-                className="lowercase p-0 text-[0.7rem] md:text-[1em]"
+                className="lowercase p-0 text-[0.7rem] md:text-[1em] text-light-blue"
                 href="https://mail.google.com/mail/u/0/#inbox?compose=GTvVlcSGKnKzdQbfqSPBFngwZvTbDjKqMwGqtWPvHBKckCrdlDxhXHqJSHVGkjMBFQxNzmlwTDrxG"
                 target={"_blank"}
               >
@@ -83,4 +82,5 @@ export default function Footer() {
       </div>
     </div>
   );
-}
+};
+export default Footer;
