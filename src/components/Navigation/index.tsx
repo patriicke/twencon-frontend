@@ -6,7 +6,7 @@ import { NavBarProps } from "./../../interface/";
 const Navigation: React.FC<NavBarProps> = ({ data }) => {
   const navigate = useNavigate();
   return (
-    <div className="bg-blue-300 w-full h-16 shadow-md flex items-center justify-between px-5">
+    <div className="w-full h-16 shadow-md flex items-center justify-between px-5">
       <div className="flex items-center justify-center">
         <img src={Logo} alt="Logo" className="w-12" />
       </div>

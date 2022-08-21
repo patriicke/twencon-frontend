@@ -9,3 +9,10 @@
   box-sizing: border-box;
   font-family: "Roboto", sans-serif;
 }
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
