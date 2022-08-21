@@ -8,7 +8,6 @@ interface ISignupData {
   email: string;
   password: string;
 }
-
 const Signup: React.FC = () => {
   const navigate = useNavigate();
   const [inputError, setInputError] = useState({
@@ -25,14 +24,14 @@ const Signup: React.FC = () => {
       name: "name"
     },
     {
-      error: inputError.name,
+      error: inputError.email,
       helperText: inputError.email && "Email can't be empty",
       label: "Enter your email",
       type: "text",
       name: "email"
     },
     {
-      error: inputError.name,
+      error: inputError.password,
       helperText: inputError.password && "Password can't be empty",
       label: "Enter your password",
       type: "password",
@@ -71,18 +70,12 @@ const Signup: React.FC = () => {
       setPreviewImage(URL.createObjectURL(file));
     }
   };
-
-  //Upload profile image
-  const uploadProfileImage = async () => {
-    return uploadImage(image, setUploading);
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!image) {
       return alert(`Upload your profile picture`);
     }
-    const url = await uploadProfileImage();
+    const url = await uploadImage(image, setUploading);
     console.log(url);
   };
 
