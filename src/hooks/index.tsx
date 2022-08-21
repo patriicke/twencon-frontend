@@ -39,3 +39,26 @@ const handleSubmit = async (e) => {
   localStorage.setItem("token", response.data.token);
   return navigate("/");
 };*/
+
+//Upload image
+export const uploadImage = async (image: any, setUploading: any) => {
+  const data = new FormData();
+  data.append("file", image);
+  data.append("upload_preset", "chatpresetimages");
+  try {
+    setUploading(true);
+    let res = await fetch(
+      "https://api.cloudinary.com/v1_1/dkpaiyjv5/image/upload",
+      {
+        method: "post",
+        body: data
+      }
+    );
+    const urlData = await res.json();
+    setUploading(false);
+    return urlData.url;
+  } catch (error) {
+    setUploading(false);
+    console.log(error);
+  }
+};
