@@ -5,7 +5,7 @@ import User from "../../components/User";
 
 const Chat: React.FC = () => {
   return (
-    <div className="h-screen w-full flex flex-row">
+    <div className="h-screen w-full xl:max-w-[1400px] flex flex-row m-auto">
       <Sidebar />
       <Chatform />
       <User />

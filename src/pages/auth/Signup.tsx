@@ -122,7 +122,7 @@ const Signup: React.FC = () => {
                 helperText={data.helperText}
                 onChange={handleChange}
                 name={data.name}
-                autoComplete={"false"}
+                autoComplete={"off"}
               />
             );
           })}
