@@ -50,7 +50,7 @@ const Login: React.FC = () => {
       <div
         className={`flex flex-col w-full justify-center p-5 md:w-3/4 md:p-2 lg:w-2/6 lg:p-5 xl:p-7 2xl:p-10`}
       >
-        <p className="text-center text-light-blue">Login to Chatsp</p>
+        <p className="text-center text-light-blue">LOGIN TO CHATSP</p>
         <form className="flex flex-col space-y-3" onSubmit={handleSubmit}>
           {loginElements.map((data, index) => {
             return (
