@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@mui/material";
 import Navigation from "../../components/Navigation";
-import Footer from "./../../components/footer";
+import Footer from "../../components/Footer";
 const Home: React.FC = () => {
   document.title =
     "Welcome to Chatsp! This is where you will connect to everyone you want.";
