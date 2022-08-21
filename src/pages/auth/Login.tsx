@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Login: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex w-full h-screen flex-col md:flex-row">
+    <div className="flex w-full h-screen flex-col md:flex-row overflow-auto">
       <img
         src="https://images.unsplash.com/photo-1488998287214-1e668a8e0dc4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
         className="w-full h-1/2 md:h-screen md:w-3/5 lg:w-4/6 "
@@ -24,10 +24,10 @@ const Login: React.FC = () => {
         <div>
           <div className="flex justify-between py-3 text-[0.8em] ">
             <Link
-              className="text-[1.1em] hover:underline cursor-pointer"
+              className="text-[1.1em] hover:underline cursor-pointer text-light-blue"
               underline="none"
               onClick={() => {
-                navigate("auth/signup");
+                navigate("/auth/signup");
               }}
             >
               Don't have account?
