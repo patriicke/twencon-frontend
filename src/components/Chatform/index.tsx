@@ -49,12 +49,23 @@ const Chatform: React.FC = () => {
     element.current.scrollTop = element.current?.scrollHeight;
   }, [messages]);
 
+  const orderIds = (id1: any, id2: any) => {
+    if (id1 > id2) {
+      return id1 + "-" + id2;
+    } else {
+      return id2 + "-" + id1;
+    }
+  };
+
   return (
-    <div className="bg-white h-screen border shadow-lg flex flex-col w-full md:w-4/5 lg:w-3/5">
+    <div className="bg-white h-screen border shadow-lg flex flex-col w-full md:w-4/5 lg:w-3/5 relative">
       <div
-        className="h-[92%] w-full flex-shrink flex flex-col overflow-auto p-2"
+        className="h-[92%] w-full flex-shrink flex flex-col overflow-auto"
         ref={element}
       >
+        <div className="text-[1.4em] font-semibold absolute top-0 bg bg-slate-100 z-50 p-2 w-full shadow-2xl">
+          {currentRoom}
+        </div>
         {(messages as []).map(({ _id, messagesByDate }, index) => {
           return (
             <div key={index}>

@@ -88,7 +88,11 @@ const Sidebar: React.FC = () => {
       <ul>
         {(members as []).map((data: any, index) => {
           return (
-            <li key={index} className="border p-2 text-red-500">
+            <li
+              key={index}
+              className="border p-2 text-red-500"
+              hidden={user.name == data.name}
+            >
               {data.name}
             </li>
           );
