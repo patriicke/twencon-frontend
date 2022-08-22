@@ -1,18 +1,17 @@
-import {
-  CameraAlt,
-  InsertEmoticon,
-  InsertPhoto,
-  Mic,
-  Send
-} from "@mui/icons-material";
+import { InsertEmoticon, Send } from "@mui/icons-material";
 import { Input } from "@mui/material";
 import React from "react";
-
 const Chatform: React.FC = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
   return (
     <div className="bg-white h-screen border shadow-lg flex flex-col w-full md:w-4/5 lg:w-3/5">
       <div className="h-[92%] w-full flex-shrink"></div>
-      <form className="min-h-[8%] h-[5em] w-full flex items-center border p-1 lg:p-2 border-slate-300">
+      <form
+        className="min-h-[8%] h-[5em] w-full flex items-center border p-1 lg:p-2 border-slate-300"
+        onSubmit={handleSubmit}
+      >
         <div className="w-full h-full border border-gray-700 rounded-[2em] flex items-center">
           <div className="min-w-[2.5em] h-full sm:min-w-[0em] w-[7%] rounded-l-[2em] flex items-center justify-center">
             <div className="p-2 rounded-full h-[2.5em] w-[2.5em] flex items-center justify-center">
