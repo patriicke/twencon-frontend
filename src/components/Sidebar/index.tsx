@@ -54,6 +54,20 @@ const Sidebar: React.FC = () => {
     //redirect to home page
     window.location.replace("/");
   };
+
+  const orderIds = (id1: any, id2: any) => {
+    if (id1 > id2) {
+      return id1 + "-" + id2;
+    } else {
+      return id2 + "-" + id1;
+    }
+  };
+
+  const handlePrivateMemberMessage = (member: any) => {
+    setPrivateMemberMessages(member);
+    const roomId = orderIds(user._id, member._id);
+    joinRoom(roomId, false);
+  };
   return (
     <div className="hidden md:block w-1/5">
       <figure className="md:fbg-slate-100 rounded-xl dark:bg-slate-800 border">
@@ -72,7 +86,7 @@ const Sidebar: React.FC = () => {
           return (
             <li
               key={index}
-              className={`text-red-500 px-3 ${""} cursor-pointer ${
+              className={`text-red-500 p-2 ${""} cursor-pointer ${
                 data === currentRoom ? "border bg-slate-200" : ""
               }`}
               onClick={() => {
@@ -85,20 +99,23 @@ const Sidebar: React.FC = () => {
         })}
       </ul>
       <h1 className="text-[1.3em] font-semibold">Members</h1>
-      <ul>
+      <ul className="flex flex-col space-y-2">
         {(members as []).map((data: any, index) => {
           return (
             <li
               key={index}
-              className="border p-2 text-red-500"
+              className="border p-2 text-red-500 cursor-pointer"
               hidden={user.name == data.name}
+              onClick={() => {
+                handlePrivateMemberMessage(data);
+              }}
             >
               {data.name}
             </li>
           );
         })}
       </ul>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mt-3">
         <Button
           variant="contained"
           className="bg-red-500"
