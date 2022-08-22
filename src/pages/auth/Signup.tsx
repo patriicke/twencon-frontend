@@ -81,8 +81,9 @@ const Signup: React.FC = () => {
       email: signupData.email,
       password: signupData.password,
       picture: url
-    }).then((data) => {
-      if (data) {
+    }).then((data: any) => {
+      if (data.error) console.log("Error occured");
+      else {
         navigate("/chat");
       }
     });

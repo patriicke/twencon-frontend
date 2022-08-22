@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, TextField, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "./../../services/appApi";
+import { AppContext } from "../../context/appContext";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
+  const { socket } = useContext<any>(AppContext);
   const [loginData, setLoginData] = useState({
     email: "",
     password: ""
@@ -13,8 +15,11 @@ const Login: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     loginUser({ email: loginData.email, password: loginData.password }).then(
-      (data) => {
-        if (data) {
+      (data: any) => {
+        if (data.error) console.log("I am giving error: ", data);
+        else {
+          console.log("I am giving data: ", data);
+          socket.emit("new-user");
           navigate("/chat");
         }
       }

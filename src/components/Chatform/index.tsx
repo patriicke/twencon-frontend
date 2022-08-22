@@ -1,13 +1,88 @@
 import { InsertEmoticon, Send } from "@mui/icons-material";
-import { Input } from "@mui/material";
-import React from "react";
+import { formControlClasses, Input } from "@mui/material";
+import React, { useState, useContext, useRef } from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { AppContext } from "../../context/appContext";
 const Chatform: React.FC = () => {
+  const [message, setMessage] = useState("");
+  const user = useSelector((state: any) => state.user);
+  const { socket, currentRoom, setMessages, messages, privateMemberMessages } =
+    useContext<any>(AppContext);
+  const getFormattedDate = () => {
+    const date = new Date();
+    let year = date.getFullYear();
+    let month: string = (date.getMonth() + 1).toString();
+    month = month.length > 1 ? month : "0" + month;
+    let day: string = date.getDate().toString();
+    day = day.length > 1 ? day : "0" + day;
+
+    return `${month}/${day}/${year}`;
+  };
+  const todayDate = getFormattedDate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!message) return;
+    const today = new Date();
+    const minutes: string =
+      today.getMinutes() < 10
+        ? "0" + today.getMinutes().toString()
+        : today.getMinutes().toString();
+    const time: string = today.getHours().toString() + ":" + minutes;
+    const roomId = currentRoom;
+    socket.emit("message-room", roomId, message, user, time, todayDate);
+    setMessage("");
   };
+
+  socket.off("room-messages").on("room-messages", (roomMessages: any) => {
+    setMessages(roomMessages);
+    console.log(roomMessages);
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setMessage(e.target.value);
+  };
+  const element: any = useRef(null);
+  useEffect(() => {
+    element.current.scrollTop = element.current?.scrollHeight;
+  }, [messages]);
+
   return (
     <div className="bg-white h-screen border shadow-lg flex flex-col w-full md:w-4/5 lg:w-3/5">
-      <div className="h-[92%] w-full flex-shrink"></div>
+      <div
+        className="h-[92%] w-full flex-shrink flex flex-col overflow-auto p-2"
+        ref={element}
+      >
+        {(messages as []).map(({ _id, messagesByDate }, index) => {
+          return (
+            <div key={index}>
+              <p>{_id}</p>
+              <div className={`flex flex-col space-y-2`}>
+                {(messagesByDate as []).map((data: any, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className={`flex items-center space-x-2 ${
+                        data?.from?.name == user.name
+                          ? "self-end "
+                          : "self-start flex-row-reverse"
+                      }`}
+                    >
+                      <p>{data.content}</p>
+                      <img
+                        src={data?.from?.picture}
+                        className="w-14 h-14 rounded-full border"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
       <form
         className="min-h-[8%] h-[5em] w-full flex items-center border p-1 lg:p-2 border-slate-300"
         onSubmit={handleSubmit}
@@ -22,8 +97,10 @@ const Chatform: React.FC = () => {
             disableUnderline={true}
             autoFocus
             placeholder="Type a message"
+            value={message}
             size="medium"
             className="w-[84%] h-full flex-shrink flex-grow"
+            onChange={handleChange}
           />
           <div className="w-[7%] sm:w-[10%] min-w-[4em] h-full rounded-r-[2em] flex items-center justify-evenly">
             <button
@@ -40,33 +117,3 @@ const Chatform: React.FC = () => {
 };
 
 export default Chatform;
-
-{
-  /* <div className="w-full min-h-[3em] flex border border-gray-700 rounded-[2em]">
-          <div className="h-[4em] w-[5em] flex items-center justify-center">
-            <InsertEmoticon className="text-[2em]" />
-          </div>
-          <Input
-            disableUnderline={true}
-            autoFocus
-            placeholder="Type a message"
-            size="medium"
-            className="w-[85%]"
-          />
-          <div className="h-full w-[30%] min-h-[4em] flex items-center justify-center space-x-2">
-            {elements.map((data, index) => {
-              return (
-                <div
-                  className="w-10 h-7 p-1 flex items-center justify-center lg:p-2 rounded-full bg-light-blue"
-                  key={index}
-                >
-                  {data.component}
-                </div>
-              );
-            })}
-            <button className="p-2 rounded-full bg-light-blue" type="submit">
-              <Send className="text-white" />
-            </button>
-          </div>
-        </div> */
-}
