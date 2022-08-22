@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Button, TextField, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useLoginUserMutation } from "./../../services/appApi";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const [loginData, setLoginData] = useState({
     email: "",
     password: ""
   });
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    loginUser({ email: loginData.email, password: loginData.password }).then(
+      (data) => {
+        if (data) {
+          navigate("/chat");
+        }
+      }
+    );
   };
   const [inputError, setIputError] = useState({
     email: false,

@@ -3,6 +3,7 @@ import { Button, TextField, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Person } from "@mui/icons-material";
 import { uploadImage } from "./../../hooks/index";
+import { useSignupUserMutation } from "./../../services/appApi";
 interface ISignupData {
   name: string;
   email: string;
@@ -10,6 +11,7 @@ interface ISignupData {
 }
 const Signup: React.FC = () => {
   const navigate = useNavigate();
+  const [signupUser, { isLoading, error }] = useSignupUserMutation();
   const [inputError, setInputError] = useState({
     name: false,
     email: false,
@@ -54,9 +56,6 @@ const Signup: React.FC = () => {
       };
     });
   };
-  useEffect(() => {
-    console.log(signupData);
-  }, [signupData]);
   //Uploading image
   const [image, setImage] = useState<any>(null);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -77,6 +76,16 @@ const Signup: React.FC = () => {
     }
     const url = await uploadImage(image, setUploading);
     console.log(url);
+    signupUser({
+      name: signupData.name,
+      email: signupData.email,
+      password: signupData.password,
+      picture: url
+    }).then((data) => {
+      if (data) {
+        navigate("/chat");
+      }
+    });
   };
 
   return (
