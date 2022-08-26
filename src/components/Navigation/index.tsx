@@ -9,7 +9,7 @@ const Navigation: React.FC<NavBarProps> = ({ data }) => {
   const scrollPosition = useScrollPosition();
   return (
     <div
-      className={`w-full h-16  flex items-center justify-between px-5 sticky top-0 bg-white z-50 ${
+      className={`w-full h-20  flex items-center justify-between px-5 sticky top-0 bg-white z-50 ${
         scrollPosition > 0 ? "shadow-lg" : ""
       }`}
     >
