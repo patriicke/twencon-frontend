@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import api from "./../api";
 
 //signup custom hook
@@ -61,4 +62,16 @@ export const uploadImage = async (image: any, setUploading: any) => {
     setUploading(false);
     console.log(error);
   }
+};
+
+export const useScrollPosition = () => {
+  const [scrollPosition, setScrollPostion] = useState<number>(0);
+  useEffect(() => {
+    const updatePosition = () => {
+      setScrollPostion(window.pageYOffset);
+    };
+    window.addEventListener("scroll", updatePosition);
+    return () => window.removeEventListener("scroll", updatePosition);
+  }, []);
+  return scrollPosition;
 };

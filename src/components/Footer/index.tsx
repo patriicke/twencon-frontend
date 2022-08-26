@@ -38,7 +38,6 @@ const Footer = () => {
             <div className="font-bold">Overview</div>
             {overview.map((data, index) => {
               return <div key={index}>{data}</div>;
-              s;
             })}
           </div>
           <div className="text-[0.7rem] md:text-[0.8em]">
