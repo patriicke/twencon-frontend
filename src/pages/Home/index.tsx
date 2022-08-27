@@ -4,7 +4,7 @@ import Navigation from "../../components/Navigation";
 import Footer from "../../components/Footer";
 const Home: React.FC = () => {
   document.title =
-    "Welcome to Chatsp! This is where you will connect to everyone you want.";
+    "Welcome to Twencon! This is where you will connect to everyone you want.";
   const navigations: { name: string; href: string }[] = [
     {
       name: "GET STARTED",

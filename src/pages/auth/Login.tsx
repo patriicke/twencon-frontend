@@ -56,13 +56,13 @@ const Login: React.FC = () => {
     });
   };
   return (
-    <div className="flex w-full h-screen flex-col md:flex-row overflow-auto">
+    <div className="flex w-full h-screen flex-col lg:flex-row overflow-auto">
       <img
         src="https://images.unsplash.com/photo-1488998287214-1e668a8e0dc4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-        className="w-full h-1/2 md:h-screen md:w-3/5 lg:w-4/6 "
+        className="w-full md:block h-1/2 lg:h-screen lg:w-3/5 xl:w-4/6 min-h-[20em] "
       />
       <div
-        className={`flex flex-col w-full justify-center p-5 md:w-3/4 md:p-2 lg:w-2/6 lg:p-5 xl:p-7 2xl:p-10`}
+        className={`flex flex-col w-full justify-center p-5 lg:w-3/4 lg:p-2 xl:w-2/6 xl:p-5 2xl:p-10 `}
       >
         <p className="text-center text-light-blue">LOGIN TO CHATSP</p>
         <form className="flex flex-col space-y-3" onSubmit={handleSubmit}>
