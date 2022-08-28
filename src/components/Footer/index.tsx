@@ -28,10 +28,18 @@ const Footer = () => {
       icon: <InstagramIcon className="text-red-500 md:text-[2em]" />
     }
   ];
-  const overview = ["About", "Contacts", "Terms of Use", "Privacy Policy"];
-  const community = ["Community center", "Support team", "Help"];
-  return (
-    <div className="h-72 md:flex md:flex-col md:justify-center md:h-52 md:items-center border overflow-hidden sm:absolute left-0 right-0 dark:bg-gray-900">
+  const overview: string[] = [
+    "About",
+    "Contacts",
+    "Terms of Use",
+    "Privacy Policy"
+  ];
+  const community: string[] = ["Community center", "Support team", "Help"];
+  return <div className="min-h-[25em]"></div>;
+};
+export default Footer;
+/* 
+ <div className="h-72 md:flex md:flex-col md:justify-center md:h-52 md:items-center border overflow-hidden sm:absolute left-0 right-0 dark:bg-gray-900">
       <div className="flex h-[78%] space-x-1 p-1 dark:text-white md:w-full   ">
         <div className="w-1/2 h-full grid grid-cols-2 md:ml-10 lg:ml-52 ">
           <div className="text-[0.7rem] md:text-[0.8em]">
@@ -80,6 +88,4 @@ const Footer = () => {
         &copy;2021-{new Date().getFullYear()} All rights are reserved
       </div>
     </div>
-  );
-};
-export default Footer;
+*/
