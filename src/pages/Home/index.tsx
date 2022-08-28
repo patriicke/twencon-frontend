@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@mui/material";
 import Navigation from "../../components/Navigation";
 import Footer from "../../components/Footer";
+import Logo from "./../../assets/logo/twencon.svg";
 const Home: React.FC = () => {
   document.title =
     "Welcome to Twencon! This is where you will connect to everyone you want.";
@@ -32,8 +33,10 @@ const Home: React.FC = () => {
       <Navigation data={{ href: "auth/signup", title: "GET STARTED" }} />
       <div className="w-full dark:bg-gray-900 relative min-h-screen ">
         <div className="flex w-[100%] flex-col md:grid md:grid-cols-2 gap-2 p-5 shadow-sm lg:px-[5%]">
-          <div className="text-[1.2em] font-medium max-w-sm dark:text-white md:text-[1.9em] 2xl:mt-[2em]">
-            Take your team collaboration to the next level
+          <div className="text-[1.2em] font-medium max-w-sm dark:text-white md:text-[1.4em] 2xl:mt-[1.6em]">
+            Take your team collaboration to the next level. Project managament
+            is made easy with
+            <img src={Logo} className="w-1/2" />
           </div>
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
