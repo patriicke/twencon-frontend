@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
 import Navigation from "../../components/Navigation";
 import Footer from "../../components/Footer";
-import Loading from "./../../assets/loading/loading.gif";
-import Logo from "./../../assets/logo/twencon.svg";
 const Home: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
   document.title =
     "Welcome to Twencon! This is where you will connect to everyone you want.";
   const navigations: { name: string; href: string }[] = [
@@ -18,27 +15,10 @@ const Home: React.FC = () => {
       href: "auth/login"
     }
   ];
-  window.addEventListener("load", () => {
-    setLoading(false);
-  });
+
   return (
     <div>
-      <div
-        className={`w-full h-screen flex items-center justify-center static z-50 ${
-          loading ? "" : "hidden"
-        }`}
-      >
-        <div>
-          <img src={Loading} alt="Loading..." className="w-10" />
-        </div>
-        <div className="absolute bottom-12">
-          <img src={Logo} alt="Loading..." className="w-36" />
-        </div>
-      </div>
-      <div
-        className={`w-full min-h-screen ${loading ? "hidden" : ""}`}
-        id="home"
-      >
+      <div className={`w-full min-h-screen`}>
         <Navigation data={{ href: "auth/signup", title: "GET STARTED" }} />
         <div className="w-full dark:bg-gray-900 relative min-h-screen ">
           <div className="flex w-[100%] flex-col md:grid md:grid-cols-2 gap-2 p-5 shadow-sm lg:px-[5%]">

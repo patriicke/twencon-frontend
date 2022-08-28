@@ -1,4 +1,5 @@
-import { Button, Link } from "@mui/material";
+import React from "react";
+import { Link } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -6,7 +7,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Language } from "@mui/icons-material";
 
-const Footer = () => {
+const Footer: React.FC = () => {
   const userNavs = [
     {
       link: "https://www.facebook.com/profile.php?id=100076022093184",
@@ -59,7 +60,7 @@ const Footer = () => {
     }
   ];
   return (
-    <div className="min-h-[20em] flex flex-col justify-center mt-5 border-t-2 space-y-3">
+    <div className="min-h-[20em] flex flex-col justify-center mt-5 border-t-2 space-y-3 pt-5">
       <div className="flex space-x-4 justify-evenly">
         {footerContent.map((data, index) => {
           return (
