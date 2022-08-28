@@ -62,15 +62,15 @@ const Home: React.FC = () => {
         {pageDescription.map((data, index) => {
           return (
             <div
-              className="flex justify-between p-10 px-24 items-center w-full"
+              className="p-5 w-full flex flex-col md:flex-row justify-between items-center gap-5 lg:px-14 xl:px-20 2xl:px-24"
               key={index}
             >
               <img
                 src={data.url}
-                className="animate-image md:max-w-[50%] lg:max-w-[50%] rounded-md"
+                className="w-full rounded-md md:w-1/2 flex items-center justify-center"
               />
-              <div className="text-[0.9em] text-gray-700 dark:text-white md:text-[1.2em] w-[45%]">
-                {data.description}
+              <div className="w-full py-5 md:w-1/2 flex items-center justify-center">
+                <p className="lg:w-[60%] text-[1.2em]">{data.description}</p>
               </div>
             </div>
           );

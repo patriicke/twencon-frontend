@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
   ];
   return (
     <div className="min-h-[20em] flex flex-col justify-center mt-5 border-t-2 space-y-3 pt-5">
-      <div className="flex space-x-4 justify-evenly">
+      <div className="flex flex-wrap gap-3 justify-evenly">
         {footerContent.map((data, index) => {
           return (
             <div key={index}>
@@ -118,7 +118,7 @@ const Footer: React.FC = () => {
               </Link>
             </div>
           </div>
-          <div className="mt-5 flex space-x-1 items-center">
+          <div className="flex space-x-1 items-center">
             <h1 className="font-medium">Languge</h1>
             <Language />
             <p className="opacity-60 border border-gray-500 p-1 px-2 rounded-md">
@@ -128,7 +128,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <div className="flex flex-col justify-center items-center">
-        <Link>FOLLOW US ON:</Link>
+        <Link className="underline underline-offset-4">FOLLOW US ON:</Link>
         <div className="flex space-x-3 p-2">
           {userNavs.map((data, index) => {
             return (
