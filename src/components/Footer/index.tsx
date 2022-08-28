@@ -13,11 +13,11 @@ const Footer = () => {
       icon: <FacebookIcon className="text-blue-500 md:text-[2em]" />
     },
     {
-      link: "https://twitter.com/patr_ndayambaje",
+      link: "https://twitter.com/patriicke",
       icon: <TwitterIcon className="text-blue-500 md:text-[2em]" />
     },
     {
-      link: "https://github.com/patrick-n4",
+      link: "https://github.com/patriicke",
       icon: <GitHubIcon className="md:text-[2em]" />
     },
     {
@@ -25,7 +25,7 @@ const Footer = () => {
       icon: <LinkedInIcon className="text-blue-500 md:text-[2em]" />
     },
     {
-      link: "https://www.instagram.com/patrickndayambaje1/",
+      link: "https://www.instagram.com/_patriicke/",
       icon: <InstagramIcon className="text-red-500 md:text-[2em]" />
     }
   ];
