@@ -9,8 +9,11 @@ import AppleStore from "./../../assets/stores/applestore.png";
 import GoogleStore from "./../../assets/stores/googlestore.png";
 import { ISignupData } from "../../interface";
 import { useSignup } from "../../hooks";
+import { useDispatch } from "react-redux";
+import { userData } from "./../../features/user/userSlice";
 const Signup: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showInput, setShowInput] = useState<number>(1);
   const [inputError, setInputError] = useState({
     fullname: false,
@@ -133,6 +136,7 @@ const Signup: React.FC = () => {
         };
       });
     }
+
     return setShowInput(2);
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -179,8 +183,15 @@ const Signup: React.FC = () => {
           };
         });
       }
+      signupData.fullname = signupData.fullname.trim();
+      signupData.email = signupData.email.trim();
+      signupData.telephone = signupData.telephone.trim();
+      signupData.username = signupData.username.trim();
       const response = await useSignup(signupData);
-      if (response) return navigate("/create/verification");
+      localStorage.setItem("acc_token", response.accessToken);
+      localStorage.setItem("v_reference", response.v_reference);
+      dispatch(userData({ ...response }));
+      return navigate("/create/verification");
     } catch (error) {
       console.log(error);
     }

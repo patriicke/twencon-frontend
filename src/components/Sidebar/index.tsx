@@ -2,12 +2,10 @@ import { Button } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppContext } from "../../context/appContext";
-import { useLogoutUserMutation } from "./../../services/appApi";
-import { addNotifications, resetNotifications } from "../../features/userSlice";
+import { addNotifications, resetNotifications } from "../../features/user/userSlice";
 const Sidebar: React.FC = () => {
   const user = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
-  const [logoutUser] = useLogoutUserMutation();
   const {
     socket,
     members,
@@ -53,12 +51,6 @@ const Sidebar: React.FC = () => {
       socket.emit("new-user");
     }
   }, []);
-  const handleLogout = async (e: any) => {
-    e.preventDefault();
-    await logoutUser(user);
-    //redirect to home page
-    window.location.replace("/");
-  };
   const orderIds = (id1: any, id2: any) => {
     if (id1 > id2) {
       return id1 + "-" + id2;
@@ -146,11 +138,7 @@ const Sidebar: React.FC = () => {
         })}
       </ul>
       <div className="flex items-center justify-center mt-3">
-        <Button
-          variant="contained"
-          className="bg-red-500"
-          onClick={handleLogout}
-        >
+        <Button variant="contained" className="bg-red-500">
           LOGOUT
         </Button>
       </div>
