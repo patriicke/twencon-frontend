@@ -6,9 +6,11 @@ import Signup from "./auth/Signup";
 import Chat from "./Chat";
 import Home from "./Home";
 import { AppContext, socket } from "./../context/appContext";
-import VerificationCode from "./Verification/VerificationCode";
-import Success from "./Success/Success";
-import { ResetPassword } from "./Reset/ResetPassword";
+import VerificationCode from "./Verification/Create/VerificationCode";
+import Success from "./Success/Create/Success";
+import ResetPassword from "./Reset/ResetPassword";
+import VerificationResetPwd from "./Verification/Reset/VerificationResetPwd";
+import ResetSuccess from "./Success/Reset/ResetSuccessfull";
 
 const Pages: React.FC = () => {
   const [rooms, setRooms] = useState<[]>([]);
@@ -40,8 +42,13 @@ const Pages: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<Signup />} />
-          <Route path="verification" element={<VerificationCode />} />
-          <Route path="/success" element={<Success />} />
+          <Route path="/create/verification" element={<VerificationCode />} />
+          <Route
+            path="/reset/verification"
+            element={<VerificationResetPwd />}
+          />
+          <Route path="/create/success" element={<Success />} />
+          <Route path="/reset/success" element={<ResetSuccess />} />
           <Route path="/password/reset" element={<ResetPassword />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<PageNotFound />} />

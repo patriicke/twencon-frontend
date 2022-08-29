@@ -180,7 +180,7 @@ const Signup: React.FC = () => {
         });
       }
       const response = await useSignup(signupData);
-      if (response) return navigate("/verification");
+      if (response) return navigate("/create/verification");
     } catch (error) {
       console.log(error);
     }
