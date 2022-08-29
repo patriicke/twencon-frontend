@@ -26,7 +26,7 @@ const App: React.FC = () => {
         </div>
       </div>
       <div className={`${loading ? "hidden" : ""}`}>
-        <Pages />;
+        <Pages />
       </div>
     </>
   );
