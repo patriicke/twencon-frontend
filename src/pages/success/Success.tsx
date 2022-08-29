@@ -27,8 +27,8 @@ export const Success: React.FC = () => {
         <div>
           <p className={`flex items-center justify-center text-center text-md`}>
             {show
-              ? "You can now start posting videos and images, and chat with your friends and family!"
-              : "Your group management is nolonger a problem now!"}
+              ? "You can now start posting videos and images and chat with your friends and family!"
+              : "Your group management is no longer a problem now!"}
           </p>
         </div>
         <div className="py-3">
