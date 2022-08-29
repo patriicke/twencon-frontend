@@ -16,3 +16,8 @@ export interface ISignupData {
   password: string;
   cpassword: string;
 }
+
+export interface ILoginData {
+  email: string;
+  password: string;
+}

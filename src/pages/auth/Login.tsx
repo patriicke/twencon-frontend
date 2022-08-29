@@ -1,53 +1,54 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, TextField, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useLoginUserMutation } from "./../../services/appApi";
-import { AppContext } from "../../context/appContext";
-
+import Navigation from "./../../components/Navigation";
+import iphone12 from "./../../assets/iphone12/iphone12.png";
+import Twencon from "./../../assets/logo/twencon.svg";
+import Footer from "../../components/Footer";
+import AppleStore from "./../../assets/stores/applestore.png";
+import GoogleStore from "./../../assets/stores/googlestore.png";
+import { ILoginData } from "../../interface";
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [loginUser, { isLoading, error }] = useLoginUserMutation();
-  const { socket } = useContext<any>(AppContext);
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: ""
-  });
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    loginUser({ email: loginData.email, password: loginData.password }).then(
-      (data: any) => {
-        if (data.error) console.log("I am giving error: ", data);
-        else {
-          console.log("I am giving data: ", data);
-          socket.emit("new-user");
-          navigate("/chat");
-        }
-      }
-    );
-  };
-  const [inputError, setIputError] = useState({
+  const [showInput, setShowInput] = useState<number>(1);
+  const [inputError, setInputError] = useState({
     email: false,
     password: false
+  });
+  const [loginData, setLoginData] = useState<ILoginData>({
+    email: "",
+    password: ""
   });
   const loginElements = [
     {
       error: inputError.email,
-      helperText: inputError.email && "Email can't be empty",
-      label: "Enter your email",
-      type: "text",
+      helperText: inputError.email && "Please enter your fullnames",
+      label: "Email",
+      type: "email",
       name: "email"
     },
     {
-      helperText: inputError.password && "Password can't be empty",
-      label: "Enter your password",
+      error: inputError.password,
+      helperText:
+        loginData.password === ""
+          ? loginData.password && "Please enter your email"
+          : loginData.password && "Please enter valid email",
+      label: "Password",
       type: "password",
       name: "password"
     }
   ];
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const name = e.target.name;
+    setInputError((current) => {
+      return {
+        ...current,
+        [name]: false
+      };
+    });
     setLoginData((current) => {
       return {
         ...current,
@@ -55,58 +56,90 @@ const Login: React.FC = () => {
       };
     });
   };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      console.log("logged in");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <div className="flex w-full h-screen flex-col lg:flex-row overflow-auto">
-      <img
-        src="https://images.unsplash.com/photo-1488998287214-1e668a8e0dc4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-        className="w-full md:block h-1/2 lg:h-screen lg:w-3/5 xl:w-4/6 min-h-[20em] "
-      />
-      <div
-        className={`flex flex-col w-full justify-center p-5 lg:w-3/4 lg:p-2 xl:w-2/6 xl:p-5 2xl:p-10 `}
-      >
-        <p className="text-center text-light-blue">LOGIN TO CHATSP</p>
-        <form className="flex flex-col space-y-3" onSubmit={handleSubmit}>
-          {loginElements.map((data, index) => {
-            return (
-              <TextField
-                key={index}
-                error={data.error}
-                label={data.label}
-                type={data.type}
-                helperText={data.helperText}
-                onChange={handleChange}
-                name={data.name}
-                autoComplete={"off"}
-              />
-            );
-          })}
-          <Button type="submit" className="bg-light-blue" variant="contained">
-            LOGIN
-          </Button>
-        </form>
-        <div>
-          <div className="flex justify-between py-3 text-[0.8em] ">
-            <Link
-              className="text-[1.1em] hover:underline cursor-pointer text-light-blue"
-              underline="none"
-              onClick={() => {
-                navigate("/auth/signup");
-              }}
-            >
-              Don't have account?
-            </Link>
-            <Link
-              className="text-[1.1em] text-red-500 hover:underline cursor-pointer"
-              underline="none"
-              onClick={() => {
-                navigate("/");
-              }}
-            >
-              Forgot password?
-            </Link>
+    <div>
+      <Navigation data={{ href: "/auth/login", title: "LOGIN" }} />
+      <div className="flex items-center justify-evenly min-h-[85vh] max-w-[80em] m-auto">
+        <div className="hidden md:block">
+          <img src={iphone12} className={`w-80`} />
+        </div>
+        <div className="w-[25em] h-[35em] border p-5">
+          <div className="flex items-center justify-center">
+            <img src={Twencon} className={`w-32 cursor-pointer`} />
+          </div>
+          <div>
+            <h1 className="font-medium text-blue-500 text-center pt-3 text-lg">
+              LOGIN
+            </h1>
+          </div>
+          <div className="my-5">
+            <form className="flex flex-col space-y-3" onSubmit={handleSubmit}>
+              {loginElements.map((data, index) => {
+                return (
+                  <TextField
+                    key={index}
+                    error={data.error}
+                    label={data.label}
+                    value={loginData[data.name as keyof ILoginData]}
+                    type={data.type}
+                    helperText={data.helperText}
+                    onChange={handleChange}
+                    name={data.name}
+                    autoComplete={"off"}
+                  />
+                );
+              })}
+              <div className="flex space-x-5">
+                <Button
+                  type="submit"
+                  className="bg-light-blue w-full"
+                  variant="contained"
+                >
+                  LOGIN
+                </Button>
+              </div>
+            </form>
+            <div>
+              <div className="flex justify-between py-3 text-[0.8em] ">
+                <Link
+                  className="text-[1.1em] hover:underline cursor-pointer text-light-blue"
+                  underline="none"
+                  onClick={() => {
+                    navigate("/auth/login");
+                  }}
+                >
+                  Already have account?
+                </Link>
+                <Link
+                  className="text-[1.1em] text-red-500 hover:underline cursor-pointer"
+                  underline="none"
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="text-center p-2">GET APP ON</div>
+            <div className=" flex justify-between">
+              <img src={AppleStore} className={`w-40  cursor-pointer`} />
+              <img src={GoogleStore} className={`w-40 cursor-pointer`} />
+            </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

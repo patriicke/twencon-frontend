@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import Navigation from "./../../components/Navigation";
 import iphone12 from "./../../assets/iphone12/iphone12.png";
@@ -8,6 +8,7 @@ import AppleStore from "./../../assets/stores/applestore.png";
 import GoogleStore from "./../../assets/stores/googlestore.png";
 import ReactInputVerificationCode from "react-input-verification-code";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const StyledReactInputVerificationCode = styled.div`
   display: flex;
@@ -16,9 +17,9 @@ const StyledReactInputVerificationCode = styled.div`
   --ReactInputVerificationCode-itemHeight: 55px;
   --ReactInputVerificationCode-itemSpacing: 8px;
   .ReactInputVerificationCode__item {
-    font-size: 16px;
+    font-size: 24px;
     font-weight: 500;
-    color: #fff;
+    color: #000;
     border: 1px solid #ef6c65;
     border-radius: 4px;
     box-shadow: none;
@@ -31,9 +32,13 @@ const StyledReactInputVerificationCode = styled.div`
 
 const VerificationCode: React.FC = () => {
   const [value, setValue] = useState<string>("");
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
 
   return (
     <div>
@@ -44,7 +49,13 @@ const VerificationCode: React.FC = () => {
         </div>
         <div className="w-[25em] h-[35em] border p-5">
           <div className="flex items-center justify-center">
-            <img src={Twencon} className={`w-32`} />
+            <img
+              src={Twencon}
+              className={`w-32 cursor-pointer`}
+              onClick={() => {
+                navigate("/");
+              }}
+            />
           </div>
           <div>
             <h1 className="font-medium text-blue-500 text-center pt-3 text-lg">

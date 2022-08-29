@@ -194,7 +194,13 @@ const Signup: React.FC = () => {
         </div>
         <div className="w-[25em] h-[35em] border p-5">
           <div className="flex items-center justify-center">
-            <img src={Twencon} className={`w-32`} />
+            <img
+              src={Twencon}
+              className={`w-32 cursor-pointer`}
+              onClick={() => {
+                navigate("/");
+              }}
+            />
           </div>
           <div>
             <h1 className="font-medium text-blue-500 text-center pt-3 text-lg">
