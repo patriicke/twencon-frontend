@@ -276,7 +276,7 @@ const Signup: React.FC = () => {
                   className="text-[1.1em] text-red-500 hover:underline cursor-pointer"
                   underline="none"
                   onClick={() => {
-                    navigate("/");
+                    navigate("/password/reset");
                   }}
                 >
                   Forgot password?

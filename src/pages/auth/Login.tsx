@@ -135,16 +135,16 @@ const Login: React.FC = () => {
                   className="text-[1.1em] hover:underline cursor-pointer text-light-blue"
                   underline="none"
                   onClick={() => {
-                    navigate("/auth/login");
+                    navigate("/auth/signup");
                   }}
                 >
-                  Already have account?
+                  Don't have an account?
                 </Link>
                 <Link
                   className="text-[1.1em] text-red-500 hover:underline cursor-pointer"
                   underline="none"
                   onClick={() => {
-                    navigate("/");
+                    navigate("/password/reset");
                   }}
                 >
                   Forgot password?
