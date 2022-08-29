@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
 import Navigation from "./../../components/Navigation";
 import iphone12 from "./../../assets/iphone12/iphone12.png";
@@ -8,14 +8,6 @@ import AppleStore from "./../../assets/stores/applestore.png";
 import GoogleStore from "./../../assets/stores/googlestore.png";
 import ReactInputVerificationCode from "react-input-verification-code";
 import styled from "styled-components";
-
-const StyledError = styled.div`
-  font-size: 12px;
-  line-height: 16px;
-  text-align: center;
-  letter-spacing: 0.004em;
-  color: #ef6c65;
-`;
 
 const StyledReactInputVerificationCode = styled.div`
   display: flex;
