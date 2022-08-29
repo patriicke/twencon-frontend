@@ -7,7 +7,7 @@ import Chat from "./Chat";
 import Home from "./Home";
 import { AppContext, socket } from "./../context/appContext";
 import VerificationCode from "./Verification/VerificationCode";
-import { Success } from "./Success/Success";
+import Success from "./Success/Success";
 import { ResetPassword } from "./Reset/ResetPassword";
 
 const Pages: React.FC = () => {

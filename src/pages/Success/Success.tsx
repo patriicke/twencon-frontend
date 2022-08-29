@@ -3,7 +3,7 @@ import tick from "./../../assets/success/tick.png";
 import Twencon from "./../../assets/logo/twencon.svg";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-export const Success: React.FC = () => {
+const Success: React.FC = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState<boolean>(false);
   useEffect(() => {
@@ -23,7 +23,7 @@ export const Success: React.FC = () => {
         </div>
         <div className="flex space-x-1 items-center justify-center">
           <h1 className="text-xl">Welcome to </h1>
-          <img src={Twencon} className="w-20" />
+          <img src={Twencon} className="w-24" />
           <p className="flex items-end justify-end text-2xl">!</p>
         </div>
         <div>
@@ -53,3 +53,5 @@ export const Success: React.FC = () => {
     </div>
   );
 };
+
+export default Success;
