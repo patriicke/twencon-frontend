@@ -97,11 +97,8 @@ const Signup: React.FC = () => {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("submitted");
   };
-
-  useEffect(() => {
-    console.log(signupData);
-  }, [signupData]);
   return (
     <div>
       <Navigation data={{ href: "/auth/login", title: "LOGIN" }} />
@@ -150,14 +147,25 @@ const Signup: React.FC = () => {
                   BACK
                 </Button>
                 <Button
-                  type={showInput === 1 ? "button" : "submit"}
-                  className="bg-light-blue w-1/2"
+                  type={"button"}
+                  className={`bg-light-blue w-1/2 ${
+                    showInput == 2 && "hidden"
+                  }`}
                   variant="contained"
                   onClick={() => {
-                    showInput < 2 ? setShowInput(2) : null;
+                    setShowInput(2);
                   }}
                 >
-                  {showInput === 1 ? "NEXT" : "SIGNUP"}
+                  NEXT
+                </Button>
+                <Button
+                  type={"submit"}
+                  className={`bg-light-blue w-1/2 ${
+                    showInput == 1 && "hidden"
+                  }`}
+                  variant="contained"
+                >
+                  SIGNUP
                 </Button>
               </div>
             </form>
