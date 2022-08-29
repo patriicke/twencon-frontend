@@ -31,13 +31,12 @@ const Home: React.FC = () => {
   return (
     <div className={`w-full min-h-screen`}>
       <Navigation data={{ href: "auth/signup", title: "GET STARTED" }} />
-      <div className="w-full dark:bg-gray-900 relative min-h-screen ">
+      <div className="w-full dark:bg-gray-900 relative min-h-screen">
         <div className="flex w-[100%] flex-col md:grid md:grid-cols-2 gap-2 p-5 shadow-sm lg:px-[5%]">
-          <div className="text-[1.2em] font-medium max-w-sm dark:text-white md:text-[1.2em] 2xl:mt-[1.3em]">
+          <div className="text-[1.2em] font-medium max-w-sm dark:text-white md:text-[1.2em] 2xl:mt-[1.3em] xl:pt-14">
             All in one now available! This is where you can chat with your
             friends and family members. But also project management is made
-            simple with
-            <img src={Logo} className="w-40" />
+            simple with us.
           </div>
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"

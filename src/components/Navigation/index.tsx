@@ -14,7 +14,12 @@ const Navigation: React.FC<NavBarProps> = ({ data }) => {
       }`}
     >
       <div className="flex items-center justify-center">
-        <img src={Logo} alt="Logo" className="w-32" />
+        <img
+          src={Logo}
+          alt="Logo"
+          className="w-32 cursor-pointer"
+          onClick={() => navigate("/")}
+        />
       </div>
       <div className="flex items-center">
         {data?.title && (
