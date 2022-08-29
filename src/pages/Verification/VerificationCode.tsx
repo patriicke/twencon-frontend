@@ -20,13 +20,13 @@ const StyledReactInputVerificationCode = styled.div`
     font-size: 24px;
     font-weight: 500;
     color: #000;
-    border: 1px solid #ef6c65;
+    border: 1px solid #4200fe;
     border-radius: 4px;
     box-shadow: none;
   }
   .ReactInputVerificationCode__item.is-active {
     box-shadow: none;
-    border: 2px solid #4200fe;
+    border: 2px solid #20FF0D;
   }
 `;
 

@@ -10,7 +10,6 @@ import GoogleStore from "./../../assets/stores/googlestore.png";
 import { ILoginData } from "../../interface";
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [showInput, setShowInput] = useState<number>(1);
   const [inputError, setInputError] = useState({
     email: false,
     password: false
@@ -22,7 +21,10 @@ const Login: React.FC = () => {
   const loginElements = [
     {
       error: inputError.email,
-      helperText: inputError.email && "Please enter your fullnames",
+      helperText:
+        loginData.email === ""
+          ? inputError.email && "Please enter your email"
+          : inputError.email && "Invalid email",
       label: "Email",
       type: "email",
       name: "email"
@@ -31,8 +33,8 @@ const Login: React.FC = () => {
       error: inputError.password,
       helperText:
         loginData.password === ""
-          ? loginData.password && "Please enter your email"
-          : loginData.password && "Please enter valid email",
+          ? inputError.password && "Please enter your password"
+          : inputError.password && "Invalid email or password",
       label: "Password",
       type: "password",
       name: "password"
@@ -59,6 +61,22 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
+      if (loginData.email == "" || !loginData.email.includes("@gmail.com")) {
+        return setInputError((current) => {
+          return {
+            ...current,
+            email: true
+          };
+        });
+      }
+      if (loginData.password == "") {
+        return setInputError((current) => {
+          return {
+            ...current,
+            password: true
+          };
+        });
+      }
       console.log("logged in");
     } catch (error) {
       console.log(error);
@@ -66,14 +84,18 @@ const Login: React.FC = () => {
   };
   return (
     <div>
-      <Navigation data={{ href: "/auth/login", title: "LOGIN" }} />
+      <Navigation data={{ href: "/auth/signup", title: "SIGNUP" }} />
       <div className="flex items-center justify-evenly min-h-[85vh] max-w-[80em] m-auto">
         <div className="hidden md:block">
           <img src={iphone12} className={`w-80`} />
         </div>
         <div className="w-[25em] h-[35em] border p-5">
           <div className="flex items-center justify-center">
-            <img src={Twencon} className={`w-32 cursor-pointer`} />
+            <img
+              src={Twencon}
+              className={`w-32 cursor-pointer`}
+              onClick={() => navigate("/")}
+            />
           </div>
           <div>
             <h1 className="font-medium text-blue-500 text-center pt-3 text-lg">
