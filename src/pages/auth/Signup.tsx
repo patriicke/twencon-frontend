@@ -189,7 +189,7 @@ const Signup: React.FC = () => {
     <div>
       <Navigation data={{ href: "/auth/login", title: "LOGIN" }} />
       <div className="flex items-center justify-evenly min-h-[85vh] max-w-[80em] m-auto">
-        <div>
+        <div className="hidden md:block">
           <img src={iphone12} className={`w-80`} />
         </div>
         <div className="w-[25em] h-[35em] border p-5">
