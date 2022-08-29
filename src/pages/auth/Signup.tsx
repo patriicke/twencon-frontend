@@ -7,14 +7,8 @@ import Twencon from "./../../assets/logo/twencon.svg";
 import Footer from "../../components/Footer";
 import AppleStore from "./../../assets/stores/applestore.png";
 import GoogleStore from "./../../assets/stores/googlestore.png";
-interface ISignupData {
-  fullname: string;
-  email: string;
-  username: string;
-  telephone: string;
-  password: string;
-  cpassword: string;
-}
+import { ISignupData } from "../../interface";
+import { useSignup } from "../../hooks";
 const Signup: React.FC = () => {
   const navigate = useNavigate();
   const [showInput, setShowInput] = useState<number>(1);
@@ -26,56 +20,6 @@ const Signup: React.FC = () => {
     username: false,
     cpassword: false
   });
-  const signupElements = [
-    {
-      error: inputError.fullname,
-      helperText: inputError.fullname && "Name can't be empty",
-      label: "Full Name",
-      type: "text",
-      name: "fullname",
-      show: 1
-    },
-    {
-      error: inputError.email,
-      helperText: inputError.email && "Email can't be empty",
-      label: "Email",
-      type: "text",
-      name: "email",
-      show: 1
-    },
-    {
-      error: inputError.password,
-      helperText: inputError.password && "Password can't be empty",
-      label: "Username",
-      type: "text",
-      name: "username",
-      show: 1
-    },
-    {
-      error: inputError.telephone,
-      helperText: inputError.telephone && "Telephone can't be empty",
-      label: "Telephone",
-      type: "tel",
-      name: "telephone",
-      show: 2
-    },
-    {
-      error: inputError.password,
-      helperText: inputError.password && "Password can't be empty",
-      label: "Password",
-      type: "password",
-      name: "password",
-      show: 2
-    },
-    {
-      error: inputError.cpassword,
-      helperText: inputError.cpassword && "Confirm Password can't be empty",
-      label: "Confirm Password",
-      type: "password",
-      name: "cpassword",
-      show: 2
-    }
-  ];
   const [signupData, setSignupData] = useState<ISignupData>({
     fullname: "",
     email: "",
@@ -84,10 +28,79 @@ const Signup: React.FC = () => {
     password: "",
     cpassword: ""
   });
+  const signupElements = [
+    {
+      error: inputError.fullname,
+      helperText: inputError.fullname && "Please enter your fullnames",
+      label: "Full Name",
+      type: "text",
+      name: "fullname",
+      show: 1
+    },
+    {
+      error: inputError.email,
+      helperText:
+        signupData.email == ""
+          ? inputError.email && "Please enter your email"
+          : inputError.email && "Please enter valid email",
+      label: "Email",
+      type: "text",
+      name: "email",
+      show: 1
+    },
+    {
+      error: inputError.username,
+      helperText:
+        signupData.username == ""
+          ? inputError.username && "Please enter your username"
+          : inputError.username && "Try using another username",
+      label: "Username",
+      type: "text",
+      name: "username",
+      show: 1
+    },
+    {
+      error: inputError.telephone,
+      helperText: inputError.telephone && "Please enter your telephone number",
+      label: "Telephone",
+      type: "tel",
+      name: "telephone",
+      show: 2
+    },
+    {
+      error: inputError.password,
+      helperText:
+        signupData.password == ""
+          ? inputError.password && "Password can't be empty"
+          : inputError.password && "Password is too short",
+      label: "Password",
+      type: "password",
+      name: "password",
+      show: 2
+    },
+    {
+      error: inputError.cpassword,
+      helperText:
+        signupData.cpassword == ""
+          ? inputError.cpassword && "Please confirm your password"
+          : inputError.cpassword && "Passwords don't match",
+      label: "Confirm Password",
+      type: "password",
+      name: "cpassword",
+      show: 2
+    }
+  ];
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const name = e.target.name;
+    setInputError((current) => {
+      return {
+        ...current,
+        [name]: false
+      };
+    });
     setSignupData((current) => {
       return {
         ...current,
@@ -95,9 +108,74 @@ const Signup: React.FC = () => {
       };
     });
   };
+  const firstFormSubmit = () => {
+    if (signupData.fullname == "") {
+      setShowInput(1);
+      return setInputError((current) => {
+        return { ...current, fullname: true };
+      });
+    }
+    if (signupData.email == "" || !signupData.email.includes("@gmail.com")) {
+      setShowInput(1);
+      return setInputError((current) => {
+        return {
+          ...current,
+          email: true
+        };
+      });
+    }
+    if (signupData.username == "") {
+      setShowInput(1);
+      return setInputError((current) => {
+        return {
+          ...current,
+          username: true
+        };
+      });
+    }
+    return setShowInput(2);
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("submitted");
+    try {
+      e.preventDefault();
+      firstFormSubmit();
+      if (signupData.telephone == "") {
+        setShowInput(2);
+        return setInputError((current) => {
+          return { ...current, telephone: true };
+        });
+      }
+      if (signupData.password == "" || signupData.password.length < 6) {
+        setShowInput(2);
+        return setInputError((current) => {
+          return {
+            ...current,
+            password: true
+          };
+        });
+      }
+      if (signupData.cpassword == "") {
+        setShowInput(2);
+        return setInputError((current) => {
+          return {
+            ...current,
+            cpassword: true
+          };
+        });
+      }
+      if (signupData.password !== signupData.cpassword) {
+        setShowInput(2);
+        return setInputError((current) => {
+          return {
+            ...current,
+            cpassword: true
+          };
+        });
+      }
+      useSignup(signupData);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div>
@@ -153,7 +231,7 @@ const Signup: React.FC = () => {
                   }`}
                   variant="contained"
                   onClick={() => {
-                    setShowInput(2);
+                    firstFormSubmit();
                   }}
                 >
                   NEXT

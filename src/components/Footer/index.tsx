@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
           );
         })}
         <div>
-          <h1 className="font-medium">Contact US</h1>
+          <h1 className="font-medium">Contact Us</h1>
           <div className="flex flex-col">
             <div className="flex space-x-1">
               <p>Call:</p>
@@ -121,7 +121,7 @@ const Footer: React.FC = () => {
           <div className="flex space-x-1 items-center">
             <h1 className="font-medium">Languge</h1>
             <Language />
-            <p className="opacity-60 border border-gray-500 p-1 px-2 rounded-md">
+            <p className="opacity-60 border border-gray-500 p-1 px-2 rounded-md cursor-pointer">
               en-US
             </p>
           </div>

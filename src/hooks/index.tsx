@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ISignupData } from "../interface";
 import api from "./../api";
 
 //signup custom hook
@@ -64,6 +65,7 @@ export const uploadImage = async (image: any, setUploading: any) => {
   }
 };
 
+// scroll
 export const useScrollPosition = () => {
   const [scrollPosition, setScrollPostion] = useState<number>(0);
   useEffect(() => {
@@ -74,4 +76,11 @@ export const useScrollPosition = () => {
     return () => window.removeEventListener("scroll", updatePosition);
   }, []);
   return scrollPosition;
+};
+
+/* Register a user   */
+export const useSignup = async (data: ISignupData) => {
+  const request = await api.post("/auth/signup", data);
+  const response = request.data;
+  console.log(response);
 };

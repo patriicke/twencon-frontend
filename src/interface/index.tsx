@@ -8,3 +8,11 @@ export interface ILinks {
   href: string;
   name: string;
 }
+export interface ISignupData {
+  fullname: string;
+  email: string;
+  username: string;
+  telephone: string;
+  password: string;
+  cpassword: string;
+}
