@@ -139,6 +139,13 @@ const Signup: React.FC = () => {
     try {
       e.preventDefault();
       firstFormSubmit();
+      if (
+        signupData.fullname == "" ||
+        signupData.email == "" ||
+        signupData.username == ""
+      ) {
+        return setShowInput(1);
+      }
       if (signupData.telephone == "") {
         setShowInput(2);
         return setInputError((current) => {
@@ -172,7 +179,8 @@ const Signup: React.FC = () => {
           };
         });
       }
-      useSignup(signupData);
+      const response = await useSignup(signupData);
+      if (response) return navigate("/verification");
     } catch (error) {
       console.log(error);
     }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ISignupData } from "../interface";
 import api from "./../api";
 
@@ -80,7 +81,11 @@ export const useScrollPosition = () => {
 
 /* Register a user   */
 export const useSignup = async (data: ISignupData) => {
-  const request = await api.post("/auth/signup", data);
-  const response = request.data;
-  console.log(response);
+  try {
+    const request = await api.post("/auth/signup", data);
+    const response = request.data;
+    return response;
+  } catch (error) {
+    return error;
+  }
 };

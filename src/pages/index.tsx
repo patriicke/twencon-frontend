@@ -6,6 +6,7 @@ import Signup from "./auth/Signup";
 import Chat from "./Chat";
 import Home from "./Home";
 import { AppContext, socket } from "./../context/appContext";
+import VerificationCode from "./Verification/VerificationCode";
 
 const Pages: React.FC = () => {
   const [rooms, setRooms] = useState<[]>([]);
@@ -37,6 +38,7 @@ const Pages: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<Signup />} />
+          <Route path="verification" element={<VerificationCode />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
