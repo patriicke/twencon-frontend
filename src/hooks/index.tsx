@@ -110,3 +110,9 @@ export const useUserData = async (
     console.log(error);
   }
 };
+
+/* Reset password */
+
+export const restPassword = async () => {
+  const request = await api.post("/reset/verify");
+};

@@ -1,19 +1,23 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import tick from "./../../assets/success/tick.png";
+import React, { useState } from "react";
 import Twencon from "./../../assets/logo/twencon.svg";
 import { Button, Link, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../components/Navigation";
+import api from "./../../api";
+import Loading from "./../../assets/loading/loading.gif";
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<boolean>(false);
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       if (email == "" || !email.includes("@gmail.com"))
         return setEmailError(true);
-      navigate("/reset/verification ")
+      const request = await api.post("/verification/reset", { email });
+      const response = request.data;
+      // navigate("/reset/verification ");
     } catch (error) {
       console.log(error);
     }
@@ -30,8 +34,8 @@ const ResetPassword: React.FC = () => {
             You're having problems with logging in?
           </p>
           <p className="text-center opacity-60">
-            Enter you email and we'll automatically send you the link to confirm
-            it's you.
+            Enter your email and we'll automatically send you the reset code to
+            confirm that it's you.
           </p>
           <form
             className="py-2 flex flex-col space-y-3"
@@ -53,7 +57,7 @@ const ResetPassword: React.FC = () => {
               size="medium"
             />
             <Button variant="contained" className="bg-light-blue" type="submit">
-              SEND CODE
+              {loading ? <img src={Loading} className="w-7" /> : "SEND CODE"}
             </Button>
           </form>
           <div className="flex justify-between py-3 text-[0.8em] ">

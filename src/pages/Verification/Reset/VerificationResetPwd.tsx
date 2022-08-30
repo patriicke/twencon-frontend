@@ -33,11 +33,13 @@ const StyledReactInputVerificationCode = styled.div`
 const VerificationResetPwd: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       if (value == "") return setError(true);
+      
       return navigate("/reset/success");
     } catch (error) {
       console.log(error);
@@ -81,7 +83,7 @@ const VerificationResetPwd: React.FC = () => {
               </StyledReactInputVerificationCode>
               {error && (
                 <p className="text-red-500 opacity-70 border border-red-300 text-center">
-                  Please enter code we've sent to you!
+                  Please enter reset code we've sent to you!
                 </p>
               )}
               <div className="flex space-y-5 flex-col">
@@ -89,13 +91,15 @@ const VerificationResetPwd: React.FC = () => {
                   type="submit"
                   className="bg-light-blue w-full"
                   variant="contained"
+                  disabled={loading}
                 >
-                  CONFIRM
+                  RESET
                 </Button>
                 <Button
                   type="button"
                   className="bg-light-blue w-full"
                   variant="contained"
+                  disabled={loading}
                 >
                   RESEND CODE
                 </Button>
