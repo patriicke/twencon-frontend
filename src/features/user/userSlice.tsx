@@ -14,7 +14,7 @@ const userSlice = createSlice({
     resetNotifications: (state: any, { payload }) => {
       delete state.newMessages[payload];
     },
-    userData: (state: any, action) => {
+    userDataAction: (state: any, action) => {
       return {
         ...state,
         userData: action.payload
@@ -23,6 +23,6 @@ const userSlice = createSlice({
   }
 });
 
-export const { addNotifications, resetNotifications, userData } =
+export const { addNotifications, resetNotifications, userDataAction } =
   userSlice.actions;
 export default userSlice.reducer;

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Person } from "@mui/icons-material";
 import { uploadImage, useUserData } from "../../../hooks";
-import { userData as userDataAction } from "../../../features/user/userSlice";
+import { userDataAction } from "../../../features/user/userSlice";
 import Loading from "./../../../assets/loading/loading.gif";
 const Success: React.FC = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Success: React.FC = () => {
   };
   const handleSubmit = async () => {
     await uploadImage(image, setUploading, userData?.email);
-    navigate("/chat")
+    navigate("/");
   };
   return (
     <div className="h-screen w-full flex items-center justify-center">

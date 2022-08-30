@@ -8,8 +8,14 @@ import Footer from "../../components/Footer";
 import AppleStore from "./../../assets/stores/applestore.png";
 import GoogleStore from "./../../assets/stores/googlestore.png";
 import { ILoginData } from "../../interface";
+import api from "./../../api";
+import { useDispatch } from "react-redux";
+import { userDataAction } from "../../features/user/userSlice";
+import Loading from "./../../assets/loading/loading.gif";
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
   const [inputError, setInputError] = useState({
     email: false,
     password: false
@@ -61,7 +67,9 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
+      setLoading(true);
       if (loginData.email == "" || !loginData.email.includes("@gmail.com")) {
+        setLoading(false);
         return setInputError((current) => {
           return {
             ...current,
@@ -70,6 +78,7 @@ const Login: React.FC = () => {
         });
       }
       if (loginData.password == "") {
+        setLoading(false);
         return setInputError((current) => {
           return {
             ...current,
@@ -77,8 +86,13 @@ const Login: React.FC = () => {
           };
         });
       }
-      console.log("logged in");
+      const request = await api.post("/auth/login", { ...loginData });
+      const response = request.data;
+      setLoading(false);
+      dispatch(userDataAction(response));
+      navigate("/");
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -89,7 +103,7 @@ const Login: React.FC = () => {
         <div className="hidden md:block">
           <img src={iphone12} className={`w-80`} />
         </div>
-        <div className="w-[25em] h-[35em] border p-5">
+        <div className={`w-[25em] h-[35em] border p-5`}>
           <div className="flex items-center justify-center">
             <img
               src={Twencon}
@@ -124,8 +138,9 @@ const Login: React.FC = () => {
                   type="submit"
                   className="bg-light-blue w-full"
                   variant="contained"
+                  disabled={loading}
                 >
-                  LOGIN
+                  {loading ? <img src={Loading} className="w-8" /> : "LOGIN"}
                 </Button>
               </div>
             </form>

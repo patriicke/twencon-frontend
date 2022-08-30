@@ -16,7 +16,7 @@ import {
   useResendCreateVerificationCode
 } from "./../../../hooks";
 import { useDispatch } from "react-redux";
-import { userData } from "../../../features/user/userSlice";
+import { userDataAction } from "../../../features/user/userSlice";
 
 const StyledReactInputVerificationCode = styled.div`
   display: flex;
@@ -57,7 +57,7 @@ const VerificationCode: React.FC = () => {
         },
         dispatch,
         navigate,
-        userData,
+        userDataAction,
         setLoading,
         setServerMsg
       );

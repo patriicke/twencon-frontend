@@ -9,7 +9,7 @@ import AppleStore from "./../../assets/stores/applestore.png";
 import GoogleStore from "./../../assets/stores/googlestore.png";
 import { ISignupData } from "../../interface";
 import { useDispatch } from "react-redux";
-import { userData } from "./../../features/user/userSlice";
+import { userDataAction } from "./../../features/user/userSlice";
 import api from "./../../api/";
 import Loading from "./../../assets/loading/loading.gif";
 const Signup: React.FC = () => {
@@ -217,7 +217,7 @@ const Signup: React.FC = () => {
       localStorage.setItem("acc_token", response.accessToken);
       localStorage.setItem("v_reference", response.v_reference);
       setLoading(false);
-      dispatch(userData({ ...response }));
+      dispatch(userDataAction({ ...response }));
       return navigate("/create/verification");
     } catch (error: any) {
       setLoading(false);
