@@ -105,6 +105,8 @@ export const useUserData = async (
     const response = request.data;
     dispatch(userDataAction(response.foundUser));
   } catch (error) {
+    localStorage.clear();
+    navigate("/auth/login");
     console.log(error);
   }
 };

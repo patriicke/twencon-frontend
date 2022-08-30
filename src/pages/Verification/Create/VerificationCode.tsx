@@ -83,89 +83,84 @@ const VerificationCode: React.FC = () => {
         <div className="hidden md:block">
           <img src={iphone12} className={`w-80`} />
         </div>
-        <div className="relative">
-          {loading && (
-            <div className="absolute top-[40%] z-50 left-[45%]">
-              <img src={Loading} className={`w-12 rounded-full `} />
+        <div
+          className={`w-[25em] h-[35em] border p-5 ${loading ? "blur-md" : ""}`}
+        >
+          <div className="flex items-center justify-center">
+            <img
+              src={Twencon}
+              className={`w-32 cursor-pointer`}
+              onClick={() => {
+                navigate("/");
+              }}
+            />
+          </div>
+          <div>
+            <p className="font-medium text-center pt-3 opacity-70">
+              Enter verification code we've sent to your email!
+            </p>
+          </div>
+          {resend && (
+            <div className="border p-2 relative pt-3 mt-3 rounded-md">
+              <p className="text-center text-green-500">
+                Check your email we've resend the code to you!
+              </p>
+              <img src={tick} className="w-8 absolute -top-4 left-[45%]" />
             </div>
           )}
-          <div
-            className={`w-[25em] h-[35em] border p-5 ${
-              loading ? "blur-md" : ""
-            }`}
-          >
-            <div className="flex items-center justify-center">
-              <img
-                src={Twencon}
-                className={`w-32 cursor-pointer`}
-                onClick={() => {
-                  navigate("/");
-                }}
-              />
-            </div>
-            <div>
-              <p className="font-medium text-center pt-3 opacity-70">
-                Enter verification code we've sent to your email!
-              </p>
-            </div>
-            {resend && (
-              <div className="border p-2 relative pt-3 mt-3 rounded-md">
-                <p className="text-center text-green-500">
-                  Check your email we've resend the code to you!
+          <div className="my-5">
+            <form className="flex flex-col space-y-3" onSubmit={handleSubmit}>
+              <StyledReactInputVerificationCode>
+                <ReactInputVerificationCode
+                  length={6}
+                  value={value}
+                  placeholder={""}
+                  onChange={(newValue) => {
+                    setValue(newValue);
+                    setError(false);
+                    setResend(false);
+                    setServerMsg(false);
+                  }}
+                />
+              </StyledReactInputVerificationCode>
+              {serverMsg && (
+                <p className="text-[red] opacity-90 border border-red-300 text-center">
+                  Invalid verification code. Please enter valid one!
                 </p>
-                <img src={tick} className="w-8 absolute -top-4 left-[45%]" />
+              )}
+              {error && (
+                <p className="text-red-500 opacity-70 border border-red-300 text-center">
+                  Please enter code we've sent to you!
+                </p>
+              )}
+              <div className="flex space-y-5 flex-col">
+                <Button
+                  type="submit"
+                  className="bg-light-blue w-full"
+                  variant="contained"
+                >
+                  {loading ? <img src={Loading} className="w-8" /> : "CONFIRM"}
+                </Button>
+                <Button
+                  type="button"
+                  className="bg-light-blue w-full"
+                  variant="contained"
+                  onClick={resendCode}
+                >
+                  {loading ? (
+                    <img src={Loading} className="w-8" />
+                  ) : (
+                    "RESEND CODE"
+                  )}
+                </Button>
               </div>
-            )}
-            <div className="my-5">
-              <form className="flex flex-col space-y-3" onSubmit={handleSubmit}>
-                <StyledReactInputVerificationCode>
-                  <ReactInputVerificationCode
-                    length={6}
-                    value={value}
-                    placeholder={""}
-                    onChange={(newValue) => {
-                      setValue(newValue);
-                      setError(false);
-                      setResend(false);
-                      setServerMsg(false);
-                    }}
-                  />
-                </StyledReactInputVerificationCode>
-                {serverMsg && (
-                  <p className="text-[red] opacity-90 border border-red-300 text-center">
-                    Invalid verification code. Please enter valid one!
-                  </p>
-                )}
-                {error && (
-                  <p className="text-red-500 opacity-70 border border-red-300 text-center">
-                    Please enter code we've sent to you!
-                  </p>
-                )}
-                <div className="flex space-y-5 flex-col">
-                  <Button
-                    type="submit"
-                    className="bg-light-blue w-full"
-                    variant="contained"
-                  >
-                    CONFIRM
-                  </Button>
-                  <Button
-                    type="button"
-                    className="bg-light-blue w-full"
-                    variant="contained"
-                    onClick={resendCode}
-                  >
-                    RESEND CODE
-                  </Button>
-                </div>
-              </form>
-            </div>
-            <div>
-              <div className="text-center p-2">GET APP ON</div>
-              <div className=" flex justify-between">
-                <img src={AppleStore} className={`w-40  cursor-pointer`} />
-                <img src={GoogleStore} className={`w-40 cursor-pointer`} />
-              </div>
+            </form>
+          </div>
+          <div>
+            <div className="text-center p-2">GET APP ON</div>
+            <div className=" flex justify-between">
+              <img src={AppleStore} className={`w-40  cursor-pointer`} />
+              <img src={GoogleStore} className={`w-40 cursor-pointer`} />
             </div>
           </div>
         </div>

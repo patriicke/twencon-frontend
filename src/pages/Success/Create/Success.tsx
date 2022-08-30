@@ -112,8 +112,9 @@ const Success: React.FC = () => {
             variant="contained"
             className="bg-light-blue w-2/5"
             onClick={() => {
-              navigate("/chat");
+              navigate("/");
             }}
+            disabled={uploading}
           >
             SKIP FOR NOW
           </Button>

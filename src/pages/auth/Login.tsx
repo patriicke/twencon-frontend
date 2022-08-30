@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, TextField, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Navigation from "./../../components/Navigation";
@@ -88,10 +88,16 @@ const Login: React.FC = () => {
       }
       const request = await api.post("/auth/login", { ...loginData });
       const response = request.data;
+      localStorage.setItem("acc_token", response.acc_token);
       setLoading(false);
-      dispatch(userDataAction(response));
       navigate("/");
     } catch (error) {
+      setInputError((current) => {
+        return {
+          ...current,
+          password: true
+        };
+      });
       setLoading(false);
       console.log(error);
     }
