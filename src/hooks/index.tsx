@@ -1,47 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ISignupData } from "../interface";
 import api from "./../api";
-
-//signup custom hook
-/*
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (loginInfo.email == "" || !loginInfo.email.includes("@gmail.com")) {
-    setLoading(false);
-    return setIputError({
-      password: false,
-      email: true
-    });
-  }
-  if (loginInfo.password == "") {
-    setLoading(false);
-    return setIputError({
-      password: true,
-      email: false
-    });
-  }
-  const response = await api.post("/login", { ...loginInfo });
-  console.log(response.data);
-  if (response.data == "Not Found") {
-    setLoading(false);
-    return setIputError({
-      password: false,
-      email: true
-    });
-  }
-  if (response.data == "Incorrect Data") {
-    setLoading(false);
-    return setIputError({
-      password: true,
-      email: false
-    });
-  }
-  setLoading(false);
-  localStorage.setItem("refresh", response.data.refresh);
-  localStorage.setItem("token", response.data.token);
-  return navigate("/");
-};*/
 
 //Upload image
 export const uploadImage = async (image: any, setUploading: any) => {
@@ -128,5 +86,24 @@ export const useResendCreateVerificationCode = async (
     console.log(error);
     setLoading(false);
     return error;
+  }
+};
+
+/* Get user data on home route*/
+
+export const useUserData = async (
+  navigate: any,
+  dispatch: any,
+  userDataAction: any
+) => {
+  try {
+    const acc_token = localStorage.getItem("acc_token");
+    if (acc_token == "undefined" || !acc_token) return navigate("/auth/login");
+    const request = await api.post("/home", { acc_token });
+    const response = request.data;
+    dispatch(userDataAction(response.foundUser));
+    console.log(response);
+  } catch (error) {
+    console.log(error);
   }
 };
