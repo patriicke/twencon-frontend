@@ -78,14 +78,55 @@ export const useScrollPosition = () => {
   }, []);
   return scrollPosition;
 };
+/* Create verification code */
 
-/* Register a user   */
-export const useSignup = async (data: ISignupData) => {
+export const useVerifyUserVerificationCode = async (
+  data: {
+    v_code: string;
+    acc_token: string | null;
+  },
+  dispatch: any,
+  navigate: any,
+  userData: any,
+  setLoading: any,
+  setServerMsg: any
+) => {
   try {
-    const request = await api.post("/auth/signup", data);
+    setLoading(true);
+    const request = await api.post("/verification/create/verify", data);
     const response = request.data;
+    dispatch(userData(response.user));
+    navigate("/create/success");
+    setLoading(false);
+  } catch (error: any) {
+    console.log(error);
+    if (error.response.status == 403) setServerMsg(true);
+    setLoading(false);
+    return error;
+  }
+};
+
+/* Resend create verification code */
+
+export const useResendCreateVerificationCode = async (
+  data: {
+    v_reference: string | null;
+  },
+  setResend: (value: boolean) => void,
+  setLoading: (value: boolean) => void
+) => {
+  try {
+    setLoading(true);
+    const request = await api.post("/verification/create/resend", data);
+    const response = request.data;
+    setResend(true);
+    console.log(response);
+    localStorage.setItem("v_reference", response.v_reference);
+    setLoading(false);
     return response;
   } catch (error) {
+    console.log(error);
+    setLoading(false);
     return error;
   }
 };
