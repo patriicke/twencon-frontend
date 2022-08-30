@@ -5,8 +5,9 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Person } from "@mui/icons-material";
-import { useUserData } from "../../../hooks";
+import { uploadImage, useUserData } from "../../../hooks";
 import { userData as userDataAction } from "../../../features/user/userSlice";
+import Loading from "./../../../assets/loading/loading.gif";
 const Success: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -24,6 +25,20 @@ const Success: React.FC = () => {
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
   }, []);
+  const validateImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const file: any = e.target.files == null ? null : e.target.files[0];
+    if ((file.size as number) > 1048576) {
+      alert("Maximum file size should be atleast 1mb");
+    } else {
+      setImage(file);
+      setPreviewImage(URL.createObjectURL(file));
+    }
+  };
+  const handleSubmit = async () => {
+    await uploadImage(image, setUploading, userData?.email);
+    navigate("/chat")
+  };
   return (
     <div className="h-screen w-full flex items-center justify-center">
       <div className="bg-white shadow-lg w-[25em] h-[35em] border p-5 pt-10 flex flex-col space-y-3 relative">
@@ -33,18 +48,31 @@ const Success: React.FC = () => {
         <div className="flex items-center justify-center">
           <img src={Twencon} className="w-28" />
         </div>
-        <div className="flex items-center justify-center pb-7 relative ">
-          <div className="border border-gray-700 border-opacity-70 rounded-full p-1 ">
-            <Person className="text-[4.5em]" />
+        <div className="flex items-center justify-center pb-7 relative">
+          <div className="border border-gray-700 border-opacity-70 rounded-full flex items-center justify-center">
+            {previewImage === null ? (
+              <Person className="text-[5em]" />
+            ) : (
+              <img src={previewImage} className="w-20 h-20 rounded-full" />
+            )}
           </div>
-          <Button
-            className="absolute -bottom-2  bg-light-blue text-[0.7em]"
-            variant="contained"
+          <label
+            className="absolute -bottom-2 text-[0.8em]"
+            htmlFor="image-upload"
           >
-            UPLOAD IMAGE
-          </Button>
+            <p className="border-2 p-1 px-2 rounded-md font-medium opacity-70 cursor-pointer ">
+              SELECT IMAGE
+            </p>
+            <input
+              type="file"
+              id="image-upload"
+              hidden
+              accept="image/png, image/jpeg"
+              onChange={validateImage}
+            />
+          </label>
         </div>
-        <h1 className="text-center text-md font-medium pt-2">
+        <h1 className="text-center text-md font-medium">
           {userData?.fullname}
         </h1>
         <div className="flex space-x-1 items-center justify-center">
@@ -59,17 +87,32 @@ const Success: React.FC = () => {
               : "Your group management is no longer a problem now!"}
           </p>
         </div>
-        <div className="py-1">
-          <Button variant="contained" className="bg-light-blue w-full">
-            CLICK HERE TO UPLOAD YOUR PROFILE IMAGE
-          </Button>
-        </div>
-        <div className="py-1 flex items-center justify-center">
+        {previewImage && (
+          <>
+            {uploading && (
+              <div className="flex items-center justify-center text-light-blue flex-col">
+                <p>Wait as image uploads!</p>
+                <img src={Loading} className="w-8" />
+              </div>
+            )}
+            <div className="py-2 flex items-center justify-center">
+              <Button
+                variant="contained"
+                className="bg-light-blue m-auto"
+                disabled={uploading}
+                onClick={handleSubmit}
+              >
+                UPLOAD YOUR PROFILE IMAGE
+              </Button>
+            </div>
+          </>
+        )}
+        <div className="py-1 flex items-center justify-center absolute bottom-8 w-full left-0">
           <Button
             variant="contained"
             className="bg-light-blue w-2/5"
             onClick={() => {
-              navigate("/");
+              navigate("/chat");
             }}
           >
             SKIP FOR NOW

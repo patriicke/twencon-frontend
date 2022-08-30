@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import api from "./../api";
-
 //Upload image
-export const uploadImage = async (image: any, setUploading: any) => {
+export const uploadImage = async (
+  image: any,
+  setUploading: any,
+  email: string
+) => {
   const data = new FormData();
   data.append("file", image);
   data.append("upload_preset", "chatpresetimages");
@@ -16,14 +19,18 @@ export const uploadImage = async (image: any, setUploading: any) => {
       }
     );
     const urlData = await res.json();
+    const request = await api.post("/auth/upload", {
+      profile: urlData.url,
+      email
+    });
+    const response = request.data;
     setUploading(false);
-    return urlData.url;
+    return response;
   } catch (error) {
     setUploading(false);
     console.log(error);
   }
 };
-
 // scroll
 export const useScrollPosition = () => {
   const [scrollPosition, setScrollPostion] = useState<number>(0);
@@ -37,7 +44,6 @@ export const useScrollPosition = () => {
   return scrollPosition;
 };
 /* Create verification code */
-
 export const useVerifyUserVerificationCode = async (
   data: {
     v_code: string;
@@ -63,9 +69,7 @@ export const useVerifyUserVerificationCode = async (
     return error;
   }
 };
-
 /* Resend create verification code */
-
 export const useResendCreateVerificationCode = async (
   data: {
     v_reference: string | null;
@@ -88,9 +92,7 @@ export const useResendCreateVerificationCode = async (
     return error;
   }
 };
-
 /* Get user data on home route*/
-
 export const useUserData = async (
   navigate: any,
   dispatch: any,
@@ -102,7 +104,6 @@ export const useUserData = async (
     const request = await api.post("/home", { acc_token });
     const response = request.data;
     dispatch(userDataAction(response.foundUser));
-    console.log(response);
   } catch (error) {
     console.log(error);
   }
