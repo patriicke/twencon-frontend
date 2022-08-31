@@ -6,10 +6,13 @@ import Logo from "./assets/logo/twencon.svg";
 const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
-    window.addEventListener("load", () => {
+    const loader = () => {
       setLoading(false);
-    });
-    return window.removeEventListener("load", () => {});
+    };
+    window.addEventListener("load", loader);
+    return () => {
+      window.removeEventListener("load", loader);
+    };
   });
   return (
     <>
