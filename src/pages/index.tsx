@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PageNotFound from "./404/PageNotFound";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
-import Chat from "./Chat";
 import Home from "./Home";
 import { AppContext, socket } from "./../context/appContext";
 import VerificationCode from "./Verification/Create/VerificationCode";
@@ -52,7 +51,6 @@ const Pages: React.FC = () => {
           <Route path="/reset/success" element={<ResetSuccess />} />
           <Route path="/password/reset" element={<ResetPassword />} />
           <Route path="/password/reset/new" element={<EnterNewPasword />} />
-          <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>

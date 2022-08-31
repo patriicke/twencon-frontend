@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import { createContext } from "react";
-import backend from "../service/url";
+import backend from "../service/backend";
 const SOCKET_URL: string = backend;
 
 export const socket = io(SOCKET_URL);

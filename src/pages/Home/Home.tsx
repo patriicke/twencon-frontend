@@ -9,7 +9,7 @@ export const Home: React.FC = () => {
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
   }, []);
-  return <div>Home</div>;
+  return <div className="h-screen w-full space-x-2 flex">Home</div>;
 };
 
 export default Home;
