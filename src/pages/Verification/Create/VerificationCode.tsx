@@ -84,7 +84,7 @@ const VerificationCode: React.FC = () => {
           <img src={iphone12} className={`w-80`} />
         </div>
         <div
-          className={`w-[25em] h-[35em] border p-5 ${loading ? "blur-md" : ""}`}
+          className={`w-[25em] h-[35em] border p-5`}
         >
           <div className="flex items-center justify-center">
             <img
