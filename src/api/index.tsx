@@ -1,8 +1,7 @@
 import axios from "axios";
-
+import backend from "../service/url";
 const instance = axios.create({
-  baseURL: "https://twencon.herokuapp.com"
+  baseURL: backend
 });
 
-// baseURL: "http://localhost:5001"
 export default instance;

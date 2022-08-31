@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import { createContext } from "react";
-const SOCKET_URL: string = "http://localhost:5001";
+import backend from "../service/url";
+const SOCKET_URL: string = backend;
 
 export const socket = io(SOCKET_URL);
 //app context
