@@ -11,8 +11,46 @@
       rel="stylesheet"
     />
     <title>Twencon</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      .loading-container {
+        height: 100vh;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+      .loading-gif {
+        width: 2.5em;
+      }
+      .twencon-logo {
+        position: absolute;
+        bottom: 2em;
+        width: 10em;
+      }
+      .hide {
+        display: hidden;
+      }
+    </style>
   </head>
   <body>
+    <div class="loading-container">
+      <img
+        src="./src/assets/loading/loading.gif"
+        alt="Loading..."
+        class="loading-gif"
+      />
+      <img
+        src="./src/assets/logo/twencon.svg"
+        alt="Twencon"
+        class="twencon-logo"
+      />
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
