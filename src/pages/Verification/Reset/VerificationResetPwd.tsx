@@ -39,8 +39,8 @@ const VerificationResetPwd: React.FC = () => {
     try {
       e.preventDefault();
       if (value == "") return setError(true);
-      
-      return navigate("/reset/success");
+
+      return navigate("/password/reset/new");
     } catch (error) {
       console.log(error);
     }

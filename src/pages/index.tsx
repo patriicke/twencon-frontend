@@ -11,6 +11,7 @@ import Success from "./Success/Create/Success";
 import ResetPassword from "./Reset/ResetPassword";
 import VerificationResetPwd from "./Verification/Reset/VerificationResetPwd";
 import ResetSuccess from "./Success/Reset/ResetSuccessfull";
+import EnterNewPasword from "./Reset/EnterNewPasword";
 
 const Pages: React.FC = () => {
   const [rooms, setRooms] = useState<[]>([]);
@@ -50,6 +51,7 @@ const Pages: React.FC = () => {
           <Route path="/create/success" element={<Success />} />
           <Route path="/reset/success" element={<ResetSuccess />} />
           <Route path="/password/reset" element={<ResetPassword />} />
+          <Route path="/password/reset/new" element={<EnterNewPasword />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

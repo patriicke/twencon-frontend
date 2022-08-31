@@ -11,15 +11,23 @@ const ResetPassword: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<boolean>(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     try {
-      if (email == "" || !email.includes("@gmail.com"))
+      if (email == "" || !email.includes("@gmail.com")) {
+        setLoading(false);
         return setEmailError(true);
+      }
       const request = await api.post("/verification/reset", { email });
       const response = request.data;
-      // navigate("/reset/verification ");
-    } catch (error) {
+      console.log(response);
+      setLoading(false);
+      localStorage.setItem("r_reference", response.r_reference);
+      navigate("/reset/verification ");
+    } catch (error: any) {
+      if (error.response.status == 404) setEmailError(true);
       console.log(error);
+      setLoading(false);
     }
   };
   return (
@@ -47,6 +55,7 @@ const ResetPassword: React.FC = () => {
                 setEmail(e.target.value);
                 setEmailError(false);
               }}
+              autoComplete={"off"}
               error={emailError}
               helperText={
                 email == ""
