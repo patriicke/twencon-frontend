@@ -28,12 +28,14 @@ const EnterNewPasword: React.FC = () => {
         setLoading(false);
         return setConfirmPasswordError(true);
       }
-      //   const request = await api.post("/verification/reset", { email });
-      //   const response = request.data;
-      //   console.log(response);
-      //   setLoading(false);
-      //   localStorage.setItem("r_reference", response.r_reference);
-      //   navigate("/reset/verification ");
+      const request = await api.post("/auth/password/reset", {
+        reset_token: localStorage.getItem("reset_token"),
+        password
+      });
+      const response = request.data;
+      setLoading(false);
+      localStorage.clear();
+      navigate("/reset/success ");
     } catch (error: any) {
       console.log(error);
       setLoading(false);

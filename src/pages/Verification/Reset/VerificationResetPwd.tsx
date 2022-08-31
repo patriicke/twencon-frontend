@@ -9,7 +9,9 @@ import GoogleStore from "./../../../assets/stores/googlestore.png";
 import ReactInputVerificationCode from "react-input-verification-code";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
+import api from "./../../../api";
+import Loading from "./../../../assets/loading/loading.gif";
+import tick from "./../../../assets/success/tick.png";
 const StyledReactInputVerificationCode = styled.div`
   display: flex;
   justify-content: center;
@@ -34,18 +36,45 @@ const VerificationResetPwd: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [resendError, setResendError] = useState<boolean>(false);
+  const [resendSuccess, setResendSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
+      setLoading(true);
       e.preventDefault();
-      if (value == "") return setError(true);
-
+      if (value == "" || value.length < 6) return setError(true);
+      const request = await api.post("/verification/reset/verify", {
+        r_code: value,
+        r_reference: localStorage.getItem("r_reference")
+      });
+      const response = request.data;
+      localStorage.setItem("reset_token", response.reset_token);
+      setLoading(false);
       return navigate("/password/reset/new");
     } catch (error) {
+      setLoading(false);
+      setError(true);
       console.log(error);
     }
   };
 
+  const resendCode = async () => {
+    try {
+      setLoading(true);
+      const request = await api.post("/verification/reset/resend", {
+        r_reference: localStorage.getItem("r_reference")
+      });
+      const response = request.data;
+      localStorage.setItem("r_reference", response.r_reference);
+      setLoading(false);
+      setResendSuccess(true);
+    } catch (error) {
+      setLoading(false);
+      setResendError(true);
+      console.log(error);
+    }
+  };
   return (
     <div>
       <Navigation data={{ href: "/auth/login", title: "LOGIN" }} />
@@ -68,6 +97,12 @@ const VerificationResetPwd: React.FC = () => {
               Enter reset code we've sent to your email!
             </p>
           </div>
+          {resendSuccess && (
+            <p className="text-green-500 opacity-70 border border-gray-600 rounded-sm  text-center p-2 mt-3 relative">
+              <img src={tick} className="absolute w-7 -top-4 left-[45%]" />
+              Please enter reset code we've sent to you!
+            </p>
+          )}
           <div className="my-5">
             <form className="flex flex-col space-y-3" onSubmit={handleSubmit}>
               <StyledReactInputVerificationCode>
@@ -78,12 +113,19 @@ const VerificationResetPwd: React.FC = () => {
                   onChange={(newValue) => {
                     setValue(newValue);
                     setError(false);
+                    setResendError(false);
+                    setResendSuccess(false);
                   }}
                 />
               </StyledReactInputVerificationCode>
               {error && (
                 <p className="text-red-500 opacity-70 border border-red-300 text-center">
                   Please enter reset code we've sent to you!
+                </p>
+              )}
+              {resendError && (
+                <p className="text-red-500 opacity-70 border border-red-300 text-center">
+                  Sorry! You are not allowed to perform this action!
                 </p>
               )}
               <div className="flex space-y-5 flex-col">
@@ -93,15 +135,20 @@ const VerificationResetPwd: React.FC = () => {
                   variant="contained"
                   disabled={loading}
                 >
-                  RESET
+                  {loading ? <img src={Loading} className="w-7" /> : "RESET"}
                 </Button>
                 <Button
                   type="button"
                   className="bg-light-blue w-full"
                   variant="contained"
                   disabled={loading}
+                  onClick={resendCode}
                 >
-                  RESEND CODE
+                  {loading ? (
+                    <img src={Loading} className="w-7" />
+                  ) : (
+                    "RESEND CODE"
+                  )}
                 </Button>
               </div>
             </form>
