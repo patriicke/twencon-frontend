@@ -13,7 +13,7 @@ const App: React.FC = () => {
     return () => {
       window.removeEventListener("load", loader);
     };
-  });
+  }, []);
   return (
     <>
       <div
