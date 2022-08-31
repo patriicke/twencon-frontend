@@ -4,21 +4,17 @@ import Loading from "./assets/loading/loading.gif";
 import Logo from "./assets/logo/twencon.svg";
 
 const App: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  useEffect(() => {
-    const loader = () => {
-      setLoading(false);
-    };
-    window.addEventListener("load", loader);
-    return () => {
-      window.removeEventListener("load", loader);
-    };
-  }, []);
+  const [loaded, setStatus] = useState<boolean>(false);
+
+  document.onreadystatechange = () => {
+    setStatus(document.readyState === "complete");
+  };
+
   return (
     <>
       <div
         className={`w-full h-screen flex items-center justify-center static z-50 ${
-          loading ? "" : "hidden"
+          loaded ? "" : "hidden"
         }`}
       >
         <div>
@@ -28,7 +24,7 @@ const App: React.FC = () => {
           <img src={Logo} alt="Loading..." className="w-36" />
         </div>
       </div>
-      <div className={`${loading ? "hidden" : ""}`}>
+      <div className={`${loaded ? "hidden" : ""}`}>
         <Pages />
       </div>
     </>
