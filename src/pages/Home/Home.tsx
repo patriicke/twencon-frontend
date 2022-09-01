@@ -12,6 +12,7 @@ import {
   Search
 } from "@mui/icons-material";
 import ChatIcon from "../../components/ChatIcon/ChatIcon";
+import Messages from "../../components/Messages/Messages";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ export const Home: React.FC = () => {
   ];
   return (
     <div className="relative overflow-hidden flex flex-col md:flex-row-reverse">
-      <div className="h-[93vh] min-h-[40em] w-full overflow-auto md:h-screen">
+      <div className="h-[93vh] min-h-[40em] w-full overflow-auto md:h-screen flex flex-col">
         <div className="flex p-4 justify-between shadow-md md:shadow-none md:h-[8%] md:border-b md:min-h-[5em] md:px-5">
           <div
             className="w-10 flex items-center md:hidden"
@@ -99,7 +100,7 @@ export const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        <div>All data</div>
+        <div className="h-[92%]">{current === 3 && <Messages />}</div>
       </div>
 
       <div className="bg-white h-[7vh] min-h-[4em] w-full flex px-4 border-t-2 md:w-[4%] md:h-screen md:px-0 md:flex-col md:border-t-0 md:border-r md:min-w-[5em]">
