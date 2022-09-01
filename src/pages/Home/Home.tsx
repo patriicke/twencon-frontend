@@ -21,7 +21,7 @@ export const Home: React.FC = () => {
     useUserData(navigate, dispatch, userDataAction);
   }, []);
   useEffect(() => {
-    const previousCurrent = localStorage.getItem("current");
+    const previousCurrent = sessionStorage.getItem("current");
     if (previousCurrent) setCurrent(Number(previousCurrent));
   }, []);
   const navigations: {
@@ -67,7 +67,7 @@ export const Home: React.FC = () => {
             className="w-10 flex items-center md:hidden"
             onClick={() => {
               setCurrent(0);
-              localStorage.setItem("current", "0");
+              sessionStorage.setItem("current", "0");
             }}
           >
             <img src={Logo} />
@@ -108,7 +108,7 @@ export const Home: React.FC = () => {
             className="w-10 flex items-center cursor-pointer"
             onClick={() => {
               setCurrent(0);
-              localStorage.setItem("current", "0");
+              sessionStorage.setItem("current", "0");
             }}
           >
             <img src={Logo} />
@@ -122,7 +122,7 @@ export const Home: React.FC = () => {
                 className="cursor-pointer"
                 onClick={() => {
                   setCurrent(index);
-                  localStorage.setItem("current", index.toString());
+                  sessionStorage.setItem("current", index.toString());
                 }}
               >
                 {data.icons}
