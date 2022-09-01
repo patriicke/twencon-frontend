@@ -8,6 +8,7 @@ import {
   Apps,
   FavoriteBorder,
   Notifications,
+  Person,
   Search
 } from "@mui/icons-material";
 import ChatIcon from "../../components/ChatIcon/ChatIcon";
@@ -45,9 +46,15 @@ export const Home: React.FC = () => {
     },
     {
       icons: (
-        <div className="border-2 rounded-full p-[0.1em]">
-          <img src={userData?.profile} className="w-10 rounded-full" />
-        </div>
+        <>
+          {userData?.profile == null ? (
+            <Person className="text-[2.5em]" />
+          ) : (
+            <div className="border-2 rounded-full p-[0.1em]">
+              <img src={userData?.profile} className="w-10 rounded-full" />
+            </div>
+          )}
+        </>
       ),
       name: "Account"
     }
@@ -86,9 +93,6 @@ export const Home: React.FC = () => {
             <div className="flex items-center justify-end">
               <input className="w-[70%] outline-none" placeholder="Search..." />
               <Search className="text-[1.5em] cursor-pointer" />
-            </div>
-            <div className="hidden border-2 rounded-full p-[0.1em]">
-              <img src={userData?.profile} className="w-10 rounded-full" />
             </div>
           </div>
         </div>
