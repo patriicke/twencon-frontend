@@ -90,8 +90,11 @@ export const Home: React.FC = () => {
             })}
           </div>
           <div className="flex">
-            <div className="flex items-center justify-end">
-              <input className="w-[70%] outline-none" placeholder="Search..." />
+            <div className="flex items-center justify-end border p-2 rounded-md md:w-[20em] xl:w-[25em]">
+              <input
+                className="w-[95%] outline-none"
+                placeholder="Search Twencon"
+              />
               <Search className="text-[1.5em] cursor-pointer" />
             </div>
           </div>
