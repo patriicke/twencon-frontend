@@ -5,10 +5,8 @@ import { useUserData } from "../../hooks";
 import { userDataAction } from "../../features/user/userSlice";
 import Logo from "./../../assets/logo/logo.png";
 import {
-  AccountCircle,
   Apps,
   FavoriteBorder,
-  Menu,
   Notifications,
   Search
 } from "@mui/icons-material";
@@ -20,6 +18,10 @@ export const Home: React.FC = () => {
   const [current, setCurrent] = useState<number>(0);
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
+  }, []);
+  useEffect(() => {
+    const previousCurrent = localStorage.getItem("current");
+    if (previousCurrent) setCurrent(Number(previousCurrent));
   }, []);
   const navigations: {
     icons: any;
@@ -51,22 +53,29 @@ export const Home: React.FC = () => {
     }
   ];
   return (
-    <div className="relative overflow-hidden">
-      <div className="h-[93vh] min-h-[40em] overflow-auto">
-        <div className="flex p-2 px-4 justify-between shadow-lg">
-          <div className="w-10 flex items-center">
+    <div className="relative overflow-hidden flex flex-col md:flex-row-reverse">
+      <div className="h-[93vh] min-h-[40em] w-full overflow-auto md:h-screen">
+        <div className="flex p-4 justify-between shadow-md md:shadow-none md:h-[8%] md:border-b md:min-h-[5em] md:px-5">
+          <div
+            className="w-10 flex items-center md:hidden"
+            onClick={() => {
+              setCurrent(0);
+              localStorage.setItem("current", "0");
+            }}
+          >
             <img src={Logo} />
           </div>
-          <div className="hidden">
+          <div className="hidden md:flex ">
             {navigations.map((data, index) => {
               return (
                 <div key={index}>
                   {index === current && (
-                    <div className="" key={index}>
+                    <div
+                      className="flex items-center justify-center h-full space-x-3"
+                      key={index}
+                    >
                       <div>{data.icons}</div>
-                      <h1 className="hidden text-[1.5em] font-medium">
-                        {data.name}
-                      </h1>
+                      <h1 className="text-[1.5em] font-medium">{data.name}</h1>
                     </div>
                   )}
                 </div>
@@ -85,17 +94,29 @@ export const Home: React.FC = () => {
         </div>
         <div>All data</div>
       </div>
-      <div className="bg-white h-[7vh] min-h-[4em] w-full flex px-4 border-t-2 fixed bottom-0">
-        <div className="hidden">
-          <Menu className="text-[2.5em] text-gray-600" />
+
+      <div className="bg-white h-[7vh] min-h-[4em] w-full flex px-4 border-t-2 md:w-[4%] md:h-screen md:px-0 md:flex-col md:border-t-0 md:border-r md:min-w-[5em]">
+        <div className="hidden md:flex md:h-[8%] items-center justify-center">
+          <div
+            className="w-10 flex items-center cursor-pointer"
+            onClick={() => {
+              setCurrent(0);
+              localStorage.setItem("current", "0");
+            }}
+          >
+            <img src={Logo} />
+          </div>
         </div>
-        <div className="h-full w-full flex-shrink flex items-center justify-between">
+        <div className="h-full w-full flex-shrink flex items-center justify-between md:flex-col md:justify-center md:items-center md:h-[80%] md:space-y-10">
           {navigations.map((data, index) => {
             return (
               <div
                 key={index}
                 className="cursor-pointer"
-                onClick={() => setCurrent(index)}
+                onClick={() => {
+                  setCurrent(index);
+                  localStorage.setItem("current", index.toString());
+                }}
               >
                 {data.icons}
               </div>
