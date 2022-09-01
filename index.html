@@ -36,9 +36,12 @@
       .hide {
         display: hidden;
       }
+      .body {
+        overflow: hidden;
+      }
     </style>
   </head>
-  <body>
+  <body class="body">
     <div class="loading-container">
       <img
         src="./src/assets/loading/loading.gif"
@@ -53,8 +56,12 @@
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      const global = globalThis;
-    </script>
   </body>
+  <script>
+    const global = globalThis;
+    window.addEventListener("load", () => {
+      document.querySelector(".loading-container")?.classList.add("hidden");
+      document.querySelector("body")?.classList.remove("body");
+    });
+  </script>
 </html>
