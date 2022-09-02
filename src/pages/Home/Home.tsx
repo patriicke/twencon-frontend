@@ -102,7 +102,6 @@ export const Home: React.FC = () => {
         </div>
         <div className="h-[92%]">{current === 3 && <Messages />}</div>
       </div>
-
       <div className="bg-white h-[7vh] min-h-[4em] w-full flex px-4 border-t-2 md:w-[4%] md:h-screen md:px-0 md:flex-col md:border-t-0 md:border-r md:min-w-[5em]">
         <div className="hidden md:flex md:h-[8%] items-center justify-center">
           <div
