@@ -1,3 +1,4 @@
-const backend: string = "https://twencon.herokuapp.com"
+const backend: string = "http://localhost:5001";
 export default backend;
-// "http://localhost:5001"
+//https://twencon.herokuapp.com
+//http://localhost:5001

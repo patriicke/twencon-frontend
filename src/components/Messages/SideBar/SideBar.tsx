@@ -1,4 +1,4 @@
-import { Add, Search } from "@mui/icons-material";
+import { Add, Person, Search } from "@mui/icons-material";
 import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ChatContext } from "../../../context/chatContext";
@@ -119,11 +119,17 @@ const SideBar: React.FC = () => {
                   handlePrivateMemberMessage(data);
                 }}
               >
-                <div className="flex items-center space-x-1">
-                  <img
-                    src={data.profile}
-                    className="w-14 h-14 border rounded-full"
-                  />
+                <div className="flex items-center space-x-2">
+                  {data.profile === "icon" ? (
+                    <div className="rounded-full border-2">
+                      <Person className="text-black text-[3rem]" />
+                    </div>
+                  ) : (
+                    <img
+                      src={data.profile}
+                      className="w-14 h-14 border rounded-full"
+                    />
+                  )}
                   <p>{data.fullname}</p>
                 </div>
                 {user.newMessages[orderIds(data._id, user._id)] != null ? (
