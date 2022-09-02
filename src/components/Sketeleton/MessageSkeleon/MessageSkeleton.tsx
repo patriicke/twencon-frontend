@@ -6,7 +6,7 @@ const MessageSkeleton: React.FC = () => {
     <>
       {Array(6)
         .fill(1)
-        .map((data, index) => {
+        .map((data: any, index) => {
           return (
             <div className="flex flex-col gap-2 overflow-hidden" key={index}>
               <div className="w-1/2 flex items-center gap-2 self-start">

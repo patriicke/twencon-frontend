@@ -94,7 +94,7 @@ const SideBar: React.FC = () => {
                 <p>{room} </p>
                 {user?.newMessages[room] != null ? (
                   <p
-                    className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em] ${user.newMessages}`}
+                    className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em] ${user?.newMessages}`}
                   >
                     {user?.newMessages[room]}
                   </p>
@@ -137,9 +137,9 @@ const SideBar: React.FC = () => {
                 </div>
                 {user?.newMessages[orderIds(data._id, user._id)] != null ? (
                   <p
-                    className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em] ${user.newMessages}`}
+                    className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em] ${user?.newMessages}`}
                   >
-                    {user.newMessages[orderIds(data._id, user._id)]}
+                    {user?.newMessages[orderIds(data._id, user._id)]}
                   </p>
                 ) : null}
               </li>
