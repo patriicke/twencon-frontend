@@ -92,11 +92,11 @@ const SideBar: React.FC = () => {
                 }}
               >
                 <p>{room} </p>
-                {user.newMessages[room] != null ? (
+                {user?.newMessages[room] != null ? (
                   <p
                     className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em] ${user.newMessages}`}
                   >
-                    {user.newMessages[room]}
+                    {user?.newMessages[room]}
                   </p>
                 ) : null}
               </li>
@@ -116,7 +116,7 @@ const SideBar: React.FC = () => {
                 (currentRoom as string).includes(data._id)
                   ? "border bg-slate-200"
                   : ""
-              } ${user.fullname == data.fullname ? "hidden" : ""}
+              } ${user?.fullname == data?.fullname ? "hidden" : ""}
               `}
                 onClick={() => {
                   handlePrivateMemberMessage(data);
@@ -133,7 +133,7 @@ const SideBar: React.FC = () => {
                       className="w-14 h-14 border rounded-full"
                     />
                   )}
-                  <p>{data.fullname}</p>
+                  <p>{data?.fullname}</p>
                 </div>
                 {user?.newMessages[orderIds(data._id, user._id)] != null ? (
                   <p

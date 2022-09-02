@@ -6,15 +6,16 @@ import {
   Person,
   VideoCall
 } from "@mui/icons-material";
-import { Button, TextField } from "@mui/material";
+import { Button, Skeleton, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Picker from "emoji-picker-react";
 import { ChatContext } from "../../../context/chatContext";
+import MessageSkeleton from "../../Sketeleton/MessageSkeleon/MessageSkeleton";
 
 const Chat: React.FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const allData = useSelector((state) => state);
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.userData);
@@ -53,6 +54,7 @@ const Chat: React.FC = () => {
   useEffect(() => {
     chatSocket.off("room-messages").on("room-messages", (roomMessages: any) => {
       setMessages(roomMessages);
+      setLoading(false);
     });
     console.log(messages);
   }, [chatSocket]);
@@ -73,7 +75,6 @@ const Chat: React.FC = () => {
         setShowEmojiFile(false);
     });
   }, [showEmojiFile]);
-  //Date structuring
   const months = [
     "Jan",
     "Feb",
@@ -111,64 +112,70 @@ const Chat: React.FC = () => {
         className="h-[82%] w-full flex-shrink flex flex-col overflow-auto p-2 scroll-smooth"
         ref={element}
       >
-        {(messages as []).map(({ _id, messagesByDate }, index: number) => (
-          <div key={index} className="flex flex-col gap-[0.1em]">
-            {(messagesByDate as []).map((data: any, index) => {
-              return (
-                <div>
-                  {(messagesByDate[index - 1] as any)?.time !==
-                  (messagesByDate[index] as any)?.time ? (
-                    <div className="text-[0.8rem] text-center font-medium opacity-50">
-                      {`${formatDate(_id)} ${data?.time}`}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                  <div
-                    key={index}
-                    className={`flex ${
-                      data?.from?.fullname === user?.fullname
-                        ? "justify-end"
-                        : "justify-start"
-                    }`}
-                  >
-                    <div className={`px-2 break-words max-w-[50%] flex gap-1`}>
-                      {data?.from?.fullname !== user?.fullname && (
-                        <>
-                          {data?.from?.profile === "icon" ? (
-                            <div className="border rounded-full">
-                              <Person className="text-[2em]" />
-                            </div>
-                          ) : (
-                            <img
-                              src={data?.from?.profile}
-                              className={`${
-                                (messagesByDate[index - 1] as any)?.time !==
-                                (messagesByDate[index] as any)?.time
-                                  ? ""
-                                  : "hidden"
-                              } w-10 h-10 rounded-full border`}
-                            />
-                          )}
-                        </>
-                      )}
-
+        {loading ? (
+          <MessageSkeleton />
+        ) : (
+          (messages as []).map(({ _id, messagesByDate }, index: number) => (
+            <div key={index} className="flex flex-col gap-[0.1em]">
+              {(messagesByDate as []).map((data: any, index) => {
+                return (
+                  <div key={index}>
+                    {(messagesByDate[index - 1] as any)?.time !==
+                    (messagesByDate[index] as any)?.time ? (
+                      <div className="text-[0.8rem] text-center font-medium opacity-50">
+                        {`${formatDate(_id)} ${data?.time}`}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    <div
+                      key={index}
+                      className={`flex ${
+                        data?.from?.fullname === user?.fullname
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
                       <div
-                        className={`${
-                          data?.from?.fullname === user?.fullname
-                            ? "bg-[#1877F2] text-white  "
-                            : "bg-[#E4E6EB]"
-                        } text-[1rem] rounded-2xl px-4 py-2 font-light`}
+                        className={`px-2 break-words max-w-[50%] flex gap-1`}
                       >
-                        {data?.content}
+                        {data?.from?.fullname !== user?.fullname && (
+                          <>
+                            {data?.from?.profile === "icon" ? (
+                              <div className="border rounded-full">
+                                <Person className="text-[2em]" />
+                              </div>
+                            ) : (
+                              <img
+                                src={data?.from?.profile}
+                                className={`${
+                                  (messagesByDate[index - 1] as any)?.time !==
+                                  (messagesByDate[index] as any)?.time
+                                    ? ""
+                                    : "hidden"
+                                } w-10 h-10 rounded-full border`}
+                              />
+                            )}
+                          </>
+                        )}
+
+                        <div
+                          className={`${
+                            data?.from?.fullname === user?.fullname
+                              ? "bg-[#1877F2] text-white  "
+                              : "bg-[#E4E6EB]"
+                          } text-[1rem] rounded-2xl px-4 py-2 font-light`}
+                        >
+                          {data?.content}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+                );
+              })}
+            </div>
+          ))
+        )}
       </div>
       <div
         className={`flex space-x-2 px-2 flex-shrink flex-grow bottom-3 right-0 left-0 items-center justify-center h-[10%] border `}
