@@ -135,7 +135,7 @@ const SideBar: React.FC = () => {
                   )}
                   <p>{data.fullname}</p>
                 </div>
-                {user.newMessages[orderIds(data._id, user._id)] != null ? (
+                {user?.newMessages[orderIds(data._id, user._id)] != null ? (
                   <p
                     className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em] ${user.newMessages}`}
                   >

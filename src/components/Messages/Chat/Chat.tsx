@@ -50,10 +50,12 @@ const Chat: React.FC = () => {
     chatSocket.emit("message-room", roomId, message, user, time, todayDate);
     setMessage("");
   };
-  chatSocket.off("room-messages").on("room-messages", (roomMessages: any) => {
-    setMessages(roomMessages);
-  });
-  console.log(messages);
+  useEffect(() => {
+    chatSocket.off("room-messages").on("room-messages", (roomMessages: any) => {
+      setMessages(roomMessages);
+    });
+    console.log(messages);
+  }, [chatSocket]);
   const element: any = useRef(null);
   useEffect(() => {
     element.current.scrollTop = element.current.scrollHeight;
@@ -71,6 +73,28 @@ const Chat: React.FC = () => {
         setShowEmojiFile(false);
     });
   }, [showEmojiFile]);
+  //Date structuring
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+  const formatDate = (date: string): string => {
+    let dateArray: string[] = date.split("/");
+    const month: number = Number(dateArray[0]) - 1;
+    const day = dateArray[1];
+    const year = dateArray[2];
+    return `${day} ${months[month]} ${year}`;
+  };
   return (
     <div className="h-[100%] w-[70%] xl:w-[50%] hidden md:block relative border-r overflow-hidden">
       <div className="bg-gray-100 h-[8%] flex px-5 items-center justify-between shadow-xl">
@@ -87,72 +111,64 @@ const Chat: React.FC = () => {
         className="h-[82%] w-full flex-shrink flex flex-col overflow-auto p-2 scroll-smooth"
         ref={element}
       >
-        {(messages as []).map(({ _id, messagesByDate }, index) => {
-          return (
-            <div key={index}>
-              <p>{_id}</p>
-              <div className={`flex flex-col space-y-2`}>
-                {(messagesByDate as any).map((data: any, index: number) => {
-                  return (
-                    <div
-                      key={index}
-                      className={`${
-                        data?.from?.fullname == user?.fullname
-                          ? "flex self-end space-x-2"
-                          : "flex self-start flex-row-reverse gap-2"
-                      } 
-                     
-                      `}
-                    >
-                      <div
-                        className={`p-2 rounded-[2em] ${
-                          data?.from?.fullname == user?.fullname
-                            ? `bg-[#1877F2] text-white
-                            ${
-                              (messagesByDate[index - 1] as any)?.from
-                                .profile !==
-                              (messagesByDate[index] as any)?.from?.profile
-                                ? ""
-                                : "mr-12"
-                            }
-                            `
-                            : ` bg-[#E4E6EB] ${
-                                (messagesByDate[index - 1] as any)?.from
-                                  .profile !==
-                                (messagesByDate[index] as any)?.from?.profile
-                                  ? ""
-                                  : "ml-12"
-                              }
-                            
-                            `
-                        } text-[1rem] rounded-2xl px-4 py-2 font-light
-
-                        `}
-                      >
-                        {data.content}
-                      </div>
-                      {data?.from?.profile === "icon" ? (
-                        <div className="border rounded-full">
-                          <Person className="text-[2em]" />
-                        </div>
-                      ) : (
-                        <img
-                          src={data?.from?.profile}
-                          className={`${
-                            (messagesByDate[index - 1] as any)?.from.profile !==
-                            (messagesByDate[index] as any)?.from?.profile
-                              ? ""
-                              : "hidden"
-                          } w-10 h-10 rounded-full border`}
-                        />
-                      )}
+        {(messages as []).map(({ _id, messagesByDate }, index: number) => (
+          <div key={index} className="flex flex-col gap-[0.1em]">
+            {(messagesByDate as []).map((data: any, index) => {
+              return (
+                <div>
+                  {(messagesByDate[index - 1] as any)?.time !==
+                  (messagesByDate[index] as any)?.time ? (
+                    <div className="text-[0.8rem] text-center font-medium opacity-50">
+                      {`${formatDate(_id)} ${data?.time}`}
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
+                  ) : (
+                    <></>
+                  )}
+                  <div
+                    key={index}
+                    className={`flex ${
+                      data?.from?.fullname === user?.fullname
+                        ? "justify-end"
+                        : "justify-start"
+                    }`}
+                  >
+                    <div className={`px-2 break-words max-w-[50%] flex gap-1`}>
+                      {data?.from?.fullname !== user?.fullname && (
+                        <>
+                          {data?.from?.profile === "icon" ? (
+                            <div className="border rounded-full">
+                              <Person className="text-[2em]" />
+                            </div>
+                          ) : (
+                            <img
+                              src={data?.from?.profile}
+                              className={`${
+                                (messagesByDate[index - 1] as any)?.time !==
+                                (messagesByDate[index] as any)?.time
+                                  ? ""
+                                  : "hidden"
+                              } w-10 h-10 rounded-full border`}
+                            />
+                          )}
+                        </>
+                      )}
+
+                      <div
+                        className={`${
+                          data?.from?.fullname === user?.fullname
+                            ? "bg-[#1877F2] text-white  "
+                            : "bg-[#E4E6EB]"
+                        } text-[1rem] rounded-2xl px-4 py-2 font-light`}
+                      >
+                        {data?.content}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
       <div
         className={`flex space-x-2 px-2 flex-shrink flex-grow bottom-3 right-0 left-0 items-center justify-center h-[10%] border `}
