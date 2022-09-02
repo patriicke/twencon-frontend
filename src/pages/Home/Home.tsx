@@ -90,8 +90,8 @@ export const Home: React.FC = () => {
               );
             })}
           </div>
-          <div className="flex">
-            <div className="flex items-center justify-end border p-2 rounded-md md:w-[20em] xl:w-[25em]">
+          <div className="flex items-center">
+            <div className="flex items-center justify-end border p-2 rounded-md md:w-[20em] xl:w-[25em] max-h-[3em]">
               <input
                 className="w-[95%] outline-none"
                 placeholder="Search Twencon"

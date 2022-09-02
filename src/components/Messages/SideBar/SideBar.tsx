@@ -35,6 +35,7 @@ const SideBar: React.FC = () => {
         method: "GET"
       });
       const response = await request.json();
+      joinRoom(response[0]);
       setRooms(response);
     } catch (error) {
       console.log(error);
@@ -63,19 +64,21 @@ const SideBar: React.FC = () => {
     <div className="w-1/4 h-full border p-3">
       <div className="flex justify-between items-center">
         <div className="font-medium text-[1.3em]">Chats</div>
-        <div className="flex  justify-between items-center flex-shrink">
+        <div className="flex  justify-between items-center flex-shrink space-x-1">
           <div className="border p-1 rounded-md">
             <input
-              className="border-none outline-none"
+              className="border-none outline-none hidden"
               placeholder="Search..."
             />
             <Search className="cursor-pointer" />
           </div>
-          <Add className="cursor-pointer" />
+          <div className="p-1 border rounded-md">
+            <Add className="cursor-pointer" />
+          </div>
         </div>
       </div>
       <div className="hidden md:block">
-        <h1 className="text-[1.3em] font-semibold">Available rooms</h1>
+        <h1 className="p-1">Groups</h1>
         <ul>
           {(rooms as []).map((room, index) => {
             return (
@@ -100,7 +103,7 @@ const SideBar: React.FC = () => {
             );
           })}
         </ul>
-        <h1 className="text-[1.3em] font-semibold">Members</h1>
+        <h1 className="pt-2">People</h1>
         <ul className="flex flex-col space-y-2">
           {(members as []).map((data: any, index) => {
             {
