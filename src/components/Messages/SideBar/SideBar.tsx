@@ -2,6 +2,10 @@ import { Add, Person, Search } from "@mui/icons-material";
 import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ChatContext } from "../../../context/chatContext";
+import {
+  addNotifications,
+  resetNotifications
+} from "../../../features/user/userSlice";
 
 const SideBar: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
@@ -16,18 +20,20 @@ const SideBar: React.FC = () => {
     setRooms,
     setPrivateMemberMessages
   } = useContext<any>(ChatContext);
-  useEffect(() => {
-    chatSocket.off("new-user").on("new-user", (payload: any) => {
-      setMembers(payload);
-    });
-    console.log(members);
-  }, [members]);
+  chatSocket.off("new-user").on("new-user", (payload: any) => {
+    setMembers(payload);
+  });
+  chatSocket.off("notifications").on("notifications", (room: any) => {
+    if (currentRoom !== room) dispatch(addNotifications(room));
+  });
   const joinRoom = (room: any, isPublic = true) => {
     chatSocket.emit("join-room", room, currentRoom);
     setCurrentRoom(room);
     if (isPublic) {
       setPrivateMemberMessages(null);
     }
+    //Reset All notifications in this room
+    dispatch(resetNotifications(room));
   };
   const getRooms = async () => {
     try {

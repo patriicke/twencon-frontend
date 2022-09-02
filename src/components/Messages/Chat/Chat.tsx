@@ -96,6 +96,7 @@ const Chat: React.FC = () => {
     const year = dateArray[2];
     return `${day} ${months[month]} ${year}`;
   };
+  console.log(privateMemberMessages);
   return (
     <div className="h-[100%] w-[70%] xl:w-[50%] hidden md:block relative border-r overflow-hidden">
       <div className="bg-gray-100 h-[8%] flex px-5 items-center justify-between shadow-xl">
@@ -137,7 +138,10 @@ const Chat: React.FC = () => {
                       }`}
                     >
                       <div
-                        className={`px-2 break-words max-w-[50%] flex gap-1`}
+                        className={`px-2 break-words max-w-[50%] flex gap-1 ${
+                          data?.from?.fullname !== user?.fullname && (messagesByDate[index - 1] as any)?.time ===
+                          (messagesByDate[index] as any)?.time &&"ml-11"
+                        }`}
                       >
                         {data?.from?.fullname !== user?.fullname && (
                           <>

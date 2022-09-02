@@ -5,14 +5,14 @@ const userSlice = createSlice({
   initialState: {},
   reducers: {
     addNotifications: (state: any, { payload }) => {
-      if (state.newMessages[payload]) {
-        state.newMessages[payload] = state.newMessages[payload] + 1;
+      if (state.userData.newMessages[payload]) {
+        state.userData.newMessages[payload] = state.userData.newMessages[payload] + 1;
       } else {
-        state.newMessages[payload] = 1;
+        state.userData.newMessages[payload] = 1;
       }
     },
     resetNotifications: (state: any, { payload }) => {
-      delete state.newMessages[payload];
+      delete state.userData.newMessages[payload];
     },
     userDataAction: (state: any, action) => {
       return {
