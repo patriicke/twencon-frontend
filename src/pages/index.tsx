@@ -4,7 +4,7 @@ import PageNotFound from "./404/PageNotFound";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import Home from "./Home";
-import { AppContext, socket } from "./../context/appContext";
+import { AppContext, socket } from "../context/chatContext";
 import VerificationCode from "./Verification/Create/VerificationCode";
 import Success from "./Success/Create/Success";
 import ResetPassword from "./Reset/ResetPassword";
