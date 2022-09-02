@@ -48,7 +48,7 @@ export const Home: React.FC = () => {
     {
       icons: (
         <>
-          {userData?.profile == null ? (
+          {userData?.profile == "icon" ? (
             <Person className="text-[2.5em]" />
           ) : (
             <div className="border-2 rounded-full p-[0.1em]">
