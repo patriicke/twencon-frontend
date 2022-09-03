@@ -47,7 +47,7 @@ const SideBar: React.FC = () => {
   const getRooms = async () => {
     try {
       const request = await api.get("/rooms");
-      const response = await request.json();
+      const response = await request.data;
       setRooms(response);
       joinRoom(response[0]);
     } catch (error) {
