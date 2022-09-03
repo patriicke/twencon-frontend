@@ -76,7 +76,6 @@ const SideBar: React.FC = () => {
     const roomId = orderIds(user._id, member._id);
     joinRoom(roomId, false);
   };
-  console.log(messages);
   return (
     <div className="w-1/4 h-full border p-3 overflow-auto">
       <div className="flex justify-between items-center">

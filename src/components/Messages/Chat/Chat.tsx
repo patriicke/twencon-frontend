@@ -56,7 +56,6 @@ const Chat: React.FC = () => {
       setMessages(roomMessages);
       setLoading(false);
     });
-    console.log(messages);
   }, [chatSocket]);
   const element: any = useRef(null);
   useEffect(() => {
@@ -96,7 +95,6 @@ const Chat: React.FC = () => {
     const year = dateArray[2];
     return `${day} ${months[month]} ${year}`;
   };
-  console.log(privateMemberMessages);
   return (
     <div className="h-[100%] w-[70%] xl:w-[50%] hidden md:block relative border-r overflow-hidden">
       <div className="bg-gray-100 h-[8%] flex px-5 items-center justify-between shadow-xl">
