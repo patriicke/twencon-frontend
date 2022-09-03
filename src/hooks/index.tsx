@@ -116,3 +116,9 @@ export const useUserData = async (
 export const restPassword = async () => {
   const request = await api.post("/reset/verify");
 };
+
+/* Reset all notifications from a room */
+
+export const resetNotificationsFromDatabase = async (email: any, room: any) => {
+  const request = await api.post("/notifications/reset", { email, room });
+};

@@ -6,6 +6,7 @@ import {
   addNotifications,
   resetNotifications
 } from "../../../features/user/userSlice";
+import { resetNotificationsFromDatabase } from "../../../hooks";
 
 const SideBar: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
@@ -24,7 +25,9 @@ const SideBar: React.FC = () => {
     setMembers(payload);
   });
   chatSocket.off("notifications").on("notifications", (room: any) => {
-    if (currentRoom !== room) dispatch(addNotifications(room));
+    if (currentRoom !== room) {
+      dispatch(addNotifications(room));
+    }
   });
   const joinRoom = (room: any, isPublic = true) => {
     chatSocket.emit("join-room", room, currentRoom);
@@ -34,6 +37,10 @@ const SideBar: React.FC = () => {
     }
     //Reset All notifications in this room
     dispatch(resetNotifications(room));
+    const roomNotifications = user?.newMessages[room];
+    if (roomNotifications) {
+      resetNotificationsFromDatabase(user?.email, room);
+    }
   };
   const getRooms = async () => {
     try {
@@ -100,7 +107,8 @@ const SideBar: React.FC = () => {
                 <p>{room} </p>
                 {user?.newMessages[room] != null ? (
                   <p
-                    className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em] ${user?.newMessages}`}
+                    className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em]
+                    `}
                   >
                     {user?.newMessages[room]}
                   </p>
