@@ -13,8 +13,8 @@ const MessageSkeleton: React.FC = () => {
                 <Skeleton className="h-[3em] w-[3em]" variant="circular" />
                 <Skeleton className="h-[4em] w-[12em]" variant="text" />
               </div>
-              <div className="w-1/3 self-end">
-                <Skeleton className="h-[4em] " variant="text" />
+              <div className="w-1/3 self-end ">
+                <Skeleton className="h-[4em]" variant="text" />
               </div>
             </div>
           );
