@@ -12,6 +12,7 @@ const SideBar: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
   const dispatch = useDispatch();
   const {
+    messages,
     chatSocket,
     members,
     setMembers,
@@ -76,6 +77,7 @@ const SideBar: React.FC = () => {
     const roomId = orderIds(user._id, member._id);
     joinRoom(roomId, false);
   };
+  console.log(messages);
   return (
     <div className="w-1/4 h-full border p-3">
       <div className="flex justify-between items-center">
@@ -95,19 +97,26 @@ const SideBar: React.FC = () => {
       </div>
       <div className="hidden md:block">
         <h1 className="p-1">Groups</h1>
-        <ul>
+        <ul className="flex flex-col space-y-1">
           {(rooms as []).map((room, index) => {
             return (
               <li
                 key={index}
-                className={`text-red-500 p-2 cursor-pointer flex items-center justify-between border ${
+                className={`p-2 cursor-pointer flex items-center justify-between border ${
                   room === currentRoom ? "border bg-slate-200" : ""
                 }`}
                 onClick={() => {
                   joinRoom(room);
                 }}
               >
-                <p>{room} </p>
+                <div className="flex space-x-3">
+                  <div className="rounded-full border-2 p-2 px-4 text-[1.5em] font-bold text-black font-notable flex items-center justify-center">
+                    {(room as string)[0].toUpperCase()}
+                  </div>
+                  <div className="flex items-center">
+                    <p>{room}</p>
+                  </div>
+                </div>
                 {user?.newMessages[room] != null ? (
                   <p
                     className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em]
@@ -128,7 +137,7 @@ const SideBar: React.FC = () => {
             return (
               <li
                 key={index}
-                className={`border p-2 text-red-500 cursor-pointer flex justify-between items-center 
+                className={`border p-2 cursor-pointer flex justify-between items-center 
               ${
                 (currentRoom as string).includes(data._id)
                   ? "border bg-slate-200"
