@@ -109,7 +109,7 @@ const SideBar: React.FC = () => {
                 }}
               >
                 <div className="flex space-x-3">
-                  <div className="rounded-full border-2 p-2 px-4 text-[1.5em] font-bold text-black font-notable flex items-center justify-center">
+                  <div className="rounded-full border-2 p-2 px-4 text-[1.4em] font-bold text-black flex items-center justify-center">
                     {(room as string)[0].toUpperCase()}
                   </div>
                   <div className="flex items-center">

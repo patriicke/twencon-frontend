@@ -7,9 +7,6 @@ module.exports = {
         xs: "200px",
         smaller: "200px"
       },
-      fontFamily: {
-        "notable": "'Notable', sans-serif"
-      },
       colors: {
         "dark-blue": "#170D35",
         "light-blue": "#4200FE",
