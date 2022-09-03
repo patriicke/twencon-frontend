@@ -206,7 +206,7 @@ const Chat: React.FC = () => {
                               <img
                                 src={data?.from?.profile}
                                 className={`${
-                                  data?.from?.fullname !== user?.fullname &&
+                                  data?.from?.email !== user?.email &&
                                   (messagesByDate[index - 1] as any)?.time ===
                                     (messagesByDate[index] as any)?.time &&
                                   (messagesByDate[index - 1] as any)?.from
@@ -224,12 +224,16 @@ const Chat: React.FC = () => {
                             <span
                               className={`px-2 opacity-60 font-light
                             ${
-                              data?.from?.fullname !== user?.fullname &&
+                              data?.from?.email !== user?.email &&
                               (messagesByDate[index - 1] as any)?.time ===
                                 (messagesByDate[index] as any)?.time &&
                               (messagesByDate[index - 1] as any)?.from
                                 ?.email ===
                                 (messagesByDate[index] as any)?.from?.email &&
+                              "hidden"
+                            }
+                            ${
+                              data?.from?.username === user?.username &&
                               "hidden"
                             }
                             `}
