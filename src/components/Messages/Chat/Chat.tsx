@@ -19,7 +19,7 @@ const Chat: React.FC = () => {
   const allData = useSelector((state) => state);
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.userData);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
   const {
     chatSocket,
     currentRoom,
@@ -41,6 +41,10 @@ const Chat: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!message) return;
+    if (message.trim().length == 0) {
+      setMessage("");
+      return;
+    }
     const today = new Date();
     const minutes: string =
       today.getMinutes() < 10
@@ -48,7 +52,14 @@ const Chat: React.FC = () => {
         : today.getMinutes().toString();
     const time: string = today.getHours().toString() + ":" + minutes;
     const roomId = currentRoom;
-    chatSocket.emit("message-room", roomId, message, user, time, todayDate);
+    chatSocket.emit(
+      "message-room",
+      roomId,
+      message.trimEnd().trimStart(),
+      user,
+      time,
+      todayDate
+    );
     setMessage("");
   };
   useEffect(() => {
@@ -163,50 +174,79 @@ const Chat: React.FC = () => {
                       }`}
                     >
                       <div
-                        className={`px-2 break-words max-w-[50%] flex gap-1 ${
+                        className={`px-2 break-words max-w-[50%] flex gap-1  ${
                           data?.from?.fullname !== user?.fullname &&
                           (messagesByDate[index - 1] as any)?.time ===
                             (messagesByDate[index] as any)?.time &&
+                          (messagesByDate[index - 1] as any)?.from?.email ===
+                            (messagesByDate[index] as any)?.from?.email &&
                           "ml-11"
                         }`}
                       >
                         {data?.from?.fullname !== user?.fullname && (
-                          <>
+                          <div>
                             {data?.from?.profile === "icon" ? (
                               <div
-                                className={`border rounded-full
-                              ${
-                                (messagesByDate[index - 1] as any)?.time !==
-                                (messagesByDate[index] as any)?.time
-                                  ? ""
-                                  : "hidden"
-                              }
+                                className={`border rounded-full 
+                                ${
+                                  data?.from?.fullname !== user?.fullname &&
+                                  (messagesByDate[index - 1] as any)?.time ===
+                                    (messagesByDate[index] as any)?.time &&
+                                  (messagesByDate[index - 1] as any)?.from
+                                    ?.email ===
+                                    (messagesByDate[index] as any)?.from
+                                      ?.email &&
+                                  "hidden"
+                                }
                               `}
                               >
-                                <Person className="text-[2.5em]" />
+                                <Person className="text-[2.5em] " />
                               </div>
                             ) : (
                               <img
                                 src={data?.from?.profile}
                                 className={`${
-                                  (messagesByDate[index - 1] as any)?.time !==
-                                  (messagesByDate[index] as any)?.time
-                                    ? ""
-                                    : "hidden"
+                                  data?.from?.fullname !== user?.fullname &&
+                                  (messagesByDate[index - 1] as any)?.time ===
+                                    (messagesByDate[index] as any)?.time &&
+                                  (messagesByDate[index - 1] as any)?.from
+                                    ?.email ===
+                                    (messagesByDate[index] as any)?.from
+                                      ?.email &&
+                                  "hidden"
                                 } w-10 h-10 rounded-full border`}
                               />
                             )}
-                          </>
+                          </div>
                         )}
-
-                        <div
-                          className={`${
-                            data?.from?.fullname === user?.fullname
-                              ? "bg-[#1877F2] text-white  "
-                              : "bg-[#E4E6EB]"
-                          } text-[1rem] rounded-2xl px-4 py-2 font-light`}
-                        >
-                          {data?.content}
+                        <div>
+                          {!privateMemberMessages && (
+                            <span
+                              className={`px-2 opacity-60 font-light
+                            ${
+                              data?.from?.fullname !== user?.fullname &&
+                              (messagesByDate[index - 1] as any)?.time ===
+                                (messagesByDate[index] as any)?.time &&
+                              (messagesByDate[index - 1] as any)?.from
+                                ?.email ===
+                                (messagesByDate[index] as any)?.from?.email &&
+                              "hidden"
+                            }
+                            `}
+                            >
+                              {data?.from?.username}
+                            </span>
+                          )}
+                          <span
+                            id="message"
+                            className={`${
+                              data?.from?.fullname === user?.fullname
+                                ? "bg-[#1877F2] text-white"
+                                : "bg-[#E4E6EB]"
+                            } text-[1rem] rounded-2xl px-4 py-2 font-light flex flex-col `}
+                          >
+                            {data?.content}
+                          </span>
                         </div>
                       </div>
                     </div>
