@@ -78,7 +78,7 @@ const SideBar: React.FC = () => {
   };
   console.log(messages);
   return (
-    <div className="w-1/4 h-full border p-3">
+    <div className="w-1/4 h-full border p-3 overflow-auto">
       <div className="flex justify-between items-center">
         <div className="font-medium text-[1.3em]">Chats</div>
         <div className="flex  justify-between items-center flex-shrink space-x-1">
@@ -109,7 +109,7 @@ const SideBar: React.FC = () => {
                 }}
               >
                 <div className="flex space-x-3">
-                  <div className="rounded-full border-2 p-2 px-4 text-[1.4em] font-bold text-black flex items-center justify-center">
+                  <div className="rounded-full border-2 p-2 px-[1.1rem] text-[1.4em] font-bold text-black flex items-center justify-center">
                     {(room as string)[0].toUpperCase()}
                   </div>
                   <div className="flex items-center">

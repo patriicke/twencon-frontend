@@ -1,5 +1,7 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
+import ChatMembers from "./ChatMembers";
+import SharedFiles from "./SharedFiles";
 
 const Details: React.FC = () => {
   const chatDetails: string[] = ["Chat Members", "Shared Files"];
@@ -21,7 +23,10 @@ const Details: React.FC = () => {
           );
         })}
       </div>
-      <div className="h-[92%] w-full"></div>
+      <div className="h-[92%] w-full">
+        {current === 0 && <ChatMembers />}
+        {current === 1 && <SharedFiles />}
+      </div>
     </div>
   );
 };
