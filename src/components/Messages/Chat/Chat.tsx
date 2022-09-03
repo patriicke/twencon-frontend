@@ -97,11 +97,38 @@ const Chat: React.FC = () => {
   };
   return (
     <div className="h-[100%] w-[70%] xl:w-[50%] hidden md:block relative border-r overflow-hidden">
-      <div className="bg-gray-100 h-[8%] flex px-5 items-center justify-between shadow-xl">
-        <div className="text-[0.8em] font-normal flex items-center space-x-4">
-          <Person className="text-[3em] rounded-full bg-white" />
-          <p></p>
-        </div>
+      <div className="bg-gray-100 h-[8%] flex px-5 items-center justify-between shadow-xl relative">
+        {!privateMemberMessages ? (
+          <>
+            <div className="flex space-x-3">
+              <div className="rounded-full border-2 p-2 px-[1.1rem] text-[1.4em] font-bold text-black flex items-center justify-center">
+                {(currentRoom as string)[0].toUpperCase()}
+              </div>
+              <div className="flex items-center">
+                <p className="text-[1rem] ">{currentRoom}</p>
+              </div>
+              <p className="absolute bottom-0 right-[1.1rem] text-[0.8em] opacity-70 text-light-blue">
+                Public Group
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center space-x-2">
+              {privateMemberMessages.profile === "icon" ? (
+                <div className="rounded-full border-2">
+                  <Person className="text-black text-[3rem]" />
+                </div>
+              ) : (
+                <img
+                  src={privateMemberMessages?.profile}
+                  className="w-14 h-14 border rounded-full"
+                />
+              )}
+              <p>{privateMemberMessages?.fullname}</p>
+            </div>
+          </>
+        )}
         <div className="flex space-x-3">
           <Call className="text-[1.7em] cursor-pointer" />
           <VideoCall className="text-[1.7em] cursor-pointer" />
