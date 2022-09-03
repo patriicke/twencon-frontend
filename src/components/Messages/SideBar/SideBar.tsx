@@ -48,18 +48,21 @@ const SideBar: React.FC = () => {
         method: "GET"
       });
       const response = await request.json();
-      joinRoom(response[0]);
       setRooms(response);
+      joinRoom(response[0]);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    setCurrentRoom("general");
-    getRooms();
-    chatSocket.emit("join_room", "general", "");
-    setPrivateMemberMessages(null);
-    chatSocket.emit("new-user");
+    const getData = async () => {
+      await getRooms();
+      setCurrentRoom("general");
+      chatSocket.emit("join_room", "general", "");
+      setPrivateMemberMessages(null);
+      chatSocket.emit("new-user");
+    };
+    getData();
   }, []);
   const orderIds = (id1: any, id2: any) => {
     if (id1 > id2) {
@@ -149,7 +152,7 @@ const SideBar: React.FC = () => {
                   )}
                   <p>{data?.fullname}</p>
                 </div>
-                {user?.newMessages[orderIds(data._id, user._id)] != null ? (
+                {user?.newMessages[orderIds(data._id, user?._id)] != null ? (
                   <p
                     className={`bg-blue-500 w-5 h-5 text-white flex items-center justify-center rounded-full text-[0.8em] ${user?.newMessages}`}
                   >
