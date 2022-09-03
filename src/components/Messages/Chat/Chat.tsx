@@ -139,15 +139,26 @@ const Chat: React.FC = () => {
                     >
                       <div
                         className={`px-2 break-words max-w-[50%] flex gap-1 ${
-                          data?.from?.fullname !== user?.fullname && (messagesByDate[index - 1] as any)?.time ===
-                          (messagesByDate[index] as any)?.time &&"ml-11"
+                          data?.from?.fullname !== user?.fullname &&
+                          (messagesByDate[index - 1] as any)?.time ===
+                            (messagesByDate[index] as any)?.time &&
+                          "ml-11"
                         }`}
                       >
                         {data?.from?.fullname !== user?.fullname && (
                           <>
                             {data?.from?.profile === "icon" ? (
-                              <div className="border rounded-full">
-                                <Person className="text-[2em]" />
+                              <div
+                                className={`border rounded-full
+                              ${
+                                (messagesByDate[index - 1] as any)?.time !==
+                                (messagesByDate[index] as any)?.time
+                                  ? ""
+                                  : "hidden"
+                              }
+                              `}
+                              >
+                                <Person className="text-[2.5em]" />
                               </div>
                             ) : (
                               <img
