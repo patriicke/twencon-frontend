@@ -2,6 +2,7 @@ import { Add, Person, Search } from "@mui/icons-material";
 import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ChatContext } from "../../../context/chatContext";
+import api from "./../../../api/";
 import {
   addNotifications,
   resetNotifications
@@ -45,9 +46,7 @@ const SideBar: React.FC = () => {
   };
   const getRooms = async () => {
     try {
-      const request = await fetch("http://localhost:5001/rooms", {
-        method: "GET"
-      });
+      const request = await api.get("/rooms");
       const response = await request.json();
       setRooms(response);
       joinRoom(response[0]);
