@@ -82,7 +82,6 @@ export const useResendCreateVerificationCode = async (
     const request = await api.post("/verification/create/resend", data);
     const response = request.data;
     setResend(true);
-    console.log(response);
     localStorage.setItem("v_reference", response.v_reference);
     setLoading(false);
     return response;

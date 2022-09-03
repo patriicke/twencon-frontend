@@ -20,7 +20,6 @@ const ResetPassword: React.FC = () => {
       }
       const request = await api.post("/verification/reset", { email });
       const response = request.data;
-      console.log(response);
       setLoading(false);
       localStorage.setItem("r_reference", response.r_reference);
       navigate("/reset/verification ");
