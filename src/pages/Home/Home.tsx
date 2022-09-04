@@ -22,9 +22,38 @@ export const Home: React.FC = () => {
     useUserData(navigate, dispatch, userDataAction);
   }, []);
   useEffect(() => {
+    const title: string = "Twencon";
+    switch (current) {
+      case 0:
+        document.title = title;
+        break;
+      case 1:
+        document.title = `${title} Favorite`;
+        break;
+      case 2:
+        document.title = `${title} Notification`;
+      case 3:
+        document.title = `${title} Chats`;
+        break;
+      case 4:
+        document.title = `${title} Account`;
+        break;
+      default:
+        document.title = "Twencon";
+    }
+  }, [current]);
+  useEffect(() => {
     const previousCurrent = sessionStorage.getItem("current");
     if (previousCurrent) setCurrent(Number(previousCurrent));
   }, []);
+  const [messageNotifications, setMessageNotifications] = useState<number>(0);
+  useEffect(() => {
+    let count = 0;
+    for (const room in userData?.newMessages) {
+      count += userData?.newMessages[room];
+    }
+    setMessageNotifications(count);
+  }, [userData]);
   const navigations: {
     icons: any;
     name: string;
@@ -42,7 +71,14 @@ export const Home: React.FC = () => {
       name: "Notifications"
     },
     {
-      icons: <ChatIcon className="w-8" />,
+      icons: (
+        <div className="relative">
+          <ChatIcon className="w-8" />
+          <span className="absolute text-[0.8em] -top-2 -right-3 bg-blue-500 text-white px-1 rounded-full">
+            {messageNotifications == 0 ? null : messageNotifications}
+          </span>
+        </div>
+      ),
       name: "Messages"
     },
     {
@@ -60,6 +96,7 @@ export const Home: React.FC = () => {
       name: "Account"
     }
   ];
+
   return (
     <div className="relative overflow-hidden flex flex-col md:flex-row-reverse">
       <div className="h-[93vh] min-h-[40em] w-full overflow-auto md:h-screen flex flex-col">

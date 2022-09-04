@@ -13,7 +13,6 @@ const SideBar: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
   const dispatch = useDispatch();
   const {
-    messages,
     chatSocket,
     members,
     setMembers,
