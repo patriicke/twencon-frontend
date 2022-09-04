@@ -13,6 +13,7 @@ import {
 } from "@mui/icons-material";
 import ChatIcon from "../../components/ChatIcon/ChatIcon";
 import Messages from "../../components/Messages/Messages";
+import PhotoSkeleton from "../../components/Sketeleton/PhotoSkeleton/PhotoSkeleton";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -86,10 +87,12 @@ export const Home: React.FC = () => {
         <>
           {userData?.profile == "icon" ? (
             <Person className="text-[2.5em]" />
-          ) : (
+          ) : userData?.profile ? (
             <div className="border-2 rounded-full p-[0.1em]">
               <img src={userData?.profile} className="w-10 rounded-full" />
             </div>
+          ) : (
+            <PhotoSkeleton />
           )}
         </>
       ),
