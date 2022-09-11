@@ -8,17 +8,13 @@ import {
 } from "@mui/icons-material";
 import { TextField } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Picker from "emoji-picker-react";
 import { ChatContext } from "../../../context/chatContext";
 import MessageSkeleton from "../../Sketeleton/MessageSkeleon/MessageSkeleton";
 
 const Chat: React.FC = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
-  const allData = useSelector((state) => state);
-  const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.userData);
   const [message, setMessage] = useState<string>("");
   const {
@@ -109,6 +105,14 @@ const Chat: React.FC = () => {
     const year = dateArray[2];
     return `${day} ${months[month]} ${year}`;
   };
+  const [messageNotifications, setMessageNotifications] = useState<number>(0);
+  useEffect(() => {
+    let count = 0;
+    for (const room in user?.newMessages) {
+      count += user?.newMessages[room];
+    }
+    setMessageNotifications(count);
+  }, [user]);
   return (
     <div
       className={`h-[100%] ${
@@ -116,13 +120,17 @@ const Chat: React.FC = () => {
       } md:w-[70%] xl:w-[50%]  md:block relative border-r overflow-hidden`}
     >
       <div className="bg-gray-100 h-[8%] min-h-[3.5em] flex px-5 items-center justify-between shadow-xl relative">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <div
             onClick={() => {
               setShowTabs("select");
             }}
+            className="md:hidden relative"
           >
             <MenuIcon className="text-black text-[2em] cursor-pointer" />
+            <span className="absolute text-[0.8em] -top-2 -right-3 bg-blue-500 text-white px-[0.45em] rounded-full">
+              {messageNotifications == 0 ? null : messageNotifications}
+            </span>
           </div>
           {!privateMemberMessages ? (
             <>
