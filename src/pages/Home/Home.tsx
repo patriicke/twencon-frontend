@@ -14,6 +14,7 @@ import {
 import ChatIcon from "../../components/ChatIcon/ChatIcon";
 import Messages from "../../components/Messages/Messages";
 import PhotoSkeleton from "../../components/Sketeleton/PhotoSkeleton/PhotoSkeleton";
+import HomeComponent from "../../components/Home/HomeComponent";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -139,6 +140,10 @@ export const Home: React.FC = () => {
               <Search className="text-[1.5em] cursor-pointer" />
             </div>
           </div>
+        </div>
+        {/* This is where the components will be put */}
+        <div className={`h-[92%] ${current === 0 ? "block" : "hidden"}`}>
+          <HomeComponent />
         </div>
         <div className={`h-[92%] ${current === 3 ? "block" : "hidden"}`}>
           <Messages />
