@@ -10,6 +10,7 @@ const Messages: React.FC = () => {
   const [messages, setMessages] = useState<[]>([]);
   const [privateMemberMessages, setPrivateMemberMessages] = useState<[]>([]);
   const [newMessages, setNewMessages] = useState<[]>([]);
+  const [showTabs, setShowTabs] = useState<string>("chat");
   return (
     <ChatContext.Provider
       value={{
@@ -25,7 +26,9 @@ const Messages: React.FC = () => {
         privateMemberMessages,
         setPrivateMemberMessages,
         newMessages,
-        setNewMessages
+        setNewMessages,
+        showTabs,
+        setShowTabs
       }}
     >
       <div className="h-full w-full flex">

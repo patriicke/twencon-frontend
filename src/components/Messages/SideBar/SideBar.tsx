@@ -20,7 +20,9 @@ const SideBar: React.FC = () => {
     setCurrentRoom,
     rooms,
     setRooms,
-    setPrivateMemberMessages
+    setPrivateMemberMessages,
+    showTabs,
+    setShowTabs
   } = useContext<any>(ChatContext);
   chatSocket.off("new-user").on("new-user", (payload: any) => {
     setMembers(payload);
@@ -42,6 +44,7 @@ const SideBar: React.FC = () => {
     if (roomNotifications) {
       resetNotificationsFromDatabase(user?.email, room);
     }
+    setShowTabs("chat");
   };
   const getRooms = async () => {
     try {
@@ -76,9 +79,15 @@ const SideBar: React.FC = () => {
     joinRoom(roomId, false);
   };
   return (
-    <div className="w-1/4 h-full border p-3 overflow-auto">
+    <div
+      className={`${
+        showTabs == "select" ? "w-full" : "hidden"
+      } md:w-1/4 h-full border p-3 overflow-auto md:block`}
+    >
       <div className="flex justify-between items-center">
-        <div className="font-medium text-[1.3em]">Chats</div>
+        <div className="font-medium text-[1.3em] flex items-center">
+          <h1>Chats</h1>
+        </div>
         <div className="flex  justify-between items-center flex-shrink space-x-1">
           <div className="border p-1 rounded-md">
             <input
@@ -92,7 +101,7 @@ const SideBar: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="hidden md:block">
+      <div className="md:block">
         <h1 className="p-1">Groups</h1>
         <ul className="flex flex-col space-y-1">
           {(rooms as []).map((room, index) => {
