@@ -1,10 +1,12 @@
 import React from "react";
+import PostComponent from "./PostComponent";
+import SuggestionComponent from "./SuggestionComponent";
 
 const HomeComponent: React.FC = () => {
   return (
     <div className="flex h-full">
-      <div className="w-2/3 border"></div>
-      <div className="w-1/3 border"></div>
+      <PostComponent />
+      <SuggestionComponent />
     </div>
   );
 };
