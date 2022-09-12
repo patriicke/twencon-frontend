@@ -1,5 +1,5 @@
-import { EmojiEmotions, FavoriteBorder } from "@mui/icons-material";
-import { TextField } from "@mui/material";
+import { EmojiEmotions, FavoriteBorder, Image } from "@mui/icons-material";
+import { Button, TextField } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -12,8 +12,42 @@ const PostComponent: React.FC = () => {
   useUserData(navigate, dispatch, userDataAction);
   const user = useSelector((state: any) => state?.user?.userData);
   return (
-    <div className="w-2/4 border flex items-center justify-center h-full overflow-auto">
+    <div className="w-2/4 border flex items-center justify-center h-full overflow-auto flex-col">
       <div className="h-full w-4/5 p-2 px-4 flex flex-col gap-3">
+        <div className="flex w-full gap-2">
+          <div className="w-[4em] h-[4em] max-h-[4em] rounded-full border-2">
+            <img
+              src={user?.profile}
+              alt=""
+              className="w-full h-full rounded-full"
+            />
+          </div>
+          <div className="w-[calc(100%_-_4em)]">
+            <div className="w-full">
+              <input
+                type="text"
+                className="w-full border h-[4em] px-2 outline-none rounded-md"
+                placeholder="Post Something!"
+              />
+            </div>
+            <div className="flex mt-1 items-center justify-between">
+              <div className="gap-2 flex">
+                <span>
+                  <EmojiEmotions className="text-blue-500 text-[1.6em] cursor-pointer" />
+                </span>
+                <span>
+                  <Image className="text-blue-500 text-[1.6em] cursor-pointer" />
+                </span>
+              </div>
+              <div>
+                <Button variant="contained" className="bg-blue-500 px-10">
+                  POST
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="border w-full p-2 flex gap-2">
           <div className="w-[4em] h-[4em] rounded-full border-2">
             <img src={user?.profile} alt="" className="rounded-full" />
@@ -62,7 +96,11 @@ const PostComponent: React.FC = () => {
                 <span>
                   <EmojiEmotions />
                 </span>
-                <TextField placeholder="Post a comment" className="w-[85%]" />
+                <TextField
+                  placeholder="Post a comment"
+                  className="w-[85%]"
+                  autoComplete="off"
+                />
                 <span>POST</span>
               </div>
             </div>
