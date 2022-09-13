@@ -11,7 +11,7 @@ import { Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userDataAction } from "../../features/user/userSlice";
-import { uploadManyImages, useUserData } from "../../hooks";
+import { useUserData } from "../../hooks";
 import Picker from "emoji-picker-react";
 import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
@@ -23,6 +23,7 @@ const PostComponent: React.FC = () => {
   const [postText, setPostText] = useState<string>("");
   const [showEmojiFile, setShowEmojiFile] = useState<boolean>(false);
   const [posts, setPosts] = useState<any>([]);
+  const [allPostsObject, setAllPostsObject] = useState<any>();
   const emojiElement: any = useRef(null);
   const onEmojiClick = (event: any, emojiObject: any) => {
     let msg = postText;
@@ -40,9 +41,31 @@ const PostComponent: React.FC = () => {
     try {
       const request = await api.get("/post");
       const response = request.data;
-      console.log(response);
       setPosts(response);
-      console.log(post);
+      response.map((data1: any, index1: number) => {
+        if (data1.post.images.length < 1) {
+          return setAllPostsObject((current: any) => {
+            return {
+              ...current,
+              [index1]: {
+                postTotalImages: 0,
+                postCurrentImage: 0
+              }
+            };
+          });
+        } else {
+          return setAllPostsObject((current: any) => {
+            return {
+              ...current,
+              [index1]: {
+                postTotalImages: data1.post.images.length,
+                postCurrentImage: 0
+              }
+            };
+          });
+        }
+      });
+      console.log(allPostsObject);
     } catch (error) {
       console.log(error);
     }
@@ -144,16 +167,14 @@ const PostComponent: React.FC = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="w-2/4 border flex items-center justify-center h-full min-h-full overflow-auto flex-col">
       <div className="h-full w-4/5 p-2 px-4 flex flex-col gap-3">
         <div className="flex w-full gap-2">
           <div className="w-[4em] h-[4em] max-h-[4em] rounded-full border-2 flex justify-center items-center">
             {user?.profile === "icon" ? (
-              <Person
-                className="text-[3em] rounded-full
-              "
-              />
+              <Person className="text-[3em] rounded-full" />
             ) : (
               <img
                 src={user?.profile}
@@ -253,9 +274,9 @@ const PostComponent: React.FC = () => {
             </div>
           </div>
         </div>
-        {(posts as any).map((data: any, index: any) => {
+        {(posts as any).map((data: any, index1: any) => {
           return (
-            <div className="border w-full p-2 flex gap-2" key={index}>
+            <div className="border w-full p-2 flex gap-2" key={index1}>
               <div className="w-[4em] h-[4em] rounded-full border-2 flex items-center justify-center">
                 {data?.owner?.profile === "icon" ? (
                   <Person className="text-[3.5em]" />
@@ -281,42 +302,66 @@ const PostComponent: React.FC = () => {
                   </div>
                 </div>
                 {(data?.post?.images as any)?.length <= 0 ? null : (
-                  <div className="py-2 relative w-full">
+                  <div className="relative w-full flex overflow-hidden">
                     {(data?.post?.images as any).map(
-                      (image: any, index: number) => {
+                      (image: any, index2: number) => {
                         return (
                           <div
-                            className="flex items-center justify-center"
-                            key={index}
+                            className="flex items-center justify-center min-w-full"
+                            key={index2}
                           >
-                            <img src={image} />
+                            <img
+                              src={
+                                data?.post?.images[
+                                  allPostsObject[index1]?.postCurrentImage
+                                ]
+                              }
+                              className="rounded-md"
+                            />
                           </div>
                         );
                       }
                     )}
                     <span
                       className="absolute top-[45%] cursor-pointer bg-white border rounded-full p-[0.1em]"
-                      hidden={currentImage == 0 ? true : false}
+                      hidden={
+                        allPostsObject[index1]?.postTotalImages <= 1 ||
+                        allPostsObject[index1].postCurrentImage == 0
+                      }
                       onClick={() => {
-                        if (currentImage == 0) {
-                        } else {
-                          setCurrentImage((current) => current - 1);
-                        }
-                        console.log(currentImage);
+                        setAllPostsObject((current: any) => {
+                          return {
+                            ...current,
+                            [index1]: {
+                              ...allPostsObject[index1],
+                              postCurrentImage:
+                                allPostsObject[index1].postCurrentImage - 1
+                            }
+                          };
+                        });
                       }}
                     >
                       <ChevronLeft className="text-[1.6em]" />
                     </span>
                     <span
                       className="absolute top-[45%] right-0 cursor-pointer bg-white border rounded-full p-[0.1em]"
+                      hidden={
+                        allPostsObject[index1]?.postTotalImages <= 1 ||
+                        allPostsObject[index1].postCurrentImage ==
+                          allPostsObject[index1].postTotalImages - 1
+                      }
                       onClick={() => {
-                        if (currentImage >= imageURLs.length - 1) {
-                        } else {
-                          setCurrentImage((current) => current + 1);
-                        }
-                        console.log(currentImage);
+                        setAllPostsObject((current: any) => {
+                          return {
+                            ...current,
+                            [index1]: {
+                              ...allPostsObject[index1],
+                              postCurrentImage:
+                                allPostsObject[index1].postCurrentImage + 1
+                            }
+                          };
+                        });
                       }}
-                      hidden={currentImage >= imageURLs.length - 1}
                     >
                       <ChevronRight className="text-[1.6em]" />
                     </span>
@@ -326,7 +371,7 @@ const PostComponent: React.FC = () => {
                   <div className="flex justify-between items-center p-2 px-5">
                     <div className="flex justify-center items-center gap-2">
                       <span>
-                        <FavoriteBorder className="text-[1.6em] opacity-70 cursor-pointer" />
+                        <FavoriteBorder className="text-[2em] opacity-70 cursor-pointer" />
                       </span>
                       <span>
                         {(data?.likes as any)?.length <= 0 ? null : "10K"}
@@ -334,7 +379,7 @@ const PostComponent: React.FC = () => {
                     </div>
                     <div className="flex gap-2 items-center justify-center ">
                       <span>
-                        <i className="fa-regular fa-comment text-[1.5em] opacity-70 cursor-pointer"></i>
+                        <i className="fa-regular fa-comment text-[1.7em] opacity-70 cursor-pointer"></i>
                       </span>
                       <span>
                         {(data?.comments as any)?.length <= 0 ? null : "10K"}
@@ -342,7 +387,7 @@ const PostComponent: React.FC = () => {
                     </div>
                     <div className="flex gap-2 items-center justify-center">
                       <span>
-                        <i className="fa-regular fa-share-from-square text-[1.3em] opacity-70 cursor-pointer"></i>
+                        <i className="fa-regular fa-share-from-square text-[1.7em] opacity-70 cursor-pointer"></i>
                       </span>
                       <span>
                         {(data?.share as any)?.length <= 0 ? null : "10K"}
