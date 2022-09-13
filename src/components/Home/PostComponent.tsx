@@ -11,10 +11,11 @@ import { Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userDataAction } from "../../features/user/userSlice";
-import { useUserData } from "../../hooks";
+import { uploadManyImages, useUserData } from "../../hooks";
 import Picker from "emoji-picker-react";
 import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
+import axios from "axios";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,22 +35,7 @@ const PostComponent: React.FC = () => {
         setShowEmojiFile(false);
     });
   }, [showEmojiFile]);
-  const post = async () => {
-    try {
-      if (postText == "") return;
-      const date = new Date();
-      const post = {
-        post: { description: postText, images: [] },
-        owner: user,
-        date
-      };
-      setPostText("");
-      await api.post("/post", post);
-    } catch (error) {
-      console.log(error);
-      setPostText("");
-    }
-  };
+
   const getPosts = async () => {
     try {
       const request = await api.get("/post");
@@ -65,6 +51,7 @@ const PostComponent: React.FC = () => {
     useUserData(navigate, dispatch, userDataAction);
     getPosts();
   }, []);
+
   const calculateDate = (date: any) => {
     let diffTime = Math.abs(new Date().valueOf() - new Date(date).valueOf());
     let days = diffTime / (24 * 60 * 60 * 1000);
@@ -97,7 +84,6 @@ const PostComponent: React.FC = () => {
     }
   };
   const [images, setImages] = useState<any>([]);
-  const [uploading, setUploading] = useState<boolean>(false);
   const [imageURLs, setImageURLs] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<number>(0);
@@ -112,6 +98,52 @@ const PostComponent: React.FC = () => {
     );
     setImageURLs(newImageUrls);
   }, [images]);
+  const post = async () => {
+    try {
+      setLoading(true);
+      if (postText == "" && imageURLs.length < 1) return;
+      const date = new Date();
+      let post = {};
+      if (imageURLs.length >= 1) {
+        let urls: string[] = [];
+        let index = 0;
+        await images.map(async (image: any) => {});
+        while (index < images.length) {
+          let data = new FormData();
+          let image = images[index];
+          data.append("file", image);
+          data.append("upload_preset", "chatpresetimages");
+          let request = await axios.post(
+            "https://api.cloudinary.com/v1_1/dkpaiyjv5/image/upload",
+            data
+          );
+          let urlData = await request.data;
+          urls.push(urlData.secure_url);
+          index++;
+        }
+        post = {
+          post: { description: postText, images: urls },
+          owner: user,
+          date
+        };
+        await api.post("/post", post);
+        console.log("post:", post);
+      } else {
+        post = {
+          post: { description: postText, images: [] },
+          owner: user,
+          date
+        };
+        await api.post("/post", post);
+      }
+      setPostText("");
+    } catch (error) {
+      console.log(error);
+      setPostText("");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="w-2/4 border flex items-center justify-center h-full min-h-full overflow-auto flex-col">
       <div className="h-full w-4/5 p-2 px-4 flex flex-col gap-3">
@@ -248,14 +280,46 @@ const PostComponent: React.FC = () => {
                     {data?.post?.description}
                   </div>
                 </div>
-                {(data?.post?.images as any).length <= 0 ? null : (
-                  <div>
-                    AW{/*  */}
-                    <img
-                      src="https://pbs.twimg.com/media/FcYuK2ZXwAIOqTB?format=jpg&name=small"
-                      alt=""
-                      className="rounded-md"
-                    />
+                {(data?.post?.images as any)?.length <= 0 ? null : (
+                  <div className="py-2 relative w-full">
+                    {(data?.post?.images as any).map(
+                      (image: any, index: number) => {
+                        return (
+                          <div
+                            className="flex items-center justify-center"
+                            key={index}
+                          >
+                            <img src={image} />
+                          </div>
+                        );
+                      }
+                    )}
+                    <span
+                      className="absolute top-[45%] cursor-pointer bg-white border rounded-full p-[0.1em]"
+                      hidden={currentImage == 0 ? true : false}
+                      onClick={() => {
+                        if (currentImage == 0) {
+                        } else {
+                          setCurrentImage((current) => current - 1);
+                        }
+                        console.log(currentImage);
+                      }}
+                    >
+                      <ChevronLeft className="text-[1.6em]" />
+                    </span>
+                    <span
+                      className="absolute top-[45%] right-0 cursor-pointer bg-white border rounded-full p-[0.1em]"
+                      onClick={() => {
+                        if (currentImage >= imageURLs.length - 1) {
+                        } else {
+                          setCurrentImage((current) => current + 1);
+                        }
+                        console.log(currentImage);
+                      }}
+                      hidden={currentImage >= imageURLs.length - 1}
+                    >
+                      <ChevronRight className="text-[1.6em]" />
+                    </span>
                   </div>
                 )}
                 <div>

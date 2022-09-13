@@ -24,11 +24,36 @@ export const uploadImage = async (
       email
     });
     const response = request.data;
-    setUploading(false);
     return response;
   } catch (error) {
-    setUploading(false);
     console.log(error);
+  } finally {
+    setUploading(false);
+  }
+};
+export const uploadManyImages = async (images: any, setLoading: any) => {
+  try {
+    let imageUrls: string[] = [];
+    images.map(async (image: any) => {
+      const data = new FormData();
+      data.append("file", image);
+      data.append("upload_preset", "chatpresetimages");
+      let res = await fetch(
+        "https://api.cloudinary.com/v1_1/dkpaiyjv5/image/upload",
+        {
+          method: "post",
+          body: data
+        }
+      );
+      let urlData = await res.json();
+      imageUrls.push(urlData.secure_url);
+    });
+    console.log(imageUrls);
+    return imageUrls;
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
   }
 };
 // scroll
