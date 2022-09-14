@@ -40,7 +40,10 @@ const Success: React.FC = () => {
     navigate("/");
   };
   return (
-    <div className="h-screen w-full flex items-center justify-center">
+    <div className="h-screen w-full flex items-center justify-center relative">
+      {/* {previewImage == null && (
+        <div className="absolute bg-red-500 w-[20em] h-[20em] z-50"></div>
+      )} */}
       <div className="bg-white shadow-lg w-[25em] h-[35em] border p-5 pt-10 flex flex-col space-y-3 relative">
         <div className="flex items-center justify-center absolute -top-10 z-50 left-[42%]">
           <img src={tick} className="w-20" />
@@ -49,9 +52,9 @@ const Success: React.FC = () => {
           <img src={Twencon} className="w-28" />
         </div>
         <div className="flex items-center justify-center pb-7 relative">
-          <div className="border border-gray-700 border-opacity-70 rounded-full flex items-center justify-center">
+          <div className="border-2 border-opacity-70 rounded-full flex items-center justify-center">
             {previewImage === null ? (
-              <img src={Person} className="w-20 h-20 rounded-full" />
+              <img src={Person} className="w-16 h-16 rounded-full" />
             ) : (
               <img src={previewImage} className="w-20 h-20 rounded-full" />
             )}

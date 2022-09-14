@@ -17,6 +17,7 @@ import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
 import axios from "axios";
 import Person from "./../../assets/person/person.png";
+import { socket } from "../../context/chatContext";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,7 +42,6 @@ const PostComponent: React.FC = () => {
     useUserData(navigate, dispatch, userDataAction);
     useGetPosts(setPosts, setAllPostsObject);
   }, []);
-
   const calculateDate = (date: any) => {
     let diffTime = Math.abs(new Date().valueOf() - new Date(date).valueOf());
     let days = diffTime / (24 * 60 * 60 * 1000);
@@ -137,9 +137,16 @@ const PostComponent: React.FC = () => {
   };
   const like = async (id: any) => {
     try {
-      const request = await api.post("/like", { user, _id: id });
-      const response = request.data;
-      console.log(response);
+      socket.emit("post", user, id);
+      socket.off("like").on("like", (data) => {
+        const newState = posts.map((post: any) => {
+          if (post._id === data?.post?._id) {
+            return { ...post, likes: data?.post?.likes };
+          }
+          return post;
+        });
+        setPosts(newState);
+      });
     } catch (error) {
       console.log(error);
     }
