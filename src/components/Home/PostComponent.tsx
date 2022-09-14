@@ -89,23 +89,14 @@ const PostComponent: React.FC = () => {
     ];
     if (days != 0) {
       if (days > 365) {
-        let years = 0;
-        while (days > 365) {
-          years++;
-          days - 365;
-        }
-        return `${years}y`;
+        let years = days / 365;
+        return `${years.toFixed(0)}y`;
       } else {
         if (days > 30) {
-          let months = 0;
-          while (days > 30) {
-            months++;
-            days - 30;
-          }
-          return `${months}mo`;
-        } else {
-          return `${days}d`;
+          const months = days / 30;
+          return `${months.toFixed(0)}mo`;
         }
+        return `${days}d`;
       }
     } else if (hours != 0) {
       return `${hours}h`;
@@ -348,7 +339,7 @@ const PostComponent: React.FC = () => {
                       className="absolute top-[45%] cursor-pointer bg-white border rounded-full p-[0.1em]"
                       hidden={
                         allPostsObject[index1]?.postTotalImages <= 1 ||
-                        allPostsObject[index1].postCurrentImage == 0
+                        allPostsObject[index1]?.postCurrentImage == 0
                       }
                       onClick={() => {
                         setAllPostsObject((current: any) => {
@@ -369,8 +360,8 @@ const PostComponent: React.FC = () => {
                       className="absolute top-[45%] right-0 cursor-pointer bg-white border rounded-full p-[0.1em]"
                       hidden={
                         allPostsObject[index1]?.postTotalImages <= 1 ||
-                        allPostsObject[index1].postCurrentImage ==
-                          allPostsObject[index1].postTotalImages - 1
+                        allPostsObject[index1]?.postCurrentImage ==
+                          allPostsObject[index1]?.postTotalImages - 1
                       }
                       onClick={() => {
                         setAllPostsObject((current: any) => {
@@ -394,7 +385,7 @@ const PostComponent: React.FC = () => {
                     <div className="flex justify-center items-center gap-2">
                       <span onClick={() => like(data?._id)}>
                         {data?.likes.find((currentUser: any) => {
-                          return currentUser?._id == user?._id;
+                          return currentUser._id == user?._id;
                         }) == undefined ? (
                           <FavoriteBorder className="text-[2em] opacity-70 cursor-pointer" />
                         ) : (
@@ -404,7 +395,7 @@ const PostComponent: React.FC = () => {
                       <span>
                         {(data?.likes as any)?.length <= 0
                           ? null
-                          : data?.likes.length}
+                          : data?.likes?.length}
                       </span>
                     </div>
                     <div className="flex gap-2 items-center justify-center ">
