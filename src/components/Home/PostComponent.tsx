@@ -3,6 +3,7 @@ import {
   ChevronLeft,
   ChevronRight,
   EmojiEmotions,
+  Favorite,
   FavoriteBorder,
   Image,
   Person
@@ -65,7 +66,6 @@ const PostComponent: React.FC = () => {
           });
         }
       });
-      console.log(allPostsObject);
     } catch (error) {
       console.log(error);
     }
@@ -159,12 +159,22 @@ const PostComponent: React.FC = () => {
         };
         await api.post("/post", post);
       }
-      setPostText("");
     } catch (error) {
       console.log(error);
-      setPostText("");
     } finally {
+      setPostText("");
       setLoading(false);
+      setImageURLs([]);
+      setImages([]);
+    }
+  };
+  const like = async (id: any) => {
+    try {
+      const request = await api.post("/like", { user, _id: id });
+      const response = request.data;
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -174,7 +184,10 @@ const PostComponent: React.FC = () => {
         <div className="flex w-full gap-2">
           <div className="w-[4em] h-[4em] max-h-[4em] rounded-full border-2 flex justify-center items-center">
             {user?.profile === "icon" ? (
-              <Person className="text-[3em] rounded-full" />
+              <Person
+                className="text-[3em] rounded-full
+              "
+              />
             ) : (
               <img
                 src={user?.profile}
@@ -302,12 +315,12 @@ const PostComponent: React.FC = () => {
                   </div>
                 </div>
                 {(data?.post?.images as any)?.length <= 0 ? null : (
-                  <div className="relative w-full flex overflow-hidden">
+                  <div className="relative w-full flex overflow-hidden rounded-md">
                     {(data?.post?.images as any).map(
                       (image: any, index2: number) => {
                         return (
                           <div
-                            className="flex items-center justify-center min-w-full"
+                            className="flex items-center justify-center min-w-full rounded-md"
                             key={index2}
                           >
                             <img
@@ -370,11 +383,19 @@ const PostComponent: React.FC = () => {
                 <div>
                   <div className="flex justify-between items-center p-2 px-5">
                     <div className="flex justify-center items-center gap-2">
-                      <span>
-                        <FavoriteBorder className="text-[2em] opacity-70 cursor-pointer" />
+                      <span onClick={() => like(data._id)}>
+                        {data?.likes.find((currentUser: any) => {
+                          return currentUser._id == user._id;
+                        }) == undefined ? (
+                          <FavoriteBorder className="text-[2em] opacity-70 cursor-pointer" />
+                        ) : (
+                          <Favorite className="text-[2em] cursor-pointer text-blue-500" />
+                        )}
                       </span>
                       <span>
-                        {(data?.likes as any)?.length <= 0 ? null : "10K"}
+                        {(data?.likes as any)?.length <= 0
+                          ? null
+                          : data?.likes.length}
                       </span>
                     </div>
                     <div className="flex gap-2 items-center justify-center ">
@@ -387,7 +408,7 @@ const PostComponent: React.FC = () => {
                     </div>
                     <div className="flex gap-2 items-center justify-center">
                       <span>
-                        <i className="fa-regular fa-share-from-square text-[1.7em] opacity-70 cursor-pointer"></i>
+                        <i className="fa-regular fa-share-from-square text-[1.6em] opacity-70 cursor-pointer"></i>
                       </span>
                       <span>
                         {(data?.share as any)?.length <= 0 ? null : "10K"}
