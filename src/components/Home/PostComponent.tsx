@@ -96,7 +96,16 @@ const PostComponent: React.FC = () => {
         }
         return `${years}y`;
       } else {
-        return `${days}d`;
+        if (days > 30) {
+          let months = 0;
+          while (days > 30) {
+            months++;
+            days - 30;
+          }
+          return `${months}mo`;
+        } else {
+          return `${days}d`;
+        }
       }
     } else if (hours != 0) {
       return `${hours}h`;
@@ -383,9 +392,9 @@ const PostComponent: React.FC = () => {
                 <div>
                   <div className="flex justify-between items-center p-2 px-5">
                     <div className="flex justify-center items-center gap-2">
-                      <span onClick={() => like(data._id)}>
+                      <span onClick={() => like(data?._id)}>
                         {data?.likes.find((currentUser: any) => {
-                          return currentUser._id == user._id;
+                          return currentUser?._id == user?._id;
                         }) == undefined ? (
                           <FavoriteBorder className="text-[2em] opacity-70 cursor-pointer" />
                         ) : (
