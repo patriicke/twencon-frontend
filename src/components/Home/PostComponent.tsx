@@ -10,7 +10,7 @@ import {
 import { Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userDataAction, postsActions } from "../../features/user/userSlice";
+import { userDataAction } from "../../features/user/userSlice";
 import { useGetPosts, useUserData } from "../../hooks";
 import Picker from "emoji-picker-react";
 import api from "./../../api";
@@ -151,8 +151,8 @@ const PostComponent: React.FC = () => {
     setImages([]);
   };
   return (
-    <div className="w-full md:w-2/4 flex items-center justify-center h-full min-h-full overflow-auto flex-col">
-      <div className="h-full w-full md:w-4/5 p-2 md:px-4 flex flex-col gap-3">
+    <div className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1">
+      <div className="h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3">
         <div className="flex w-full gap-2">
           <div className="w-[2.5em] md:w-[4em] h-[2.5em] md:h-[4em] max-h-[4em] rounded-full border-2 flex justify-center items-center">
             {user?.profile === "icon" ? (
