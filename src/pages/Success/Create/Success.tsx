@@ -4,10 +4,10 @@ import Twencon from "./../../../assets/logo/twencon.svg";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Person } from "@mui/icons-material";
 import { uploadImage, useUserData } from "../../../hooks";
 import { userDataAction } from "../../../features/user/userSlice";
 import Loading from "./../../../assets/loading/loading.gif";
+import Person from "./../../../assets/person/person.png";
 const Success: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const Success: React.FC = () => {
         <div className="flex items-center justify-center pb-7 relative">
           <div className="border border-gray-700 border-opacity-70 rounded-full flex items-center justify-center">
             {previewImage === null ? (
-              <Person className="text-[5em]" />
+              <img src={Person} className="w-20 h-20 rounded-full" />
             ) : (
               <img src={previewImage} className="w-20 h-20 rounded-full" />
             )}

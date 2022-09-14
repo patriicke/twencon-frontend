@@ -3,7 +3,6 @@ import {
   Call,
   InsertEmoticon,
   MoreHoriz,
-  Person,
   VideoCall
 } from "@mui/icons-material";
 import { TextField } from "@mui/material";
@@ -12,7 +11,7 @@ import { useSelector } from "react-redux";
 import Picker from "emoji-picker-react";
 import { ChatContext } from "../../../context/chatContext";
 import MessageSkeleton from "../../Sketeleton/MessageSkeleon/MessageSkeleton";
-
+import Person from "./../../../assets/person/person.png";
 const Chat: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const user = useSelector((state: any) => state.user.userData);
@@ -150,9 +149,7 @@ const Chat: React.FC = () => {
             <>
               <div className="flex items-center space-x-2">
                 {privateMemberMessages.profile === "icon" ? (
-                  <div className="rounded-full border-2">
-                    <Person className="text-black text-[3rem]" />
-                  </div>
+                  <img src={Person} className="w-14 h-14 border rounded-full" />
                 ) : (
                   <img
                     src={privateMemberMessages?.profile}
@@ -230,7 +227,11 @@ const Chat: React.FC = () => {
                                 }
                               `}
                               >
-                                <Person className="text-[2.5em] " />
+                                <img
+                                  src={Person}
+                                  alt=""
+                                  className="rounded-full"
+                                />
                               </div>
                             ) : (
                               <img

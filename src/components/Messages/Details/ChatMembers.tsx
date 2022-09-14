@@ -1,7 +1,7 @@
-import { Person } from "@mui/icons-material";
 import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import { ChatContext } from "../../../context/chatContext";
+import Person from "./../../../assets/person/person.png";
 
 const ChatMembers: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
@@ -21,9 +21,10 @@ const ChatMembers: React.FC = () => {
               >
                 <div className="flex items-center space-x-2">
                   {data?.profile === "icon" ? (
-                    <div className="rounded-full border-2">
-                      <Person className="text-black text-[3rem]" />
-                    </div>
+                    <img
+                      src={Person}
+                      className="w-14 h-14 border rounded-full"
+                    />
                   ) : (
                     <img
                       src={data?.profile}
@@ -47,9 +48,7 @@ const ChatMembers: React.FC = () => {
           >
             <div className="flex items-center space-x-2">
               {user?.profile === "icon" ? (
-                <div className="rounded-full border-2">
-                  <Person className="text-black text-[3rem]" />
-                </div>
+                <img src={Person} className="w-14 h-14 border rounded-full" />
               ) : (
                 <img
                   src={user?.profile}
@@ -67,9 +66,7 @@ const ChatMembers: React.FC = () => {
           >
             <div className="flex items-center space-x-2">
               {privateMemberMessages?.profile === "icon" ? (
-                <div className="rounded-full border-2">
-                  <Person className="text-black text-[3rem]" />
-                </div>
+                <img src={Person} className="w-14 h-14 border rounded-full" />
               ) : (
                 <img
                   src={privateMemberMessages?.profile}

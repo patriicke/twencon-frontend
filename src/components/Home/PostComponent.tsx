@@ -5,8 +5,7 @@ import {
   EmojiEmotions,
   Favorite,
   FavoriteBorder,
-  Image,
-  Person
+  Image
 } from "@mui/icons-material";
 import { Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +16,7 @@ import Picker from "emoji-picker-react";
 import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
 import axios from "axios";
+import Person from "./../../assets/person/person.png";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -184,10 +184,7 @@ const PostComponent: React.FC = () => {
         <div className="flex w-full gap-2">
           <div className="w-[4em] h-[4em] max-h-[4em] rounded-full border-2 flex justify-center items-center">
             {user?.profile === "icon" ? (
-              <Person
-                className="text-[3em] rounded-full
-              "
-              />
+              <img src={Person} alt="" className="w-full h-full rounded-full" />
             ) : (
               <img
                 src={user?.profile}
@@ -292,7 +289,7 @@ const PostComponent: React.FC = () => {
             <div className="border w-full p-2 flex gap-2" key={index1}>
               <div className="w-[4em] h-[4em] rounded-full border-2 flex items-center justify-center">
                 {data?.owner?.profile === "icon" ? (
-                  <Person className="text-[3.5em]" />
+                  <img src={Person} alt="" className="rounded-full w-full" />
                 ) : (
                   <img
                     src={data?.owner?.profile}

@@ -8,6 +8,7 @@ import {
   resetNotifications
 } from "../../../features/user/userSlice";
 import { resetNotificationsFromDatabase } from "../../../hooks";
+import Person1 from "./../../../assets/person/person.png";
 
 const SideBar: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
@@ -156,9 +157,10 @@ const SideBar: React.FC = () => {
               >
                 <div className="flex items-center space-x-2">
                   {data.profile === "icon" ? (
-                    <div className="rounded-full border-2">
-                      <Person className="text-black text-[3rem]" />
-                    </div>
+                    <img
+                      src={Person1}
+                      className="w-14 h-14 border rounded-full"
+                    />
                   ) : (
                     <img
                       src={data.profile}

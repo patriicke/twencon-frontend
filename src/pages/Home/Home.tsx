@@ -14,6 +14,7 @@ import {
 import ChatIcon from "../../components/ChatIcon/ChatIcon";
 import Messages from "../../components/Messages/Messages";
 import PhotoSkeleton from "../../components/Sketeleton/PhotoSkeleton/PhotoSkeleton";
+import Person1 from "./../../assets/person/person.png";
 import HomeComponent from "../../components/Home/HomeComponent";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -87,7 +88,9 @@ export const Home: React.FC = () => {
       icons: (
         <>
           {userData?.profile == "icon" ? (
-            <Person className="text-[2.5em]" />
+            <div className="border-2 rounded-full p-[0.1em]">
+              <img src={Person1} className="w-10 rounded-full" />
+            </div>
           ) : userData?.profile ? (
             <div className="border-2 rounded-full p-[0.1em]">
               <img src={userData?.profile} className="w-10 rounded-full" />
