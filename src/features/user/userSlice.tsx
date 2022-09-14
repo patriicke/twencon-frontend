@@ -6,7 +6,8 @@ const userSlice = createSlice({
   reducers: {
     addNotifications: (state: any, { payload }) => {
       if (state.userData.newMessages[payload]) {
-        state.userData.newMessages[payload] = state.userData.newMessages[payload] + 1;
+        state.userData.newMessages[payload] =
+          state.userData.newMessages[payload] + 1;
       } else {
         state.userData.newMessages[payload] = 1;
       }
@@ -19,10 +20,20 @@ const userSlice = createSlice({
         ...state,
         userData: action.payload
       };
+    },
+    postsActions: (state: any, action) => {
+      return {
+        ...state,
+        posts: action.payload
+      };
     }
   }
 });
 
-export const { addNotifications, resetNotifications, userDataAction } =
-  userSlice.actions;
+export const {
+  addNotifications,
+  resetNotifications,
+  userDataAction,
+  postsActions
+} = userSlice.actions;
 export default userSlice.reducer;

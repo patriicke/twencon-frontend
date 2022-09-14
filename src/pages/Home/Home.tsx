@@ -8,13 +8,12 @@ import {
   Apps,
   FavoriteBorder,
   Notifications,
-  Person,
   Search
 } from "@mui/icons-material";
 import ChatIcon from "../../components/ChatIcon/ChatIcon";
 import Messages from "../../components/Messages/Messages";
 import PhotoSkeleton from "../../components/Sketeleton/PhotoSkeleton/PhotoSkeleton";
-import Person1 from "./../../assets/person/person.png";
+import Person from "./../../assets/person/person.png";
 import HomeComponent from "../../components/Home/HomeComponent";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -89,7 +88,7 @@ export const Home: React.FC = () => {
         <>
           {userData?.profile == "icon" ? (
             <div className="border-2 rounded-full p-[0.1em]">
-              <img src={Person1} className="w-10 rounded-full" />
+              <img src={Person} className="w-10 rounded-full" />
             </div>
           ) : userData?.profile ? (
             <div className="border-2 rounded-full p-[0.1em]">
@@ -106,8 +105,8 @@ export const Home: React.FC = () => {
 
   return (
     <div className="relative overflow-hidden flex flex-col md:flex-row-reverse">
-      <div className="h-[93vh] w-full overflow-auto md:h-screen flex flex-col">
-        <div className="flex p-4 justify-between shadow-md md:shadow-none md:h-[8%] md:border-b md:min-h-[5em] md:px-5">
+      <div className="h-[calc(100vh_-_4em)] w-full min-h-full overflow-auto md:h-screen flex flex-col">
+        <div className="flex p-2 justify-between shadow-md md:shadow-none md:h-[8%] md:border-b md:min-h-[3em] md:px-5">
           <div
             className="w-10 flex items-center md:hidden"
             onClick={() => {
@@ -137,15 +136,15 @@ export const Home: React.FC = () => {
           <div className="flex items-center">
             <div className="flex items-center justify-end border p-2 rounded-md md:w-[20em] xl:w-[25em] max-h-[3em]">
               <input
-                className="w-[95%] outline-none"
+                className="w-[95%] outline-none text-[0.85em] h-[1.5em] md:text-[1em] "
                 placeholder="Search Twencon"
               />
-              <Search className="text-[1.5em] cursor-pointer" />
+              <Search className="md:text-[1.5em] cursor-pointer" />
             </div>
           </div>
         </div>
         {/* This is where the components will be put */}
-        <div className={`h-[92%] ${current === 0 ? "block" : "hidden"}`}>
+        <div className={`h-[92%] w-full ${current === 0 ? "block" : "hidden"}`}>
           <HomeComponent />
         </div>
         <div className={`h-[92%] ${current === 3 ? "block" : "hidden"}`}>

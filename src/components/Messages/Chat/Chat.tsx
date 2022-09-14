@@ -114,9 +114,9 @@ const Chat: React.FC = () => {
   }, [user]);
   return (
     <div
-      className={`h-[100%] ${
+      className={`${
         showTabs === "chat" ? "w-full" : "hidden"
-      } md:w-[70%] xl:w-[50%]  md:block relative border-r overflow-hidden`}
+      } h-full min-h-full bg-red-3 md:w-[70%] xl:w-[50%]  md:block relative border-r overflow-hidden border-t`}
     >
       <div className="bg-gray-100 h-[8%] min-h-[3.5em] flex px-5 items-center justify-between shadow-xl relative">
         <div className="flex items-center gap-4">
@@ -134,7 +134,7 @@ const Chat: React.FC = () => {
           {!privateMemberMessages ? (
             <>
               <div className="flex space-x-3">
-                <div className="rounded-full border-2 p-2 px-[1.1rem] text-[1.4em] font-bold text-black flex items-center justify-center">
+                <div className="hidden rounded-full border-2 p-2 px-[1.1rem] text-[1.4em] font-bold text-black md:flex items-center justify-center">
                   {(currentRoom as string)[0].toUpperCase()}
                 </div>
                 <div className="flex items-center">
@@ -149,7 +149,10 @@ const Chat: React.FC = () => {
             <>
               <div className="flex items-center space-x-2">
                 {privateMemberMessages.profile === "icon" ? (
-                  <img src={Person} className="w-14 h-14 border rounded-full" />
+                  <img
+                    src={Person}
+                    className=" w-10 md:w-14 md:h-14 border rounded-full"
+                  />
                 ) : (
                   <img
                     src={privateMemberMessages?.profile}
@@ -162,8 +165,8 @@ const Chat: React.FC = () => {
           )}
         </div>
         <div className="flex space-x-3">
-          <Call className="text-[1.7em] cursor-pointer" />
-          <VideoCall className="text-[1.7em] cursor-pointer" />
+          <Call className="md:text-[1.7em] cursor-pointer" />
+          <VideoCall className="md:text-[1.7em] cursor-pointer" />
           <div
             className="md:hidden cursor-pointer"
             onClick={() => setShowTabs("details")}
@@ -180,7 +183,7 @@ const Chat: React.FC = () => {
           <MessageSkeleton />
         ) : (
           (messages as []).map(({ _id, messagesByDate }, index: number) => (
-            <div key={index} className="flex flex-col gap-[0.1em]">
+            <div key={index} className="flex flex-col gap-[0.2em]">
               {(messagesByDate as []).map((data: any, index) => {
                 return (
                   <div key={index}>
@@ -201,7 +204,7 @@ const Chat: React.FC = () => {
                       }`}
                     >
                       <div
-                        className={`px-2 break-words max-w-[50%] flex gap-1  ${
+                        className={`px-2 break-words max-w-[70%] flex gap-1  ${
                           data?.from?.fullname !== user?.fullname &&
                           (messagesByDate[index - 1] as any)?.time ===
                             (messagesByDate[index] as any)?.time &&
@@ -293,7 +296,7 @@ const Chat: React.FC = () => {
         )}
       </div>
       <div
-        className={`flex space-x-2 px-2 flex-shrink flex-grow bottom-3 right-0 left-0 items-center justify-center h-[10%] border `}
+        className={`flex space-x-2 px-2 flex-shrink flex-grow bottom-3 right-0 left-0 items-center justify-center h-[10%] border min-h-[4]`}
       >
         <div className="min-w-[2.5em] h-full sm:min-w-[0em] w-[7%] rounded-l-[2em] flex items-center justify-center">
           <div className="p-2 rounded-full h-[2.5em] w-[2.5em] flex items-center justify-center relative">
@@ -320,18 +323,16 @@ const Chat: React.FC = () => {
           onSubmit={handleSubmit}
         >
           <div className="h-full w-full flex items-center relative justify-center">
-            <TextField
+            <input
               type="text"
-              placeholder="Send a message"
-              className="w-[100%] text-[1.1em] font-light text-black border outline-none border-black rounded-md p-2"
-              size="medium"
-              onChange={(e) => setMessage(e.target.value)}
-              value={message}
-              name="none"
+              className="w-[100%] text-[1.1em] font-normal  text-black border-[0.15em] outline-none focus:border-blue-500 rounded-md p-2"
               autoComplete="off"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Send a message"
             />
           </div>
-          <div className="sm:w-[25%] lg:w-[20%] flex flex-shrink flex-grow justify-evenly  h-full items-center ">
+          <div className="sm:w-[25%] lg:w-[20%] min-w-[6em] flex flex-shrink flex-grow justify-evenly  h-full items-center ">
             <i className="fa-solid fa-microphone text-[1.3em] cursor-pointer"></i>
             <i className="fa-solid fa-paperclip text-[1.3em] cursor-pointer"></i>
             <button type="submit">

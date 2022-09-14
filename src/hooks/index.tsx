@@ -144,3 +144,38 @@ export const restPassword = async () => {
 export const resetNotificationsFromDatabase = async (email: any, room: any) => {
   const request = await api.post("/notifications/reset", { email, room });
 };
+
+//This is all about the posts
+
+export const useGetPosts = async (setPosts: any, setAllPostsObject?: any) => {
+  try {
+    const request = await api.get("/post");
+    const response = request.data;
+    setPosts(response);
+    response.map((data1: any, index1: number) => {
+      if (data1.post.images.length < 1) {
+        return setAllPostsObject((current: any) => {
+          return {
+            ...current,
+            [index1]: {
+              postTotalImages: 0,
+              postCurrentImage: 0
+            }
+          };
+        });
+      } else {
+        return setAllPostsObject((current: any) => {
+          return {
+            ...current,
+            [index1]: {
+              postTotalImages: data1.post.images.length,
+              postCurrentImage: 0
+            }
+          };
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

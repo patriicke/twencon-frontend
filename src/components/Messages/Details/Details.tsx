@@ -13,7 +13,7 @@ const Details: React.FC = () => {
         showTabs === "details" ? "block w-full" : "hidden"
       } md:w-1/4  md:block `}
     >
-      <div className="h-[8%] w-full flex relative">
+      <div className="h-[8%] min-h-[3em] w-full flex relative">
         {chatDetails.map((data, index) => {
           return (
             <div
@@ -27,14 +27,6 @@ const Details: React.FC = () => {
             </div>
           );
         })}
-        <div className="absolute h-full flex items-center pb-1 md:hidden">
-          <Button
-            className="text-[0.9em] text-red-500"
-            onClick={() => setShowTabs("chat")}
-          >
-            BACK
-          </Button>
-        </div>
       </div>
       <div className="h-[92%] w-full">
         <div className={`${current === 0 ? "block" : "hidden"}`}>
@@ -42,6 +34,15 @@ const Details: React.FC = () => {
         </div>
         <div className={`${current === 1 ? "block" : "hidden"}`}>
           <SharedFiles />
+        </div>
+        <div className="h-full flex items-center md:hidden justify-center">
+          <Button
+            className="text-[0.9em] bg-blue-500"
+            variant="contained"
+            onClick={() => setShowTabs("chat")}
+          >
+            BACK TO CHAT
+          </Button>
         </div>
       </div>
     </div>
