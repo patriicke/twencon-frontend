@@ -175,7 +175,7 @@ const Chat: React.FC = () => {
         </div>
       </div>
       <div
-        className="w-full flex-shrink flex flex-col overflow-auto p-2 scroll-smooth"
+        className="h-[82%] w-full flex-shrink flex flex-col overflow-auto p-2 scroll-smooth"
         ref={element}
       >
         {loading ? (
