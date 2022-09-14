@@ -25,14 +25,18 @@ const SideBar: React.FC = () => {
     showTabs,
     setShowTabs
   } = useContext<any>(ChatContext);
-  chatSocket.off("new-user").on("new-user", (payload: any) => {
-    setMembers(payload);
-  });
-  chatSocket.off("notifications").on("notifications", (room: any) => {
-    if (currentRoom !== room) {
-      dispatch(addNotifications(room));
-    }
-  });
+  try {
+    chatSocket.off("new-user").on("new-user", (payload: any) => {
+      setMembers(payload);
+    });
+    chatSocket.off("notifications").on("notifications", (room: any) => {
+      if (currentRoom !== room) {
+        dispatch(addNotifications(room));
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
   const joinRoom = (room: any, isPublic = true) => {
     chatSocket.emit("join-room", room, currentRoom);
     setCurrentRoom(room);
