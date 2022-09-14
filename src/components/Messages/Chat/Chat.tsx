@@ -5,7 +5,6 @@ import {
   MoreHoriz,
   VideoCall
 } from "@mui/icons-material";
-import { TextField } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import Picker from "emoji-picker-react";
@@ -116,7 +115,7 @@ const Chat: React.FC = () => {
     <div
       className={`${
         showTabs === "chat" ? "w-full" : "hidden"
-      } h-full min-h-full bg-red-3 md:w-[70%] xl:w-[50%]  md:block relative border-r overflow-hidden border-t`}
+      } bg-red-3 md:w-[70%] xl:w-[50%]  flex flex-col relative border-r overflow-hidden border-t`}
     >
       <div className="bg-gray-100 h-[8%] min-h-[3.5em] flex px-5 items-center justify-between shadow-xl relative">
         <div className="flex items-center gap-4">
@@ -176,7 +175,7 @@ const Chat: React.FC = () => {
         </div>
       </div>
       <div
-        className="h-[82%] w-full flex-shrink flex flex-col overflow-auto p-2 scroll-smooth"
+        className="w-full flex-shrink flex flex-col overflow-auto p-2 scroll-smooth"
         ref={element}
       >
         {loading ? (
@@ -296,7 +295,7 @@ const Chat: React.FC = () => {
         )}
       </div>
       <div
-        className={`flex space-x-2 px-2 flex-shrink flex-grow bottom-3 right-0 left-0 items-center justify-center h-[10%] border min-h-[4]`}
+        className={`flex space-x-2 px-2 flex-shrink flex-grow bottom-3 right-0 left-0 items-center justify-center h-[10%] border min-h-[4em]`}
       >
         <div className="min-w-[2.5em] h-full sm:min-w-[0em] w-[7%] rounded-l-[2em] flex items-center justify-center">
           <div className="p-2 rounded-full h-[2.5em] w-[2.5em] flex items-center justify-center relative">

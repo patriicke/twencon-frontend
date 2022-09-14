@@ -104,8 +104,8 @@ export const Home: React.FC = () => {
   ];
 
   return (
-    <div className="relative overflow-hidden flex flex-col md:flex-row-reverse">
-      <div className="h-[calc(100vh_-_4em)] w-full min-h-full overflow-auto md:h-screen flex flex-col">
+    <div className="h-screen relative overflow-hidden flex flex-col md:flex-row-reverse z-auto bg-white">
+      <div className="h-[calc(100vh_-_4em)] w-full md:h-screen flex flex-col">
         <div className="flex p-2 justify-between shadow-md md:shadow-none md:h-[8%] md:border-b md:min-h-[3em] md:px-5">
           <div
             className="w-10 flex items-center md:hidden"
@@ -151,7 +151,7 @@ export const Home: React.FC = () => {
           <Messages />
         </div>
       </div>
-      <div className="bg-white h-[7vh] min-h-[4em] w-full flex px-4 border-t-2 md:w-[4%] md:h-screen md:px-0 md:flex-col md:border-t-0 md:border-r md:min-w-[5em]">
+      <div className="bg-white h-[7vh] min-h-[4em] w-full flex px-4 border-t md:w-[4%] md:h-screen md:px-0 md:flex-col md:border-t-0 md:border-r md:min-w-[5em] z-50">
         <div className="hidden md:flex md:h-[8%] items-center justify-center">
           <div
             className="w-10 flex items-center cursor-pointer"
