@@ -76,7 +76,7 @@ export const Home: React.FC = () => {
       icons: (
         <div className="relative">
           <ChatIcon className="w-8" />
-          <span className="absolute text-[0.8em] -top-2 -right-3 bg-blue-500 text-white px-1 rounded-full">
+          <span className="absolute text-[0.8em] -top-[0.4em] -right-3 bg-blue-500 text-white px-[0.45em] rounded-full">
             {messageNotifications == 0 ? null : messageNotifications}
           </span>
         </div>

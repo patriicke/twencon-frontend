@@ -16,7 +16,7 @@ const Chat: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
   const [message, setMessage] = useState<string>("");
   const {
-    chatSocket,
+    socket,
     currentRoom,
     setMessages,
     messages,
@@ -49,7 +49,7 @@ const Chat: React.FC = () => {
         : today.getMinutes().toString();
     const time: string = today.getHours().toString() + ":" + minutes;
     const roomId = currentRoom;
-    chatSocket.emit(
+    socket.emit(
       "message-room",
       roomId,
       message.trimEnd().trimStart(),
@@ -60,11 +60,11 @@ const Chat: React.FC = () => {
     setMessage("");
   };
   useEffect(() => {
-    chatSocket.off("room-messages").on("room-messages", (roomMessages: any) => {
+    socket.off("room-messages").on("room-messages", (roomMessages: any) => {
       setMessages(roomMessages);
       setLoading(false);
     });
-  }, [chatSocket]);
+  }, [socket]);
   const element: any = useRef(null);
   useEffect(() => {
     element.current.scrollTop = element.current.scrollHeight;

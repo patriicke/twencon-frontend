@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Chat from "./Chat/Chat";
 import Details from "./Details/Details";
 import SideBar from "./SideBar/SideBar";
-import { ChatContext, chatSocket } from "../../context/chatContext";
+import { ChatContext, socket } from "../../context/chatContext";
 const Messages: React.FC = () => {
   const [rooms, setRooms] = useState<[]>([]);
   const [currentRoom, setCurrentRoom] = useState<[]>([]);
@@ -14,7 +14,7 @@ const Messages: React.FC = () => {
   return (
     <ChatContext.Provider
       value={{
-        chatSocket,
+        socket,
         rooms,
         setRooms,
         currentRoom,

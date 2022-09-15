@@ -14,7 +14,7 @@ const SideBar: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
   const dispatch = useDispatch();
   const {
-    chatSocket,
+    socket,
     members,
     setMembers,
     currentRoom,
@@ -26,10 +26,10 @@ const SideBar: React.FC = () => {
     setShowTabs
   } = useContext<any>(ChatContext);
   try {
-    chatSocket.off("new-user").on("new-user", (payload: any) => {
+    socket.off("new-user").on("new-user", (payload: any) => {
       setMembers(payload);
     });
-    chatSocket.off("notifications").on("notifications", (room: any) => {
+    socket.off("notifications").on("notifications", (room: any) => {
       if (currentRoom !== room) {
         dispatch(addNotifications(room));
       }
@@ -38,7 +38,7 @@ const SideBar: React.FC = () => {
     console.log(error);
   }
   const joinRoom = (room: any, isPublic = true) => {
-    chatSocket.emit("join-room", room, currentRoom);
+    socket.emit("join-room", room, currentRoom);
     setCurrentRoom(room);
     if (isPublic) {
       setPrivateMemberMessages(null);
@@ -65,9 +65,9 @@ const SideBar: React.FC = () => {
     const getData = async () => {
       await getRooms();
       setCurrentRoom("general");
-      chatSocket.emit("join_room", "general", "");
+      socket.emit("join_room", "general", "");
       setPrivateMemberMessages(null);
-      chatSocket.emit("new-user");
+      socket.emit("new-user");
     };
     getData();
   }, []);

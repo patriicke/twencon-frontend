@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import { userDataAction } from "../../features/user/userSlice";
 import { useGetPosts, useUserData } from "../../hooks";
 import Picker from "emoji-picker-react";
-import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
 import axios from "axios";
 import Person from "./../../assets/person/person.png";
@@ -32,6 +31,11 @@ const PostComponent: React.FC = () => {
     msg = msg + `${emojiObject.emoji}`;
     setPostText(msg);
   };
+  const [images, setImages] = useState<any>([]);
+  const [imageURLs, setImageURLs] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [currentImage, setCurrentImage] = useState<number>(0);
+  const [newPosts, setNewPosts] = useState<any>([]);
   useEffect(() => {
     document.addEventListener("mousedown", () => {
       if (!emojiElement.current?.contains(event?.target))
@@ -42,6 +46,31 @@ const PostComponent: React.FC = () => {
     useUserData(navigate, dispatch, userDataAction);
     useGetPosts(setPosts, setAllPostsObject);
   }, []);
+  try {
+    socket.off("like").on("like", (data) => {
+      const newState = posts.map((post: any) => {
+        if (post._id === data?.post?._id) {
+          return { ...post, likes: data?.post?.likes };
+        }
+        return post;
+      });
+      setPosts(newState);
+    });
+    socket.off("post").on("post", (data) => {
+      if (data?.owner._id == user?._id) {
+        setPosts((current: any) => {
+          return [data, ...current];
+        });
+      } else {
+        setNewPosts((current: any) => {
+          if (current.length < 1) return [data];
+          return [data, ...current];
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
   const calculateDate = (date: any) => {
     let diffTime = Math.abs(new Date().valueOf() - new Date(date).valueOf());
     let days = diffTime / (24 * 60 * 60 * 1000);
@@ -73,10 +102,7 @@ const PostComponent: React.FC = () => {
       return `${secs}s`;
     }
   };
-  const [images, setImages] = useState<any>([]);
-  const [imageURLs, setImageURLs] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [currentImage, setCurrentImage] = useState<number>(0);
+
   const onImageChange = (e: any) => {
     setImages([...e.target.files]);
   };
@@ -116,16 +142,14 @@ const PostComponent: React.FC = () => {
           owner: user,
           date
         };
-        await api.post("/post", post);
-        console.log("post:", post);
       } else {
         post = {
           post: { description: postText, images: [] },
           owner: user,
           date
         };
-        await api.post("/post", post);
       }
+      socket.emit("create-post", post);
     } catch (error) {
       console.log(error);
     } finally {
@@ -137,16 +161,7 @@ const PostComponent: React.FC = () => {
   };
   const like = async (id: any) => {
     try {
-      socket.emit("post", user, id);
-      socket.off("like").on("like", (data) => {
-        const newState = posts.map((post: any) => {
-          if (post._id === data?.post?._id) {
-            return { ...post, likes: data?.post?.likes };
-          }
-          return post;
-        });
-        setPosts(newState);
-      });
+      socket.emit("like-post", user, id);
     } catch (error) {
       console.log(error);
     }
@@ -157,10 +172,31 @@ const PostComponent: React.FC = () => {
     setImageURLs([]);
     setImages([]);
   };
+  const viewNewPosts = () => {
+    setPosts((current: any) => {
+      return [...newPosts, ...current];
+    });
+    setNewPosts([]);
+  };
   return (
     <div className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1">
-      <div className="h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3">
-        <div className="flex w-full gap-2">
+      <div className="h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3 relative">
+        {newPosts.length < 1 ? null : (
+          <div
+            className="py-1 flex items-center justify-center fixed left-[26%] sm:left-[28%] top-[4em] md:top-[5em] bg-white z-10 cursor-pointer"
+            onClick={viewNewPosts}
+          >
+            <div className="bg-blue-500 p-1 px-3 rounded-md text-white">
+              Click to check {newPosts.length} new{" "}
+              {newPosts.length == 1 ? " post" : " posts"}
+            </div>
+          </div>
+        )}
+        <div
+          className={`flex w-full gap-2 ${
+            newPosts.length < 1 ? "" : "mt-[3em]"
+          } `}
+        >
           <div className="w-[2.5em] md:w-[4em] h-[2.5em] md:h-[4em] max-h-[4em] rounded-full border-2 flex justify-center items-center">
             {user?.profile === "icon" ? (
               <img src={Person} alt="" className="w-full h-full rounded-full" />
