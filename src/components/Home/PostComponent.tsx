@@ -18,7 +18,6 @@ import axios from "axios";
 import Person from "./../../assets/person/person.png";
 import { socket } from "../../context/chatContext";
 import "./../../assets/style/post.css";
-import AnimatedNumber from "react-animated-numbers";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,12 +26,6 @@ const PostComponent: React.FC = () => {
   const [showEmojiFile, setShowEmojiFile] = useState<boolean>(false);
   const [posts, setPosts] = useState<any>([]);
   const [allPostsObject, setAllPostsObject] = useState<any>();
-  const emojiElement: any = useRef(null);
-  const onEmojiClick = (event: any, emojiObject: any) => {
-    let msg = postText;
-    msg = msg + `${emojiObject.emoji}`;
-    setPostText(msg);
-  };
   const [images, setImages] = useState<any>([]);
   const [imageURLs, setImageURLs] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,12 +35,39 @@ const PostComponent: React.FC = () => {
   const [textComment, setTextComment] = useState<any>({});
   const [loadingPostingComment, setLoadingPostingComment] =
     useState<boolean>(false);
+  const [currentPost, setCurrentPost] = useState<any>(null);
+  const [showCommentEmojiElement, setShowCommentEmojiElement] =
+    useState<boolean>(false);
+  const emojiElement: any = useRef(null);
+  const commentEmojiElement: any = useRef(null);
+  const onEmojiClick = (event: any, emojiObject: any) => {
+    let msg = postText;
+    msg = msg + `${emojiObject.emoji}`;
+    setPostText(msg);
+  };
+  const onEmojiClickPostComment = (event?: any, emojiObject?: any) => {
+    let msg = "";
+    if (textComment[currentPost]) {
+      msg = textComment[currentPost];
+    }
+    msg = msg + `${emojiObject.emoji}`;
+    setTextComment((current: any) => {
+      return {
+        ...current,
+        [currentPost]: msg
+      };
+    });
+  };
   useEffect(() => {
     document.addEventListener("mousedown", () => {
       if (!emojiElement.current?.contains(event?.target))
         setShowEmojiFile(false);
     });
-  }, [showEmojiFile]);
+    document.addEventListener("mousedown", () => {
+      if (!commentEmojiElement.current?.contains(event?.target))
+        setShowCommentEmojiElement(false);
+    });
+  }, [showEmojiFile, showCommentEmojiElement]);
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
     useGetPosts(setPosts, setAllPostsObject);
@@ -75,7 +95,6 @@ const PostComponent: React.FC = () => {
       }
     });
     socket.off("comment").on("comment", (data) => {
-      console.log(data);
       try {
         const newState = posts.map((post: any) => {
           if (post._id === data?.post?._id) {
@@ -86,6 +105,8 @@ const PostComponent: React.FC = () => {
         setPosts(newState);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoadingPostingComment(false);
       }
     });
   } catch (error) {
@@ -122,7 +143,6 @@ const PostComponent: React.FC = () => {
       return `${secs}s`;
     }
   };
-
   const onImageChange = (e: any) => {
     setImages([...e.target.files]);
   };
@@ -191,11 +211,11 @@ const PostComponent: React.FC = () => {
       }, 500);
     }
   };
-
-  const comment = async (id: any, textComment: any) => {
-    if (textComment == "") return;
-    const date = new Date();
+  const comment = async (index1: any, id: any, textComment: any) => {
+    setLoadingPostingComment(true);
     try {
+      if (textComment == "") return setLoadingPostingComment(false);
+      const date = new Date();
       socket.emit("create-comment", user, id, textComment, date);
     } catch (error) {
       console.log(error);
@@ -203,7 +223,7 @@ const PostComponent: React.FC = () => {
       setTextComment((current: any) => {
         return {
           ...current,
-          [id]: ""
+          [index1]: ""
         };
       });
     }
@@ -361,6 +381,9 @@ const PostComponent: React.FC = () => {
             <div
               className="border w-full p-2 flex gap-2 rounded-md"
               key={index1}
+              onClick={() => {
+                setCurrentPost(index1);
+              }}
             >
               <div className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center">
                 {data?.owner?.profile === "icon" ? (
@@ -503,9 +526,27 @@ const PostComponent: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex justify-between items-center py-2 px-1 gap-1">
-                    <span>
-                      <EmojiEmotions />
-                    </span>
+                    <div className="relative">
+                      <span
+                        onClick={() => {
+                          setShowCommentEmojiElement(true);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <EmojiEmotions />
+                      </span>
+                      {showCommentEmojiElement && currentPost === index1 && (
+                        <div
+                          className="absolute top-[2em] left-0 bg-white z-50"
+                          ref={commentEmojiElement}
+                        >
+                          <Picker
+                            onEmojiClick={onEmojiClickPostComment}
+                            pickerStyle={{ width: "100%" }}
+                          />
+                        </div>
+                      )}
+                    </div>
                     <TextField
                       placeholder="Post a comment"
                       className="w-[85%]"
@@ -523,12 +564,17 @@ const PostComponent: React.FC = () => {
                     />
                     <Button
                       variant="contained"
-                      className="bg-blue-500 text-[0.8em]"
+                      disabled={currentPost == index1 && loadingPostingComment}
+                      className="bg-blue-500 text-[0.8em] flex items-center justify-center"
                       onClick={() =>
-                        comment(posts[index1]?._id, textComment[index1])
+                        comment(index1, posts[index1]?._id, textComment[index1])
                       }
                     >
-                      POST
+                      {currentPost == index1 && loadingPostingComment ? (
+                        <img src={Loading} alt="" className="w-6" />
+                      ) : (
+                        "POST"
+                      )}
                     </Button>
                   </div>
                 </div>
