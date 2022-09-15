@@ -5,7 +5,8 @@ import {
   EmojiEmotions,
   Favorite,
   FavoriteBorder,
-  Image
+  Image,
+  OndemandVideo
 } from "@mui/icons-material";
 import { Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,7 @@ import Person from "./../../assets/person/person.png";
 import { socket } from "../../context/chatContext";
 import "./../../assets/style/post.css";
 import AudioClick from "./../../assets/audio/click.mp3";
+import ReactPlayer from "react-player";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,6 +41,8 @@ const PostComponent: React.FC = () => {
   const [currentPost, setCurrentPost] = useState<any>(null);
   const [showCommentEmojiElement, setShowCommentEmojiElement] =
     useState<boolean>(false);
+  // Uploading video
+  const [uploadingVideo, setUploadingVideo] = useState<boolean>(false);
   const emojiElement: any = useRef(null);
   const commentEmojiElement: any = useRef(null);
   const onEmojiClick = (event: any, emojiObject: any) => {
@@ -147,6 +151,7 @@ const PostComponent: React.FC = () => {
   const onImageChange = (e: any) => {
     setImages([...e.target.files]);
   };
+
   useEffect(() => {
     if (images.length < 1) return;
     const newImageUrls: any = [];
@@ -155,6 +160,7 @@ const PostComponent: React.FC = () => {
     );
     setImageURLs(newImageUrls);
   }, [images]);
+
   const post = async () => {
     try {
       setLoading(true);
@@ -170,10 +176,17 @@ const PostComponent: React.FC = () => {
           let image = images[index];
           data.append("file", image);
           data.append("upload_preset", "chatpresetimages");
-          let request = await axios.post(
-            "https://api.cloudinary.com/v1_1/dkpaiyjv5/image/upload",
-            data
-          );
+          let request: any = null;
+          if (uploadingVideo)
+            request = await axios.post(
+              "https://api.cloudinary.com/v1_1/dkpaiyjv5/video/upload",
+              data
+            );
+          else
+            request = await axios.post(
+              "https://api.cloudinary.com/v1_1/dkpaiyjv5/image/upload",
+              data
+            );
           let urlData = await request.data;
           urls.push(urlData.secure_url);
           index++;
@@ -288,8 +301,18 @@ const PostComponent: React.FC = () => {
             </div>
             {imageURLs.length <= 0 ? null : (
               <div className="py-2 relative w-full">
-                <div className="flex items-center justify-center">
-                  <img src={imageURLs[currentImage]} />
+                <div className="flex items-center justify-center min-h-[15em]">
+                  {uploadingVideo ? (
+                    <ReactPlayer
+                      url={imageURLs[currentImage]}
+                      controls
+                      muted={true}
+                      loop
+                      playing
+                    />
+                  ) : (
+                    <img src={imageURLs[currentImage]} />
+                  )}
                 </div>
                 <span
                   className="absolute top-[45%] cursor-pointer bg-white border rounded-full p-[0.1em]"
@@ -338,7 +361,15 @@ const PostComponent: React.FC = () => {
                   )}
                 </div>
                 <span>
-                  <label htmlFor="image-upload">
+                  <label
+                    htmlFor="image-upload"
+                    onClick={() => {
+                      setUploadingVideo(false);
+                      setImageURLs([]);
+                      setImages([]);
+                      setCurrentImage(0);
+                    }}
+                  >
                     <Image className="text-blue-500 text-[1.6em] cursor-pointer" />
                     <input
                       type="file"
@@ -350,30 +381,54 @@ const PostComponent: React.FC = () => {
                     />
                   </label>
                 </span>
+                <span>
+                  <label
+                    htmlFor="video-upload"
+                    onClick={() => {
+                      setUploadingVideo(true);
+                      setImageURLs([]);
+                      setImages([]);
+                      setCurrentImage(0);
+                    }}
+                  >
+                    <OndemandVideo className="text-blue-500 text-[1.6em] cursor-pointer" />
+                  </label>
+                  <input
+                    type="file"
+                    id="video-upload"
+                    hidden
+                    multiple
+                    accept="video/*"
+                    onChange={onImageChange}
+                  />
+                </span>
               </div>
               <div className="flex gap-2">
-                {imageURLs.length > 0 ||
-                  (postText != "" && (
-                    <Button
-                      variant="contained"
-                      className="bg-red-500 px-10 h-[2em] w-[3em] md:w-[5em] md:h-[2.5em]"
-                      onClick={cancel}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <img src={Loading} className="w-7" />
-                      ) : (
-                        "CANCEL"
-                      )}
-                    </Button>
-                  ))}
+                {postText != "" || imageURLs.length > 0 ? (
+                  <Button
+                    variant="contained"
+                    disabled={loading}
+                    className="bg-red-500 text-[0.8em] flex items-center justify-center"
+                    onClick={cancel}
+                  >
+                    {loading ? (
+                      <img src={Loading} alt="" className="w-6" />
+                    ) : (
+                      "CANCEL"
+                    )}
+                  </Button>
+                ) : null}
                 <Button
                   variant="contained"
-                  className="bg-blue-500 px-10 h-[2em] w-[3em] md:w-[5em] md:h-[2.5em]"
-                  onClick={post}
                   disabled={loading}
+                  className="bg-blue-500 text-[0.8em] flex items-center justify-center"
+                  onClick={post}
                 >
-                  {loading ? <img src={Loading} className="w-7" /> : "POST"}
+                  {loading ? (
+                    <img src={Loading} alt="" className="w-6" />
+                  ) : (
+                    "POST"
+                  )}
                 </Button>
               </div>
             </div>
@@ -423,14 +478,30 @@ const PostComponent: React.FC = () => {
                             className="flex items-center justify-center min-w-full rounded-md"
                             key={index2}
                           >
-                            <img
-                              src={
-                                data?.post?.images[
-                                  allPostsObject[index1]?.postCurrentImage
-                                ]
-                              }
-                              className="rounded-md"
-                            />
+                            <div className="flex items-center justify-center min-h-[15em]">
+                              {image.includes("video") ? (
+                                <ReactPlayer
+                                  url={
+                                    data?.post?.images[
+                                      allPostsObject[index1]?.postCurrentImage
+                                    ]
+                                  }
+                                  controls
+                                  muted={true}
+                                  loop
+                                  playing
+                                />
+                              ) : (
+                                <img
+                                  src={
+                                    data?.post?.images[
+                                      allPostsObject[index1]?.postCurrentImage
+                                    ]
+                                  }
+                                  className="rounded-md"
+                                />
+                              )}
+                            </div>
                           </div>
                         );
                       }
