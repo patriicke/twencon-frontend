@@ -1,4 +1,4 @@
-import { Add, Person, Search } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ChatContext } from "../../../context/chatContext";
@@ -8,8 +8,10 @@ import {
   resetNotifications
 } from "../../../features/user/userSlice";
 import { resetNotificationsFromDatabase } from "../../../hooks";
-import Person1 from "./../../../assets/person/person.png";
-
+import Person from "./../../../assets/person/person.png";
+import notificationSound from "./../../../assets/audio/notification.wav";
+import Twencon from "./../../../assets/logo/logo.png";
+import { useNotifyMe } from "../../../hooks";
 const SideBar: React.FC = () => {
   const user = useSelector((state: any) => state.user.userData);
   const dispatch = useDispatch();
@@ -25,13 +27,40 @@ const SideBar: React.FC = () => {
     showTabs,
     setShowTabs
   } = useContext<any>(ChatContext);
+  const playNotificationSound = () => {
+    const notifySound = new Audio(notificationSound);
+    notifySound.play();
+  };
+
   try {
     socket.off("new-user").on("new-user", (payload: any) => {
       setMembers(payload);
     });
-    socket.off("notifications").on("notifications", (room: any) => {
+    socket.off("notifications").on("notifications", (room: any, data: any) => {
       if (currentRoom !== room) {
         dispatch(addNotifications(room));
+        const messagesArray = data[data.length - 1];
+        let header = "";
+        let body = ``;
+        let icon: any = null;
+        const message =
+          messagesArray?.messagesByDate[
+            messagesArray?.messagesByDate?.length - 1
+          ];
+        console.log(message);
+        if (message?.from?.profile == "icon") {
+          icon = Twencon;
+        } else {
+          icon = message?.from?.profile;
+        }
+        body = `${message?.content}`;
+        if (room.length <= 10) {
+          header = `You have a new message from ${message?.from?.fullname} in ${room} group`;
+          useNotifyMe(header, body, icon, playNotificationSound);
+        } else {
+          header = `You have a new message from ${message?.from?.fullname}`;
+          useNotifyMe(header, body, icon, playNotificationSound);
+        }
       }
     });
   } catch (error) {
@@ -162,7 +191,7 @@ const SideBar: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   {data.profile === "icon" ? (
                     <img
-                      src={Person1}
+                      src={Person}
                       className="w-14 h-14 border rounded-full"
                     />
                   ) : (

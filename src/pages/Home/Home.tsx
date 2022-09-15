@@ -54,6 +54,15 @@ export const Home: React.FC = () => {
     for (const room in userData?.newMessages) {
       count += userData?.newMessages[room];
     }
+    if (count != 0)
+      document
+        .querySelector("[name=logo]")
+        ?.setAttribute("href", "./src/assets/logo/LogoNotification.png");
+    else
+      document
+        .querySelector("[name=logo]")
+        ?.setAttribute("href", "./src/assets/logo/logo.png");
+
     setMessageNotifications(count);
   }, [userData]);
   const navigations: {

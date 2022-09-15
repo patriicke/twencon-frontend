@@ -18,6 +18,7 @@ import axios from "axios";
 import Person from "./../../assets/person/person.png";
 import { socket } from "../../context/chatContext";
 import "./../../assets/style/post.css";
+import AudioClick from "./../../assets/audio/click.mp3";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -201,6 +202,8 @@ const PostComponent: React.FC = () => {
   };
   const like = async (id: any) => {
     try {
+      const clickSound = new Audio(AudioClick);
+      clickSound.play();
       socket.emit("like-post", user, id);
     } catch (error) {
       console.log(error);

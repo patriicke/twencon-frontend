@@ -179,3 +179,39 @@ export const useGetPosts = async (setPosts: any, setAllPostsObject?: any) => {
     console.log(error);
   }
 };
+
+export const useNotifyMe = (
+  header: any,
+  body: any,
+  icon: any,
+  playNotificationSound: any
+) => {
+  if (!window.Notification) {
+    console.log("Browser does not support notifications.");
+  } else {
+    if (Notification.permission === "granted") {
+      var notify = new Notification(`Twencon! ${header}`, {
+        body,
+        icon
+      });
+
+      playNotificationSound();
+    } else {
+      Notification.requestPermission()
+        .then(function (p) {
+          if (p === "granted") {
+            var notify = new Notification(`Twencon! ${header}`, {
+              body,
+              icon
+            });
+            playNotificationSound();
+          } else {
+            console.log("User blocked notifications.");
+          }
+        })
+        .catch(function (err) {
+          console.error(err);
+        });
+    }
+  }
+};
