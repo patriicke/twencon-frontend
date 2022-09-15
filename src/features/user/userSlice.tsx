@@ -13,7 +13,7 @@ const userSlice = createSlice({
       }
     },
     resetNotifications: (state: any, { payload }) => {
-      delete state.userData.newMessages[payload];
+      delete state?.userData?.newMessages[payload];
     },
     userDataAction: (state: any, action) => {
       return {

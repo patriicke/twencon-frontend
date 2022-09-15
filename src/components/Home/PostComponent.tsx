@@ -552,7 +552,7 @@ const PostComponent: React.FC = () => {
                       className="w-[85%]"
                       autoComplete="off"
                       size="small"
-                      value={textComment[index1]}
+                      value={textComment[index1] ? textComment[index1] : ""}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setTextComment((current: any) => {
                           return {
