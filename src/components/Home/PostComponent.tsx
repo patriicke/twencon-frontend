@@ -17,6 +17,7 @@ import Loading from "./../../assets/loading/loading.gif";
 import axios from "axios";
 import Person from "./../../assets/person/person.png";
 import { socket } from "../../context/chatContext";
+import "./../../assets/style/post.css";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const PostComponent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<number>(0);
   const [newPosts, setNewPosts] = useState<any>([]);
+  const [likeAnimation, setLikeAnimation] = useState<any>(false);
   useEffect(() => {
     document.addEventListener("mousedown", () => {
       if (!emojiElement.current?.contains(event?.target))
@@ -164,6 +166,11 @@ const PostComponent: React.FC = () => {
       socket.emit("like-post", user, id);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLikeAnimation(id);
+      setTimeout(() => {
+        setLikeAnimation(false);
+      }, 500);
     }
   };
   const cancel = () => {
@@ -414,7 +421,11 @@ const PostComponent: React.FC = () => {
                 )}
                 <div>
                   <div className="flex justify-between items-center p-2 px-5">
-                    <div className="flex justify-center items-center gap-2 ">
+                    <div
+                      className={`flex justify-center items-center gap-2 ${
+                        likeAnimation == data?._id && "likeBtn"
+                      }`}
+                    >
                       <span
                         onClick={() => like(data?._id)}
                         className="flex items-center justify-center"
@@ -424,7 +435,7 @@ const PostComponent: React.FC = () => {
                         }) == undefined ? (
                           <FavoriteBorder className="md:text-[2em] opacity-70 cursor-pointer" />
                         ) : (
-                          <Favorite className="md:text-[2em] cursor-pointer text-blue-500" />
+                          <Favorite className="md:text-[2em] cursor-pointer text-red-500" />
                         )}
                       </span>
                       <span className="text-[0.9em] md:text-[1em] flex items-center justify-center">

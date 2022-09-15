@@ -1,0 +1,21 @@
+.likeBtn {
+  animation: like-btn 500ms linear;
+}
+
+@keyframes like-btn {
+  0% {
+    transform: rotate3d(1, 0, 0, 0deg);
+  }
+  25% {
+    transform: rotate3d(1, 0, 0, 45deg);
+  }
+  50% {
+    transform: rotate3d(1, 0, 0, 90deg);
+  }
+  75% {
+    transform: rotate3d(1, 0, 0, 90deg);
+  }
+  100% {
+    transform: rotate3d(1, 0, 0 180deg);
+  }
+}
