@@ -18,6 +18,7 @@ import axios from "axios";
 import Person from "./../../assets/person/person.png";
 import { socket } from "../../context/chatContext";
 import "./../../assets/style/post.css";
+import AnimatedNumber from "react-animated-numbers";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,6 +39,9 @@ const PostComponent: React.FC = () => {
   const [currentImage, setCurrentImage] = useState<number>(0);
   const [newPosts, setNewPosts] = useState<any>([]);
   const [likeAnimation, setLikeAnimation] = useState<any>(false);
+  const [textComment, setTextComment] = useState<any>({});
+  const [loadingPostingComment, setLoadingPostingComment] =
+    useState<boolean>(false);
   useEffect(() => {
     document.addEventListener("mousedown", () => {
       if (!emojiElement.current?.contains(event?.target))
@@ -68,6 +72,20 @@ const PostComponent: React.FC = () => {
           if (current.length < 1) return [data];
           return [data, ...current];
         });
+      }
+    });
+    socket.off("comment").on("comment", (data) => {
+      console.log(data);
+      try {
+        const newState = posts.map((post: any) => {
+          if (post._id === data?.post?._id) {
+            return { ...post, comments: data?.post?.comments };
+          }
+          return post;
+        });
+        setPosts(newState);
+      } catch (error) {
+        console.log(error);
       }
     });
   } catch (error) {
@@ -171,6 +189,23 @@ const PostComponent: React.FC = () => {
       setTimeout(() => {
         setLikeAnimation(false);
       }, 500);
+    }
+  };
+
+  const comment = async (id: any, textComment: any) => {
+    if (textComment == "") return;
+    const date = new Date();
+    try {
+      socket.emit("create-comment", user, id, textComment, date);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTextComment((current: any) => {
+        return {
+          ...current,
+          [id]: ""
+        };
+      });
     }
   };
   const cancel = () => {
@@ -433,12 +468,12 @@ const PostComponent: React.FC = () => {
                         {data?.likes.find((currentUser: any) => {
                           return currentUser._id == user?._id;
                         }) == undefined ? (
-                          <FavoriteBorder className="md:text-[2em] opacity-70 cursor-pointer" />
+                          <FavoriteBorder className="md:text-[1.5em] opacity-70 cursor-pointer" />
                         ) : (
-                          <Favorite className="md:text-[2em] cursor-pointer text-red-500" />
+                          <Favorite className="md:text-[1.5em] cursor-pointer text-red-500" />
                         )}
                       </span>
-                      <span className="text-[0.9em] md:text-[1em] flex items-center justify-center">
+                      <span className="text-[0.9em] flex items-center justify-center">
                         {(data?.likes as any)?.length <= 0
                           ? null
                           : data?.likes?.length}
@@ -446,17 +481,23 @@ const PostComponent: React.FC = () => {
                     </div>
                     <div className="flex gap-2 items-center justify-center">
                       <span className="flex items-center justify-center">
-                        <i className="fa-regular fa-comment text-[1.3em] md:text-[1.7em] opacity-70 cursor-pointer"></i>
+                        {(data?.comments as any)?.length <= 0 ? (
+                          <i className="fa-regular fa-comment text-[1.3em] opacity-70 cursor-pointer"></i>
+                        ) : (
+                          <i className="fa-solid fa-comment text-[1.3em] opacity-70 cursor-pointer text-blue-500"></i>
+                        )}
                       </span>
-                      <span className="text-[0.9em] md:text-[1em] flex items-center justify-center">
-                        {(data?.comments as any)?.length <= 0 ? null : "10K"}
+                      <span className="text-[0.9em] flex items-center justify-center">
+                        {(data?.comments as any)?.length <= 0
+                          ? null
+                          : data?.comments.length}
                       </span>
                     </div>
                     <div className="flex gap-2 items-center justify-center">
                       <span className="flex items-center justify-center">
-                        <i className="fa-regular fa-share-from-square text-[1.3em] md:text-[1.6em] opacity-70 cursor-pointer"></i>
+                        <i className="fa-regular fa-share-from-square text-[1.3em]  opacity-70 cursor-pointer"></i>
                       </span>
-                      <span className="text-[0.9em] md:text-[1em] flex items-center justify-center">
+                      <span className="text-[0.9em] flex items-center justify-center">
                         {(data?.share as any)?.length <= 0 ? null : "10K"}
                       </span>
                     </div>
@@ -470,10 +511,22 @@ const PostComponent: React.FC = () => {
                       className="w-[85%]"
                       autoComplete="off"
                       size="small"
+                      value={textComment[index1]}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setTextComment((current: any) => {
+                          return {
+                            ...current,
+                            [index1]: e.target.value
+                          };
+                        });
+                      }}
                     />
                     <Button
                       variant="contained"
                       className="bg-blue-500 text-[0.8em]"
+                      onClick={() =>
+                        comment(posts[index1]?._id, textComment[index1])
+                      }
                     >
                       POST
                     </Button>
