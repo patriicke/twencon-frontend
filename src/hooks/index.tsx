@@ -132,21 +132,15 @@ export const useUserData = async (
     console.log(error);
   }
 };
-
 /* Reset password */
-
 export const restPassword = async () => {
   const request = await api.post("/reset/verify");
 };
-
 /* Reset all notifications from a room */
-
 export const resetNotificationsFromDatabase = async (email: any, room: any) => {
   const request = await api.post("/notifications/reset", { email, room });
 };
-
 //This is all about the posts
-
 export const useGetPosts = async (setPosts: any, setAllPostsObject?: any) => {
   try {
     const request = await api.get("/post");
@@ -179,7 +173,7 @@ export const useGetPosts = async (setPosts: any, setAllPostsObject?: any) => {
     console.log(error);
   }
 };
-
+//Use notify me
 export const useNotifyMe = (
   header: any,
   body: any,

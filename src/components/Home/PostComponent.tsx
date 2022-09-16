@@ -230,7 +230,7 @@ const PostComponent: React.FC = () => {
   const comment = async (index1: any, id: any, textComment: any) => {
     setLoadingPostingComment(true);
     try {
-      if (textComment == "") return setLoadingPostingComment(false);
+      if (textComment == "" || textComment == null) return setLoadingPostingComment(false);
       const date = new Date();
       socket.emit("create-comment", user, id, textComment, date);
     } catch (error) {
@@ -257,7 +257,10 @@ const PostComponent: React.FC = () => {
     setNewPosts([]);
   };
   return (
-    <div className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1">
+    <div
+      className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1"
+      id="postId"
+    >
       <div className="h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3 relative">
         {newPosts.length < 1 ? null : (
           <div
@@ -478,8 +481,8 @@ const PostComponent: React.FC = () => {
                             className="flex items-center justify-center min-w-full rounded-md"
                             key={index2}
                           >
-                            <div className="flex items-center justify-center min-h-[15em]">
-                              {image.includes("video") ? (
+                            <div className="flex items-center justify-center min-h-[15em] videos">
+                              {image?.includes("video") ? (
                                 <ReactPlayer
                                   url={
                                     data?.post?.images[
@@ -489,7 +492,7 @@ const PostComponent: React.FC = () => {
                                   controls
                                   muted={true}
                                   loop
-                                  playing
+                                  playing={currentPost == index1}
                                 />
                               ) : (
                                 <img
