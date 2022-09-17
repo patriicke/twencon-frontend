@@ -9,6 +9,7 @@ import {
   OndemandVideo
 } from "@mui/icons-material";
 import { Button, TextField } from "@mui/material";
+import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userDataAction } from "../../features/user/userSlice";
@@ -151,7 +152,6 @@ const PostComponent: React.FC = () => {
   const onImageChange = (e: any) => {
     setImages([...e.target.files]);
   };
-
   useEffect(() => {
     if (images.length < 1) return;
     const newImageUrls: any = [];
@@ -160,7 +160,6 @@ const PostComponent: React.FC = () => {
     );
     setImageURLs(newImageUrls);
   }, [images]);
-
   const post = async () => {
     try {
       setLoading(true);
@@ -230,7 +229,8 @@ const PostComponent: React.FC = () => {
   const comment = async (index1: any, id: any, textComment: any) => {
     setLoadingPostingComment(true);
     try {
-      if (textComment == "" || textComment == null) return setLoadingPostingComment(false);
+      if (textComment == "" || textComment == null)
+        return setLoadingPostingComment(false);
       const date = new Date();
       socket.emit("create-comment", user, id, textComment, date);
     } catch (error) {
@@ -256,6 +256,14 @@ const PostComponent: React.FC = () => {
     });
     setNewPosts([]);
   };
+  useEffect(() => {
+    let a = document.getElementById("postId");
+    let postHeight = document.querySelectorAll(".postHeight")[0];
+    a?.addEventListener("scroll", () => {
+      console.log("post height :", postHeight?.scrollHeight);
+      console.log("scroll position: ", a?.scrollTop);
+    });
+  });
   return (
     <div
       className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1"
@@ -473,7 +481,7 @@ const PostComponent: React.FC = () => {
                   </div>
                 </div>
                 {(data?.post?.images as any)?.length <= 0 ? null : (
-                  <div className="relative w-full flex overflow-hidden rounded-md">
+                  <div className="relative w-full flex overflow-hidden rounded-md postHeight">
                     {(data?.post?.images as any).map(
                       (image: any, index2: number) => {
                         return (
@@ -482,28 +490,30 @@ const PostComponent: React.FC = () => {
                             key={index2}
                           >
                             <div className="flex items-center justify-center min-h-[15em] videos">
-                              {image?.includes("video") ? (
-                                <ReactPlayer
-                                  url={
-                                    data?.post?.images[
-                                      allPostsObject[index1]?.postCurrentImage
-                                    ]
-                                  }
-                                  controls
-                                  muted={true}
-                                  loop
-                                  playing={currentPost == index1}
-                                />
-                              ) : (
-                                <img
-                                  src={
-                                    data?.post?.images[
-                                      allPostsObject[index1]?.postCurrentImage
-                                    ]
-                                  }
-                                  className="rounded-md"
-                                />
-                              )}
+                              <LazyLoadComponent>
+                                {image?.includes("video") ? (
+                                  <ReactPlayer
+                                    url={
+                                      data?.post?.images[
+                                        allPostsObject[index1]?.postCurrentImage
+                                      ]
+                                    }
+                                    controls
+                                    muted={true}
+                                    loop
+                                    playing={currentPost == index1}
+                                  />
+                                ) : (
+                                  <img
+                                    src={
+                                      data?.post?.images[
+                                        allPostsObject[index1]?.postCurrentImage
+                                      ]
+                                    }
+                                    className="rounded-md"
+                                  />
+                                )}
+                              </LazyLoadComponent>
                             </div>
                           </div>
                         );
