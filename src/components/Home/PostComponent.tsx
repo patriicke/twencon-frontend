@@ -39,7 +39,7 @@ const PostComponent: React.FC = () => {
   const [textComment, setTextComment] = useState<any>({});
   const [loadingPostingComment, setLoadingPostingComment] =
     useState<boolean>(false);
-  const [currentPost, setCurrentPost] = useState<any>(null);
+  const [currentPost, setCurrentPost] = useState<any>(0);
   const [showCommentEmojiElement, setShowCommentEmojiElement] =
     useState<boolean>(false);
   // Uploading video
@@ -256,12 +256,28 @@ const PostComponent: React.FC = () => {
     });
     setNewPosts([]);
   };
+  const [totalScrollHeights, setTotalScrollHeights] = useState<any>(0);
+  const [totalPostHeights, setTotalPostsHeights] = useState<any>(0);
   useEffect(() => {
     let a = document.getElementById("postId");
-    let postHeight = document.querySelectorAll(".postHeight")[0];
+    let postHeight = document.querySelectorAll(".postHeight")[currentPost];
     a?.addEventListener("scroll", () => {
-      console.log("post height :", postHeight?.scrollHeight);
-      console.log("scroll position: ", a?.scrollTop);
+      setTotalPostsHeights((current: any) => {
+        return current + postHeight;
+      });
+      setTotalScrollHeights(a?.scrollTop);
+      if ((a as unknown as any) > totalPostHeights) {
+        setCurrentPost((current: any) => {
+          return current + 1;
+        });
+      } else {
+        setCurrentPost((current: any) => {
+          return current - 1;
+        });
+      }
+      console.log("scroll position: ", totalScrollHeights);
+      console.log("post height: ", postHeight?.scrollHeight);
+      console.log("current post: ", currentPost);
     });
   });
   return (
