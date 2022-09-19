@@ -256,30 +256,30 @@ const PostComponent: React.FC = () => {
     });
     setNewPosts([]);
   };
-  const [totalScrollHeights, setTotalScrollHeights] = useState<any>(0);
-  const [totalPostHeights, setTotalPostsHeights] = useState<any>(0);
-  useEffect(() => {
-    let a = document.getElementById("postId");
-    let postHeight = document.querySelectorAll(".postHeight")[currentPost];
-    a?.addEventListener("scroll", () => {
-      setTotalPostsHeights((current: any) => {
-        return current + postHeight;
-      });
-      setTotalScrollHeights(a?.scrollTop);
-      if ((a as unknown as any) > totalPostHeights) {
-        setCurrentPost((current: any) => {
-          return current + 1;
-        });
-      } else {
-        setCurrentPost((current: any) => {
-          return current - 1;
-        });
-      }
-      console.log("scroll position: ", totalScrollHeights);
-      console.log("post height: ", postHeight?.scrollHeight);
-      console.log("current post: ", currentPost);
-    });
-  });
+  // const [totalScrollHeights, setTotalScrollHeights] = useState<any>(0);
+  // const [totalPostHeights, setTotalPostsHeights] = useState<any>(0);
+  // useEffect(() => {
+  //   let a = document.getElementById("postId");
+  //   let postHeight = document.querySelectorAll(".postHeight")[currentPost];
+  //   a?.addEventListener("scroll", () => {
+  //     setTotalPostsHeights((current: any) => {
+  //       return current + postHeight;
+  //     });
+  //     setTotalScrollHeights(a?.scrollTop);
+  //     if ((a as unknown as any) > totalPostHeights) {
+  //       setCurrentPost((current: any) => {
+  //         return current + 1;
+  //       });
+  //     } else {
+  //       setCurrentPost((current: any) => {
+  //         return current - 1;
+  //       });
+  //     }
+  //     console.log("scroll position: ", totalScrollHeights);
+  //     console.log("post height: ", postHeight?.scrollHeight);
+  //     console.log("current post: ", currentPost);
+  //   });
+  // });
   return (
     <div
       className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1"
