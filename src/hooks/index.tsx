@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "./../api";
-//Upload image
+/*Upload image */
 export const uploadImage = async (
   image: any,
   setUploading: any,
@@ -31,6 +31,7 @@ export const uploadImage = async (
     setUploading(false);
   }
 };
+/*Upload many images */
 export const uploadManyImages = async (images: any, setLoading: any) => {
   try {
     let imageUrls: string[] = [];
@@ -56,7 +57,7 @@ export const uploadManyImages = async (images: any, setLoading: any) => {
     setLoading(false);
   }
 };
-// scroll
+/* scroll */
 export const useScrollPosition = () => {
   const [scrollPosition, setScrollPostion] = useState<number>(0);
   useEffect(() => {
@@ -116,7 +117,7 @@ export const useResendCreateVerificationCode = async (
     return error;
   }
 };
-/* Get user data on home route*/
+/* Get user data on home route */
 export const useUserData = async (
   navigate: any,
   dispatch: any,
@@ -140,7 +141,7 @@ export const restPassword = async () => {
 export const resetNotificationsFromDatabase = async (email: any, room: any) => {
   const request = await api.post("/notifications/reset", { email, room });
 };
-//This is all about the posts
+/* This is all about the posts */
 export const useGetPosts = async (setPosts: any, setAllPostsObject?: any) => {
   try {
     const request = await api.get("/post");
@@ -173,7 +174,7 @@ export const useGetPosts = async (setPosts: any, setAllPostsObject?: any) => {
     console.log(error);
   }
 };
-//Use notify me
+/* Use notify me */
 export const useNotifyMe = (
   header: any,
   body: any,
