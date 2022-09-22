@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { useGetPosts } from "../../hooks";
 import Person from "./../../assets/person/person.png";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
+  const username = useParams();
   const [posts, setPosts] = useState<any>([]);
   const getPosts = async () => {
     const posts = await useGetPosts(setPosts);
@@ -11,6 +13,7 @@ const UserAccount: React.FC = () => {
   };
   useEffect(() => {
     getPosts();
+    console.log(username);
   }, []);
   return (
     <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
