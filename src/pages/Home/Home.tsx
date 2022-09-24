@@ -17,7 +17,6 @@ import Person from "./../../assets/person/person.png";
 import HomeComponent from "../../components/Home/HomeComponent";
 import UserAccount from "../Account/UserAccount";
 import HomePageContext from "../../context/HomePageContext";
-
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

@@ -9,14 +9,25 @@ import { socket } from "./../../context/chatContext";
 const SuggestionComponent: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const [users, setUsers] = useState<any>([]);
-  const navigate = useNavigate();
   const { setCurrent } = useContext<any>(HomePageContext);
+  const [showContent, setShowContent] = useState<boolean>(false);
+  const navigate = useNavigate();
   useEffect(() => {
     getAllUsers(setUsers);
   }, []);
   try {
     socket.off("follow").on("follow", (data) => {
       console.log(data);
+      const newState = users?.map((user: any) => {
+        if (user.email === data?.friendAccount?.email) {
+          return { ...user, followers: data?.friendAccount?.followers };
+        }
+        if (user._id === data?.userAccount?._id) {
+          return { ...user, following: data?.userAccount?.following };
+        }
+        return user;
+      });
+      setUsers(newState);
     });
   } catch (error) {
     console.log(error);
@@ -26,7 +37,7 @@ const SuggestionComponent: React.FC = () => {
       <div className="h-full w-4/5 flex flex-col gap-2">
         <h1>Suggestions for you</h1>
         <div className="flex flex-col gap-2 ">
-          {users
+          {(users as any)
             ?.filter((currentUser: any) => {
               return currentUser?._id != user?._id;
             })
@@ -53,15 +64,35 @@ const SuggestionComponent: React.FC = () => {
                       <div className="text-blue-500">@{data?.username}</div>
                     </div>
                   </div>
-                  <button
-                    className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
-                    onClick={() => {
-                      let date = new Date();
-                      follow({ ...user, date }, { ...data, date });
-                    }}
-                  >
-                    Follow
-                  </button>
+                  {data?.followers?.find((currentUser: any) => {
+                    return currentUser?.email == user?.email;
+                  }) ? (
+                    <button
+                      className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
+                      onClick={() => {
+                        let date = new Date();
+                        follow({ ...user, date }, { ...data, date });
+                      }}
+                      onMouseEnter={() => {
+                        setShowContent(true);
+                      }}
+                      onMouseLeave={() => {
+                        setShowContent(false);
+                      }}
+                    >
+                      {showContent ? "Unfollow" : "Following"}
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
+                      onClick={() => {
+                        let date = new Date();
+                        follow({ ...user, date }, { ...data, date });
+                      }}
+                    >
+                      Follow
+                    </button>
+                  )}
                 </div>
               );
             })}
