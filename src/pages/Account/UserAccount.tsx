@@ -1,5 +1,6 @@
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
+import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { getUserAccount, useGetPosts } from "../../hooks";
 import Person from "./../../assets/person/person.png";
@@ -82,23 +83,25 @@ const UserAccount: React.FC = () => {
             .map((data: any, index: any) => {
               return (
                 <li
-                  className="border w-full md:w-auto min-w-[30em] items-center justify-center rounded-lg"
+                  className="border w-full md:w-auto min-w-[20em] items-center justify-center rounded-lg"
                   key={index}
                 >
-                  {data?.post?.images[0]?.includes("video") ? (
-                    <video
-                      className="flex items-center justify-center max-w-[30em]"
-                      controls
-                    >
-                      <source src={data?.post?.images[0]} />
-                    </video>
-                  ) : data?.post?.images[0] == null ? (
-                    <div className="flex items-center justify-center h-full italic text-center">
-                      {data?.post?.description}
-                    </div>
-                  ) : (
-                    <img src={data?.post?.images[0]} />
-                  )}
+                  <LazyLoadComponent>
+                    {data?.post?.images[0]?.includes("video") ? (
+                      <video
+                        className="flex items-center justify-center max-w-[30em]"
+                        controls
+                      >
+                        <source src={data?.post?.images[0]} />
+                      </video>
+                    ) : data?.post?.images[0] == null ? (
+                      <div className="flex items-center justify-center h-full italic text-center">
+                        {data?.post?.description}
+                      </div>
+                    ) : (
+                      <img src={data?.post?.images[0]} />
+                    )}
+                  </LazyLoadComponent>
                   <div className="overlay flex flex-col">
                     <span className="text-center">
                       {data?.post?.description}

@@ -220,3 +220,13 @@ export const getUserAccount = async (username: any, setUserAccount: any) => {
     console.log(error);
   }
 };
+/* Get users */
+export const getAllUsers = async (setUsers: any) => {
+  try {
+    const request = await api.get("/auth/users");
+    const response = request.data;
+    setUsers(response);
+  } catch (error) {
+    console.log(error);
+  }
+};

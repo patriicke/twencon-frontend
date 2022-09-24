@@ -216,7 +216,7 @@ const Chat: React.FC = () => {
                           <div>
                             {data?.from?.profile === "icon" ? (
                               <div
-                                className={`border rounded-full 
+                                className={`border rounded-full min-w-[2.7em]
                                 ${
                                   data?.from?.fullname !== user?.fullname &&
                                   (messagesByDate[index - 1] as any)?.time ===
@@ -232,7 +232,7 @@ const Chat: React.FC = () => {
                                 <img
                                   src={Person}
                                   alt=""
-                                  className="rounded-full"
+                                  className="rounded-full min-w-[2.7em]"
                                 />
                               </div>
                             ) : (
@@ -247,7 +247,7 @@ const Chat: React.FC = () => {
                                     (messagesByDate[index] as any)?.from
                                       ?.email &&
                                   "hidden"
-                                } w-10 h-10 rounded-full border`}
+                                } w-10 h-10 rounded-full border min-w-[2.5em]`}
                               />
                             )}
                           </div>
@@ -280,7 +280,7 @@ const Chat: React.FC = () => {
                               data?.from?.fullname === user?.fullname
                                 ? "bg-[#1877F2] text-white"
                                 : "bg-[#E4E6EB]"
-                            } text-[1rem] rounded-2xl px-4 py-2 font-light flex flex-col `}
+                            } text-[1rem] rounded-2xl px-4 py-2 font-light flex flex-col`}
                           >
                             {data?.content}
                           </span>

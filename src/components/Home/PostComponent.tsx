@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -22,6 +22,7 @@ import { socket } from "../../context/chatContext";
 import "./../../assets/style/post.css";
 import AudioClick from "./../../assets/audio/click.mp3";
 import ReactPlayer from "react-player";
+import HomePageContext from "../../context/HomePageContext";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -256,6 +257,7 @@ const PostComponent: React.FC = () => {
     });
     setNewPosts([]);
   };
+  const { current, setCurrent } = useContext<any>(HomePageContext);
   // const [totalScrollHeights, setTotalScrollHeights] = useState<any>(0);
   // const [totalPostHeights, setTotalPostsHeights] = useState<any>(0);
   // useEffect(() => {
@@ -280,6 +282,7 @@ const PostComponent: React.FC = () => {
   //     console.log("current post: ", currentPost);
   //   });
   // });
+
   return (
     <div
       className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1"

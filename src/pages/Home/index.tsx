@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Dashboard from "./Dashboard";
 import Home from "./Home";
-
+import HomePageContext from "../../context/HomePageContext";
 export const MainHome: React.FC = () => {
+  const [current, setCurrent] = useState<number>(0);
   return (
-    <>{localStorage.getItem("acc_token") == null ? <Dashboard /> : <Home />}</>
+    <>
+      {localStorage.getItem("acc_token") == null ? (
+        <Dashboard />
+      ) : (
+        <HomePageContext.Provider value={{current, setCurrent}}>
+          <Home />
+        </HomePageContext.Provider>
+      )}
+    </>
   );
 };
 

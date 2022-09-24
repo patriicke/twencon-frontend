@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "../../hooks";
@@ -16,11 +16,13 @@ import PhotoSkeleton from "../../components/Sketeleton/PhotoSkeleton/PhotoSkelet
 import Person from "./../../assets/person/person.png";
 import HomeComponent from "../../components/Home/HomeComponent";
 import UserAccount from "../Account/UserAccount";
+import HomePageContext from "../../context/HomePageContext";
+
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((state: any) => state.user.userData);
-  const [current, setCurrent] = useState<number>(0);
+  const { current, setCurrent } = useContext<any>(HomePageContext);
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
   }, []);
@@ -112,7 +114,6 @@ export const Home: React.FC = () => {
       name: "Account"
     }
   ];
-
   return (
     <div className="h-screen relative overflow-hidden flex flex-col md:flex-row-reverse z-auto bg-white">
       <div className="h-[calc(100vh_-_4em)] w-full md:h-screen flex flex-col">
