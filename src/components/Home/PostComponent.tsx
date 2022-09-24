@@ -257,7 +257,7 @@ const PostComponent: React.FC = () => {
     });
     setNewPosts([]);
   };
-  const { current, setCurrent } = useContext<any>(HomePageContext);
+  const { setCurrent } = useContext<any>(HomePageContext);
   // const [totalScrollHeights, setTotalScrollHeights] = useState<any>(0);
   // const [totalPostHeights, setTotalPostsHeights] = useState<any>(0);
   // useEffect(() => {
@@ -282,7 +282,6 @@ const PostComponent: React.FC = () => {
   //     console.log("current post: ", currentPost);
   //   });
   // });
-
   return (
     <div
       className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1"
@@ -306,15 +305,15 @@ const PostComponent: React.FC = () => {
           } `}
         >
           <div className="w-[2.5em] md:w-[4em] h-[2.5em] md:h-[4em] max-h-[4em] rounded-full border-2 flex justify-center items-center">
-            {user?.profile === "icon" ? (
-              <img src={Person} alt="" className="w-full h-full rounded-full" />
-            ) : (
-              <img
-                src={user?.profile}
-                alt=""
-                className="w-full h-full rounded-full"
-              />
-            )}
+            <img
+              src={user?.profile === "icon" ? Person : user?.profile}
+              alt=""
+              className="w-full h-full rounded-full cursor-pointer"
+              onClick={() => {
+                setCurrent(4);
+                navigate(`/${user?.username}`);
+              }}
+            />
           </div>
           <div className="w-[calc(100%_-_4em)]">
             <div className="w-full">

@@ -1,7 +1,9 @@
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import HomePageContext from "../../context/HomePageContext";
 import { getUserAccount, useGetPosts } from "../../hooks";
 import Person from "./../../assets/person/person.png";
 import "./account.css";
@@ -10,6 +12,8 @@ const UserAccount: React.FC = () => {
   const [posts, setPosts] = useState<any>([]);
   const [userAccount, setUserAccount] = useState<any>({});
   const locationArray = document.location.href.split("/");
+  const { setCurrent } = useContext<any>(HomePageContext);
+  const navigate = useNavigate();
   const getPosts = async () => {
     await useGetPosts(setPosts);
   };
@@ -18,7 +22,11 @@ const UserAccount: React.FC = () => {
   }, []);
   useEffect(() => {
     const username = locationArray[locationArray.length - 1];
-    if (!username) return;
+    if (!username) {
+      navigate("/");
+      setCurrent(0);
+      return;
+    }
     if (username == user?.username) {
       setUserAccount(user);
     } else {
@@ -75,7 +83,7 @@ const UserAccount: React.FC = () => {
         </div>
       </div>
       <div className="overflow-auto h-[calc(100%_-_20em)] w-full mt-2 border p-2 rounded-md">
-        <ul className="image-gallery overflow-auto w-full gap-4 justify-center">
+        <ul className="image-gallery overflow-auto w-full">
           {(posts as any)
             .filter((post: any) => {
               return post?.owner?.email === userAccount?.email;

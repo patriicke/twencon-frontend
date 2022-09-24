@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "./../api";
+import { socket } from "../context/chatContext";
 /*Upload image */
 export const uploadImage = async (
   image: any,
@@ -229,4 +230,8 @@ export const getAllUsers = async (setUsers: any) => {
   } catch (error) {
     console.log(error);
   }
+};
+/*Follow */
+export const follow = async (user: any, friend: any) => {
+  socket.emit("start-follow", user, friend);
 };
