@@ -473,7 +473,13 @@ const PostComponent: React.FC = () => {
                 setCurrentPost(index1);
               }}
             >
-              <div className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center">
+              <div
+                className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
+                onClick={() => {
+                  navigate(`/${data?.owner?.username}`);
+                  setCurrent(4);
+                }}
+              >
                 {data?.owner?.profile === "icon" ? (
                   <img src={Person} alt="" className="rounded-full w-full" />
                 ) : (
@@ -487,10 +493,24 @@ const PostComponent: React.FC = () => {
               <div className="w-[calc(100%_-_4em)] flex flex-col gap-2">
                 <div className="flex flex-col">
                   <div className="flex gap-2 items-center">
-                    <div className="font-medium text-[0.9em] md:text-[1em]">
+                    <div
+                      className="font-medium text-[0.9em] md:text-[1em] cursor-pointer"
+                      onClick={() => {
+                        navigate(`/${data?.owner?.username}`);
+                        setCurrent(4);
+                      }}
+                    >
                       {data?.owner?.fullname}
                     </div>
-                    <div className="opacity-50">@{data?.owner?.username}</div>
+                    <div
+                      className="opacity-50 cursor-pointer"
+                      onClick={() => {
+                        navigate(`/${data?.owner?.username}`);
+                        setCurrent(4);
+                      }}
+                    >
+                      @{data?.owner?.username}
+                    </div>
                     <div className="text-blue-500">
                       {calculateDate(data?.date)}
                     </div>
