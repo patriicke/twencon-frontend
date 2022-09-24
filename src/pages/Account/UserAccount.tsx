@@ -17,12 +17,13 @@ const UserAccount: React.FC = () => {
   }, []);
   useEffect(() => {
     const username = locationArray[locationArray.length - 1];
+    if (!username) return;
     if (username == user?.username) {
       setUserAccount(user);
     } else {
       getUserAccount(username, setUserAccount);
     }
-  }, []);
+  }, [document.location.href]);
   return (
     <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
       <div className="border h-[20em] w-full bg-gray-200 rounded-md flex flex-col">
@@ -73,14 +74,17 @@ const UserAccount: React.FC = () => {
         </div>
       </div>
       <div className="overflow-auto h-[calc(100%_-_20em)] w-full mt-2 border p-2 rounded-md">
-        <ul className="image-gallery overflow-auto w-full gap-7">
+        <ul className="image-gallery overflow-auto w-full gap-4 justify-center">
           {(posts as any)
             .filter((post: any) => {
               return post?.owner?.email === userAccount?.email;
             })
             .map((data: any, index: any) => {
               return (
-                <li className="border md:min-w-[20em] items-center justify-center rounded-lg">
+                <li
+                  className="border w-full md:w-auto min-w-[30em] items-center justify-center rounded-lg"
+                  key={index}
+                >
                   {data?.post?.images[0]?.includes("video") ? (
                     <video
                       className="flex items-center justify-center max-w-[30em]"
@@ -89,14 +93,16 @@ const UserAccount: React.FC = () => {
                       <source src={data?.post?.images[0]} />
                     </video>
                   ) : data?.post?.images[0] == null ? (
-                    <div className="flex items-center justify-center h-full italic">
+                    <div className="flex items-center justify-center h-full italic text-center">
                       {data?.post?.description}
                     </div>
                   ) : (
                     <img src={data?.post?.images[0]} />
                   )}
                   <div className="overlay flex flex-col">
-                    <span>{data?.post?.description}</span>
+                    <span className="text-center">
+                      {data?.post?.description}
+                    </span>
                     <div className="flex justify-between items-center p-2 px-5 gap-5">
                       <div
                         className={`flex justify-center items-center gap-2 `}
@@ -132,7 +138,7 @@ const UserAccount: React.FC = () => {
                       </div>
                       <div className="flex gap-2 items-center justify-center">
                         <span className="flex items-center justify-center">
-                          <i className="fa-regular fa-share-from-square text-[1.6em]  opacity-70 cursor-pointer"></i>
+                          <i className="fa-regular fa-share-from-square text-[1.4em]  opacity-70 cursor-pointer"></i>
                         </span>
                         <span className="text-[1.2em] flex items-center justify-center">
                           {(data?.share as any)?.length <= 0 ? null : "10K"}
