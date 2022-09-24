@@ -312,6 +312,7 @@ const PostComponent: React.FC = () => {
               onClick={() => {
                 setCurrent(4);
                 navigate(`/${user?.username}`);
+                sessionStorage.setItem("current", "4");
               }}
             />
           </div>
@@ -477,6 +478,7 @@ const PostComponent: React.FC = () => {
                 onClick={() => {
                   navigate(`/${data?.owner?.username}`);
                   setCurrent(4);
+                  sessionStorage.setItem("current", "4");
                 }}
               >
                 {data?.owner?.profile === "icon" ? (
@@ -497,6 +499,7 @@ const PostComponent: React.FC = () => {
                       onClick={() => {
                         navigate(`/${data?.owner?.username}`);
                         setCurrent(4);
+                        sessionStorage.setItem("current", "4");
                       }}
                     >
                       {data?.owner?.fullname}
@@ -506,6 +509,7 @@ const PostComponent: React.FC = () => {
                       onClick={() => {
                         navigate(`/${data?.owner?.username}`);
                         setCurrent(4);
+                        sessionStorage.setItem("current", "4");
                       }}
                     >
                       @{data?.owner?.username}

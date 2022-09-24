@@ -23,8 +23,9 @@ const UserAccount: React.FC = () => {
   useEffect(() => {
     const username = locationArray[locationArray.length - 1];
     if (!username) {
-      navigate("/");
       setCurrent(0);
+      sessionStorage.setItem("current", "0");
+      navigate(`/`);
       return;
     }
     if (username == user?.username) {
@@ -46,9 +47,9 @@ const UserAccount: React.FC = () => {
               Edit your profile
             </div>
           ) : (
-            <div className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-blue-500 text-white">
+            <button className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-blue-500 text-white">
               Follow
-            </div>
+            </button>
           )}
         </div>
         <div className="h-1/2 bg-white p-2 pt-12">
@@ -61,12 +62,12 @@ const UserAccount: React.FC = () => {
             </h1>
           </div>
           <div className="flex py-2 gap-3 text-[1.2em]">
-            <div className="flex gap-2">
-              <span>0</span>
+            <div className="flex gap-2 cursor-pointer">
+              <span>{userAccount?.followers?.length}</span>
               <span className="font-bold">followers</span>
             </div>
-            <div className="flex gap-2">
-              <span>0</span>
+            <div className="flex gap-2 cursor-pointer">
+              <span>{userAccount?.following?.length}</span>
               <span className="font-bold">following</span>
             </div>
             <div className="flex gap-2">
