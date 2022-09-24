@@ -210,3 +210,13 @@ export const useNotifyMe = (
     }
   }
 };
+/* User account */
+export const getUserAccount = async (username: any, setUserAccount: any) => {
+  try {
+    const request = await api.post("/auth/user", { username });
+    const response = request.data;
+    setUserAccount(response.foundUser);
+  } catch (error) {
+    console.log(error);
+  }
+};

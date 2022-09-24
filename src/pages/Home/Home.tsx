@@ -185,6 +185,9 @@ export const Home: React.FC = () => {
                 onClick={() => {
                   setCurrent(index);
                   sessionStorage.setItem("current", index.toString());
+                  index == 4
+                    ? navigate(`/${userData?.username}`)
+                    : navigate("/");
                 }}
               >
                 {data.icons}
