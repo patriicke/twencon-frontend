@@ -68,10 +68,14 @@ const UserAccount: React.FC = () => {
     <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
       <div className="border h-[20em] w-full bg-gray-200 rounded-md flex flex-col">
         <div className="border rounded-full h-1/2 relative">
-          <img
-            src={userAccount?.profile == "icon" ? Person : userAccount?.profile}
-            className="rounded-full absolute h-[10em] w-[10em] -bottom-10 left-2"
-          />
+          <div className="rounded-full absolute h-[10em] w-[10em] -bottom-10 left-2 hover:bg-gray-400 cursor-pointer p-[0.15em] ">
+            <img
+              src={
+                userAccount?.profile == "icon" ? Person : userAccount?.profile
+              }
+              className="rounded-full hover:opacity-80"
+            />
+          </div>
           {user?.username === userAccount?.username ? (
             <div className="rounded-full absolute right-3 bottom-3 border border-gray-500 p-2 px-4 cursor-pointer opacity-80 font-semibold">
               Edit your profile
