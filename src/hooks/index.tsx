@@ -248,3 +248,13 @@ export const getAllUsers = async (setUsers: any) => {
 export const follow = async (user: any, friend: any) => {
   socket.emit("start-follow", user, friend);
 };
+/*Get post*/
+export const getPost = async (postId: any, setPost: any) => {
+  try {
+    const request = await api.post("/post", { postId });
+    const response = request.data;
+    setPost(response.post);
+  } catch (error) {
+    console.log(error);
+  }
+};
