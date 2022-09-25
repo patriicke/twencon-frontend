@@ -6,13 +6,18 @@ import { useNavigate } from "react-router-dom";
 import HomePageContext from "../../context/HomePageContext";
 import { getUserAccount, useGetPosts } from "../../hooks";
 import Person from "./../../assets/person/person.png";
+import Loading from "./../../assets/loading/loading.gif";
+import { follow } from "../../hooks";
+import { socket } from "../../context/chatContext";
 import "./account.css";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const [posts, setPosts] = useState<any>([]);
   const [userAccount, setUserAccount] = useState<any>({});
   const locationArray = document.location.href.split("/");
+  const [loading, setLoading] = useState<boolean>(false);
   const { setCurrent } = useContext<any>(HomePageContext);
+  const [showContent, setShowContent] = useState<boolean>(false);
   const navigate = useNavigate();
   const getPosts = async () => {
     await useGetPosts(setPosts);
@@ -34,6 +39,20 @@ const UserAccount: React.FC = () => {
       getUserAccount(username, setUserAccount);
     }
   }, [document.location.href]);
+  useEffect(() => {
+    try {
+      socket.off("follow").on("follow", (data) => {
+        const user = data?.users?.filter((user: any) => {
+          return user._id == userAccount._id;
+        });
+        setUserAccount(user[0]);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  });
   return (
     <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
       <div className="border h-[20em] w-full bg-gray-200 rounded-md flex flex-col">
@@ -46,9 +65,41 @@ const UserAccount: React.FC = () => {
             <div className="rounded-full absolute right-3 bottom-3 border border-gray-500 p-2 px-4 cursor-pointer opacity-80 font-semibold">
               Edit your profile
             </div>
+          ) : userAccount?.followers?.find((currentUser: any) => {
+              return currentUser?._id == user?._id;
+            }) ? (
+            <button
+              className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-gray-500 text-white hover:bg-red-500"
+              onClick={() => {
+                let date = new Date();
+                follow({ ...user, date }, { ...userAccount, date });
+                setLoading(true);
+              }}
+              onMouseEnter={() => {
+                setShowContent(true);
+              }}
+              onMouseLeave={() => {
+                setShowContent(false);
+              }}
+            >
+              {loading ? (
+                <img src={Loading} className="w-5" />
+              ) : showContent ? (
+                "Unfollow"
+              ) : (
+                "Following"
+              )}
+            </button>
           ) : (
-            <button className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-blue-500 text-white">
-              Follow
+            <button
+              className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-blue-500 text-white"
+              onClick={() => {
+                let date = new Date();
+                follow({ ...user, date }, { ...userAccount, date });
+                setLoading(true);
+              }}
+            >
+              {loading ? <img src={Loading} className="w-5" /> : "Follow"}
             </button>
           )}
         </div>
