@@ -10,6 +10,7 @@ import Loading from "./../../assets/loading/loading.gif";
 import { follow } from "../../hooks";
 import { socket } from "../../context/chatContext";
 import "./account.css";
+import UserAccountSkeleton from "../../components/Sketeleton/UserAccount/UserAccountSkeleton";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const [posts, setPosts] = useState<any>([]);
@@ -18,6 +19,7 @@ const UserAccount: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { setCurrent } = useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
+  const [loadingData, setLoadingData] = useState<boolean>(true);
   const navigate = useNavigate();
   const getPosts = async () => {
     await useGetPosts(setPosts);
@@ -31,12 +33,14 @@ const UserAccount: React.FC = () => {
       setCurrent(0);
       sessionStorage.setItem("current", "0");
       navigate(`/`);
+      setLoadingData(true);
       return;
     }
     if (username == user?.username) {
       setUserAccount(user);
+      setLoadingData(false);
     } else {
-      getUserAccount(username, setUserAccount);
+      getUserAccount(username, setUserAccount, setLoadingData);
     }
   }, [document.location.href]);
   useEffect(() => {
@@ -53,6 +57,13 @@ const UserAccount: React.FC = () => {
       setLoading(false);
     }
   });
+  if (loadingData) {
+    return (
+      <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
+        <UserAccountSkeleton />
+      </div>
+    );
+  }
   return (
     <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
       <div className="border h-[20em] w-full bg-gray-200 rounded-md flex flex-col">

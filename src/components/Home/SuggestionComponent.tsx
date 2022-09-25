@@ -21,7 +21,6 @@ const SuggestionComponent: React.FC = () => {
   useEffect(() => {
     try {
       socket.off("follow").on("follow", (data) => {
-        console.log(data);
         setUsers(data.users);
       });
     } catch (error) {
@@ -76,15 +75,17 @@ const SuggestionComponent: React.FC = () => {
                       }}
                       onMouseEnter={() => {
                         setShowContent(true);
+                        setCurrentFollowing(index);
                       }}
                       onMouseLeave={() => {
                         setShowContent(false);
+                        setCurrentFollowing(index);
                       }}
                       disabled={loading && currentFollowing == index}
                     >
                       {loading && currentFollowing == index ? (
                         <img src={Loading} alt="" className="w-5" />
-                      ) : showContent ? (
+                      ) : showContent && currentFollowing == index ? (
                         "Unfollow"
                       ) : (
                         "Following"
