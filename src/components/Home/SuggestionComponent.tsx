@@ -28,7 +28,7 @@ const SuggestionComponent: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [socket, users]);
+  });
   return (
     <div className="hidden w-2/5 border md:flex items-center justify-center h-full">
       <div className="h-full w-4/5 flex flex-col gap-2">
