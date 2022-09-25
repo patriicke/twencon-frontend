@@ -29,6 +29,7 @@ const UserAccount: React.FC = () => {
   }, []);
   useEffect(() => {
     const username = locationArray[locationArray.length - 1];
+    if (document.location.href.includes("post")) return;
     if (!username) {
       setCurrent(0);
       sessionStorage.setItem("current", "0");

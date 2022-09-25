@@ -8,6 +8,7 @@ import {
   Apps,
   FavoriteBorder,
   Notifications,
+  PagesOutlined,
   Search
 } from "@mui/icons-material";
 import ChatIcon from "../../components/ChatIcon/ChatIcon";
@@ -17,6 +18,7 @@ import Person from "./../../assets/person/person.png";
 import HomeComponent from "../../components/Home/HomeComponent";
 import UserAccount from "../Account/UserAccount";
 import HomePageContext from "../../context/HomePageContext";
+import Post from "../Post/Post";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -113,6 +115,9 @@ export const Home: React.FC = () => {
       name: "Account"
     }
   ];
+  useEffect(() => {
+    if (document.location.href.includes("post")) setCurrent(5);
+  }, [document.location.href]);
   return (
     <div className="h-screen relative overflow-hidden flex flex-col md:flex-row-reverse z-auto bg-white">
       <div className="h-[calc(100vh_-_4em)] w-full md:h-screen flex flex-col">
@@ -142,6 +147,16 @@ export const Home: React.FC = () => {
                 </div>
               );
             })}
+            {current == 5 && (
+              <div>
+                <div className="flex items-center justify-center h-full space-x-3">
+                  <div>
+                    <PagesOutlined className="text-[2em]" />
+                  </div>
+                  <h1 className="text-[1.5em] font-medium">Post</h1>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex items-center">
             <div className="flex items-center justify-end border p-2 rounded-md md:w-[20em] xl:w-[25em] max-h-[3em]">
@@ -160,8 +175,11 @@ export const Home: React.FC = () => {
         <div className={`h-[92%] ${current === 3 ? "block" : "hidden"}`}>
           <Messages />
         </div>
-        <div className={`h-[92%] ${current === 4 ? "block" : "hidden"}`}>
+      <div className={`h-[92%] ${current === 4 ? "block" : "hidden"}`}>
           <UserAccount />
+        </div>
+        <div className={`h-[92%] ${current === 5 ? "block" : "hidden"}`}>
+          <Post />
         </div>
       </div>
       <div className="bg-white h-[7vh] min-h-[4em] w-full flex px-4 border-t md:w-[4%] md:h-screen md:px-0 md:flex-col md:border-t-0 md:border-r md:min-w-[5em] z-50">

@@ -260,22 +260,17 @@ const PostComponent: React.FC = () => {
     });
     setNewPosts([]);
   };
-  const { setCurrent, showPost, setShowPost } =
-    useContext<any>(HomePageContext);
+  const { setCurrent } = useContext<any>(HomePageContext);
   if (loadingAllPosts) {
     return <PostsSkeleton />;
   }
   return (
     <div
-      className={`w-full md:w-3/5 flex items-center justify-center h-full min-h-full ${
-        showPost ? "" : "overflow-auto"
-      } flex-col mb-1 relative`}
+      className={`w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1 relative`}
       id="postId"
     >
       <div
-        className={`h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3 relative ${
-          showPost ? "blur-sm" : ""
-        }`}
+        className={`h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3 relative `}
       >
         {newPosts.length < 1 ? null : (
           <div
@@ -456,12 +451,12 @@ const PostComponent: React.FC = () => {
         {(posts as any)?.map((data: any, index1: any) => {
           return (
             <div
-              className="border w-full p-2 flex gap-2 rounded-md"
+              className="border w-full p-2 flex gap-2 rounded-md select-none"
               key={index1}
               onClick={() => {
                 setCurrentPost(index1);
               }}
-              onDoubleClick={() => setShowPost(true)}
+              onDoubleClick={() => navigate(`/post/${data._id}`)}
             >
               <div
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
@@ -702,7 +697,6 @@ const PostComponent: React.FC = () => {
           );
         })}
       </div>
-      {showPost && <Post />}
     </div>
   );
 };

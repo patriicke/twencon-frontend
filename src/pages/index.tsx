@@ -18,6 +18,7 @@ const Pages: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:username" element={<Home />} />
+        <Route path="/post/:postId" element={<Home />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/signup" element={<Signup />} />
         <Route path="/create/verification" element={<VerificationCode />} />
