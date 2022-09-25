@@ -73,7 +73,7 @@ const UserAccount: React.FC = () => {
               src={
                 userAccount?.profile == "icon" ? Person : userAccount?.profile
               }
-              className="rounded-full hover:opacity-80"
+              className="rounded-full hover:opacity-80 w-full"
             />
           </div>
           {user?.username === userAccount?.username ? (

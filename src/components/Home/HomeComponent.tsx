@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 import PostComponent from "./PostComponent";
 import SuggestionComponent from "./SuggestionComponent";
 

@@ -24,6 +24,7 @@ import AudioClick from "./../../assets/audio/click.mp3";
 import ReactPlayer from "react-player";
 import HomePageContext from "../../context/HomePageContext";
 import PostsSkeleton from "../Sketeleton/PostsSkeleton/PostsSkeleton";
+import Post from "../../pages/Post/Post";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -259,16 +260,23 @@ const PostComponent: React.FC = () => {
     });
     setNewPosts([]);
   };
-  const { setCurrent } = useContext<any>(HomePageContext);
+  const { setCurrent, showPost, setShowPost } =
+    useContext<any>(HomePageContext);
   if (loadingAllPosts) {
     return <PostsSkeleton />;
   }
   return (
     <div
-      className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1"
+      className={`w-full md:w-3/5 flex items-center justify-center h-full min-h-full ${
+        showPost ? "" : "overflow-auto"
+      } flex-col mb-1 relative`}
       id="postId"
     >
-      <div className="h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3 relative">
+      <div
+        className={`h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3 relative ${
+          showPost ? "blur-sm" : ""
+        }`}
+      >
         {newPosts.length < 1 ? null : (
           <div
             className="py-1 flex items-center justify-center fixed left-[26%] sm:left-[28%] top-[4em] md:top-[5em] bg-white z-10 cursor-pointer"
@@ -453,6 +461,7 @@ const PostComponent: React.FC = () => {
               onClick={() => {
                 setCurrentPost(index1);
               }}
+              onDoubleClick={() => setShowPost(true)}
             >
               <div
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
@@ -693,6 +702,7 @@ const PostComponent: React.FC = () => {
           );
         })}
       </div>
+      {showPost && <Post />}
     </div>
   );
 };

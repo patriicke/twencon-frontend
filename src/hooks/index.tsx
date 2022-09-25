@@ -152,33 +152,34 @@ export const useGetPosts = async (
     const request = await api.get("/post");
     const response = request.data;
     setPosts(response);
-    response.map((data1: any, index1: number) => {
-      if (data1.post.images.length < 1) {
-        return setAllPostsObject((current: any) => {
-          return {
-            ...current,
-            [index1]: {
-              postTotalImages: 0,
-              postCurrentImage: 0
-            }
-          };
-        });
-      } else {
-        return setAllPostsObject((current: any) => {
-          return {
-            ...current,
-            [index1]: {
-              postTotalImages: data1.post.images.length,
-              postCurrentImage: 0
-            }
-          };
-        });
-      }
-    });
+    if (setAllPostsObject)
+      response.map((data1: any, index1: number) => {
+        if (data1.post.images.length < 1) {
+          return setAllPostsObject((current: any) => {
+            return {
+              ...current,
+              [index1]: {
+                postTotalImages: 0,
+                postCurrentImage: 0
+              }
+            };
+          });
+        } else {
+          return setAllPostsObject((current: any) => {
+            return {
+              ...current,
+              [index1]: {
+                postTotalImages: data1.post.images.length,
+                postCurrentImage: 0
+              }
+            };
+          });
+        }
+      });
   } catch (error) {
     console.log(error);
   } finally {
-    setLoadingAllPosts(false);
+    if (setLoadingAllPosts) setLoadingAllPosts(false);
   }
 };
 /* Use notify me */

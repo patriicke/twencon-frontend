@@ -44,12 +44,16 @@ const UserAccountSkeleton: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="flex gap-2 flex-wrap overflow-auto h-[calc(100%_-_20em)] justify-between">
+      <div className="flex gap-2 flex-wrap overflow-auto h-[calc(100%_-_20em)] justify-evenly">
         {Array(10)
           .fill("")
           .map((data: any, index: any) => {
             return (
-              <Skeleton className="w-[18em] h-[18em]" variant="rectangular" />
+              <Skeleton
+                className="w-[16em] h-[15em]"
+                variant="rectangular"
+                key={index}
+              />
             );
           })}
       </div>

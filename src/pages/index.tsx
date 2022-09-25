@@ -10,6 +10,7 @@ import ResetPassword from "./Reset/ResetPassword";
 import VerificationResetPwd from "./Verification/Reset/VerificationResetPwd";
 import ResetSuccess from "./Success/Reset/ResetSuccessfull";
 import EnterNewPasword from "./Reset/EnterNewPasword";
+import Post from "./Post/Post";
 
 const Pages: React.FC = () => {
   return (
