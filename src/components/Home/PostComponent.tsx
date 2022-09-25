@@ -23,6 +23,7 @@ import "./../../assets/style/post.css";
 import AudioClick from "./../../assets/audio/click.mp3";
 import ReactPlayer from "react-player";
 import HomePageContext from "../../context/HomePageContext";
+import PostsSkeleton from "../Sketeleton/PostsSkeleton/PostsSkeleton";
 const PostComponent: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const PostComponent: React.FC = () => {
   const [textComment, setTextComment] = useState<any>({});
   const [loadingPostingComment, setLoadingPostingComment] =
     useState<boolean>(false);
+  const [loadingAllPosts, setLoadingAllPosts] = useState<boolean>(true);
   const [currentPost, setCurrentPost] = useState<any>(0);
   const [showCommentEmojiElement, setShowCommentEmojiElement] =
     useState<boolean>(false);
@@ -77,7 +79,7 @@ const PostComponent: React.FC = () => {
   }, [showEmojiFile, showCommentEmojiElement]);
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
-    useGetPosts(setPosts, setAllPostsObject);
+    useGetPosts(setPosts, setAllPostsObject, setLoadingAllPosts);
   }, []);
   try {
     socket.off("like").on("like", (data) => {
@@ -258,30 +260,9 @@ const PostComponent: React.FC = () => {
     setNewPosts([]);
   };
   const { setCurrent } = useContext<any>(HomePageContext);
-  // const [totalScrollHeights, setTotalScrollHeights] = useState<any>(0);
-  // const [totalPostHeights, setTotalPostsHeights] = useState<any>(0);
-  // useEffect(() => {
-  //   let a = document.getElementById("postId");
-  //   let postHeight = document.querySelectorAll(".postHeight")[currentPost];
-  //   a?.addEventListener("scroll", () => {
-  //     setTotalPostsHeights((current: any) => {
-  //       return current + postHeight;
-  //     });
-  //     setTotalScrollHeights(a?.scrollTop);
-  //     if ((a as unknown as any) > totalPostHeights) {
-  //       setCurrentPost((current: any) => {
-  //         return current + 1;
-  //       });
-  //     } else {
-  //       setCurrentPost((current: any) => {
-  //         return current - 1;
-  //       });
-  //     }
-  //     console.log("scroll position: ", totalScrollHeights);
-  //     console.log("post height: ", postHeight?.scrollHeight);
-  //     console.log("current post: ", currentPost);
-  //   });
-  // });
+  if (loadingAllPosts) {
+    return <PostsSkeleton />;
+  }
   return (
     <div
       className="w-full md:w-3/5 flex items-center justify-center h-full min-h-full overflow-auto flex-col mb-1"

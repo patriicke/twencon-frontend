@@ -143,7 +143,11 @@ export const resetNotificationsFromDatabase = async (email: any, room: any) => {
   const request = await api.post("/notifications/reset", { email, room });
 };
 /* This is all about the posts */
-export const useGetPosts = async (setPosts: any, setAllPostsObject?: any) => {
+export const useGetPosts = async (
+  setPosts: any,
+  setAllPostsObject?: any,
+  setLoadingAllPosts?: any
+) => {
   try {
     const request = await api.get("/post");
     const response = request.data;
@@ -173,6 +177,8 @@ export const useGetPosts = async (setPosts: any, setAllPostsObject?: any) => {
     });
   } catch (error) {
     console.log(error);
+  } finally {
+    setLoadingAllPosts(false);
   }
 };
 /* Use notify me */
