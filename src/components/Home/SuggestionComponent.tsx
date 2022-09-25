@@ -13,6 +13,7 @@ const SuggestionComponent: React.FC = () => {
   const { setCurrent } = useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentFollowing, setCurrentFollowing] = useState<number>(0);
   const navigate = useNavigate();
   useEffect(() => {
     getAllUsers(setUsers);
@@ -28,7 +29,7 @@ const SuggestionComponent: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  });
+  }, [socket, users]);
   return (
     <div className="hidden w-2/5 border md:flex items-center justify-center h-full">
       <div className="h-full w-4/5 flex flex-col gap-2">
@@ -68,9 +69,10 @@ const SuggestionComponent: React.FC = () => {
                     <button
                       className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
                       onClick={() => {
+                        setCurrentFollowing(index);
+                        setLoading(true);
                         let date = new Date();
                         follow({ ...user, date }, { ...data, date });
-                        setLoading(true);
                       }}
                       onMouseEnter={() => {
                         setShowContent(true);
@@ -78,9 +80,9 @@ const SuggestionComponent: React.FC = () => {
                       onMouseLeave={() => {
                         setShowContent(false);
                       }}
-                      disabled={loading}
+                      disabled={loading && currentFollowing == index}
                     >
-                      {loading ? (
+                      {loading && currentFollowing == index ? (
                         <img src={Loading} alt="" className="w-5" />
                       ) : showContent ? (
                         "Unfollow"
@@ -92,13 +94,14 @@ const SuggestionComponent: React.FC = () => {
                     <button
                       className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
                       onClick={() => {
-                        let date = new Date();
+                        setCurrentFollowing(index);
                         setLoading(true);
+                        let date = new Date();
                         follow({ ...user, date }, { ...data, date });
                       }}
-                      disabled={loading}
+                      disabled={loading && currentFollowing == index}
                     >
-                      {loading ? (
+                      {loading && currentFollowing == index ? (
                         <img src={Loading} alt="" className="w-5" />
                       ) : (
                         "Follow"
