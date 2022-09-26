@@ -31,7 +31,7 @@ const PostComponent: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const [postText, setPostText] = useState<string>("");
   const [showEmojiFile, setShowEmojiFile] = useState<boolean>(false);
-  const [posts, setPosts] = useState<any>([]);
+  // const [posts, setPosts] = useState<any>([]);
   const [allPostsObject, setAllPostsObject] = useState<any>();
   const [images, setImages] = useState<any>([]);
   const [imageURLs, setImageURLs] = useState<any>([]);
@@ -260,7 +260,7 @@ const PostComponent: React.FC = () => {
     });
     setNewPosts([]);
   };
-  const { setCurrent } = useContext<any>(HomePageContext);
+  const { setCurrent, posts, setPosts } = useContext<any>(HomePageContext);
   if (loadingAllPosts) {
     return <PostsSkeleton />;
   }

@@ -9,7 +9,7 @@ import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HomePageContext from "../../context/HomePageContext";
-import { getUserAccount, useGetPosts } from "../../hooks";
+import { deletePost, getUserAccount, useGetPosts } from "../../hooks";
 import Person from "./../../assets/person/person.png";
 import Loading from "./../../assets/loading/loading.gif";
 import { follow } from "../../hooks";
@@ -19,16 +19,17 @@ import UserAccountSkeleton from "../../components/Sketeleton/UserAccount/UserAcc
 import { Button } from "@mui/material";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
-  const [posts, setPosts] = useState<any>([]);
+  // const {posts, setPosts} = useState<any>([]);
   const [userAccount, setUserAccount] = useState<any>({});
   const locationArray = document.location.href.split("/");
   const [loading, setLoading] = useState<boolean>(false);
-  const { setCurrent } = useContext<any>(HomePageContext);
+  const { setCurrent, posts, setPosts } = useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [deletePostShow, setDeletePostShow] = useState<boolean>(false);
   const [currentPost, setCurrentPost] = useState<number>(0);
   const [showPopUp, setShowPopUp] = useState<boolean>(false);
+  const [deletePostLoading, setDeletePostLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const deletePostElement = useRef<any>(null);
   const getPosts = async () => {
@@ -102,29 +103,49 @@ const UserAccount: React.FC = () => {
   return (
     <>
       {showPopUp && (
-        <div
-          className={`absolute bg-white top-[45%] left-[40%] z-50 p-10 rounded-md`}
-        >
-          <div className="flex flex-col gap-2">
-            <div className="font-semibold">
-              Are you sure your want to delete this post
-            </div>
-            <div className="flex gap-2 justify-center items-center">
-              <Button
-                className="w-1/3 bg-red-500 hover:bg-red-500"
-                variant="contained"
-              >
-                Yes
-              </Button>
-              <Button
-                className="w-1/3 bg-blue-500"
-                variant="contained"
-                onClick={() => {
-                  setShowPopUp(false);
-                }}
-              >
-                No
-              </Button>
+        <div className="flex items-center justify-center">
+          <div
+            className={`absolute bg-white top-[45%] z-50 p-10 rounded-md border-2`}
+          >
+            <div className="flex flex-col gap-2">
+              <div className="font-semibold">
+                Are you sure your want to delete this post
+              </div>
+              <div className="flex gap-2 justify-center items-center">
+                <Button
+                  className="w-1/3 bg-red-500 hover:bg-red-500"
+                  variant="contained"
+                  onClick={() => {
+                    setDeletePostLoading(true);
+                    deletePost(
+                      posts?.filter((post: any) => {
+                        return post?.owner?.email == user?.email;
+                      })[currentPost]?._id,
+                      setDeletePostLoading,
+                      setShowPopUp,
+                      setPosts,
+                      user
+                    );
+                  }}
+                  disabled={deletePostLoading}
+                >
+                  {deletePostLoading ? (
+                    <img src={Loading} className="w-6" />
+                  ) : (
+                    "Yes"
+                  )}
+                </Button>
+                <Button
+                  className="w-1/3 bg-blue-500"
+                  variant="contained"
+                  onClick={() => {
+                    setShowPopUp(false);
+                  }}
+                  disabled={deletePostLoading}
+                >
+                  No
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -223,7 +244,14 @@ const UserAccount: React.FC = () => {
               .filter((post: any) => {
                 return post?.owner?.email === userAccount?.email;
               })
-              .map((data: any, index: any) => {
+              ?.sort((a: any, b: any) => {
+                let fa = a.date,
+                  fb = b.date;
+                if (fb > fa) return 1;
+                if (fb < fa) return -1;
+                return 0;
+              })
+              ?.map((data: any, index: any) => {
                 return (
                   <li
                     className="border w-full md:w-auto min-w-[20em] items-center justify-center rounded-lg relative"
@@ -253,7 +281,6 @@ const UserAccount: React.FC = () => {
                               variant="contained"
                               className="bg-red-500 h-[1.9em] text-[0.8em] w-[8em] hover:bg-red-500"
                               onClick={() => {
-                                console.log("deleted");
                                 setShowPopUp(true);
                                 setDeletePostShow(false);
                               }}
