@@ -146,7 +146,7 @@ const Post: React.FC = () => {
                 </div>
                 {(post?.post?.images as any)?.length <= 0 ? null : (
                   <div className="relative w-full flex overflow-hidden rounded-md postHeight">
-                    {(post?.post?.images as any).map(
+                    {(post?.post?.images as any)?.map(
                       (image: any, index2: number) => {
                         return (
                           <div
@@ -182,7 +182,7 @@ const Post: React.FC = () => {
                         // onClick={() => like(post?._id)}
                         className="flex items-center justify-center"
                       >
-                        {post?.likes.find((currentUser: any) => {
+                        {post?.likes?.find((currentUser: any) => {
                           return currentUser._id == user?._id;
                         }) == undefined ? (
                           <FavoriteBorder className="md:text-[1.5em] opacity-70 cursor-pointer" />
@@ -207,7 +207,7 @@ const Post: React.FC = () => {
                       <span className="text-[0.9em] flex items-center justify-center">
                         {(post?.comments as any)?.length <= 0
                           ? null
-                          : post?.comments.length}
+                          : post?.comments?.length}
                       </span>
                     </div>
                     <div className="flex gap-2 items-center justify-center">
@@ -363,7 +363,7 @@ const Post: React.FC = () => {
                 }
                 return 0;
               })
-              .map((post: any, index: any) => {
+              ?.map((post: any, index: any) => {
                 return (
                   <div className="flex flex-col gap-1" key={index}>
                     <div
