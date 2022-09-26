@@ -126,6 +126,7 @@ export const Home: React.FC = () => {
           <div
             className="w-10 flex items-center md:hidden"
             onClick={() => {
+              navigate("/");
               setCurrent(0);
               sessionStorage.setItem("current", "0");
             }}
@@ -190,6 +191,7 @@ export const Home: React.FC = () => {
           <div
             className="w-10 flex items-center cursor-pointer"
             onClick={() => {
+              navigate("/");
               setCurrent(0);
               sessionStorage.setItem("current", "0");
             }}
