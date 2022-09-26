@@ -294,11 +294,9 @@ export const deletePost = async (
   postId: any,
   setDeletePostLoading: any,
   setShowPopUp: any,
-  setPosts: any,
-  user: any
+  setPosts: any
 ) => {
   try {
-    console.log(postId);
     const request = await api.post("/post/delete", { postId });
     const response = request.data;
     setPosts(response.posts);

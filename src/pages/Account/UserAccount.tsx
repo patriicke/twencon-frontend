@@ -35,6 +35,7 @@ const UserAccount: React.FC = () => {
   const getPosts = async () => {
     await useGetPosts(setPosts);
   };
+
   useEffect(() => {
     document.addEventListener("mousedown", () => {
       if (!deletePostElement?.current?.contains(event?.target)) {
@@ -116,6 +117,7 @@ const UserAccount: React.FC = () => {
                   className="w-1/3 bg-red-500 hover:bg-red-500"
                   variant="contained"
                   onClick={() => {
+                    socket.emit("delete-post");
                     setDeletePostLoading(true);
                     deletePost(
                       posts?.filter((post: any) => {
@@ -123,8 +125,7 @@ const UserAccount: React.FC = () => {
                       })[currentPost]?._id,
                       setDeletePostLoading,
                       setShowPopUp,
-                      setPosts,
-                      user
+                      setPosts
                     );
                   }}
                   disabled={deletePostLoading}

@@ -17,6 +17,16 @@ const Post: React.FC = () => {
   }, []);
   const buttons = ["Likes", "Comments"];
   const [currentShow, setCurrentShow] = useState<number>(0);
+  if (!post) {
+    return (
+      <div className="flex w-full h-full">
+        <div className="border w-2/3 h-full">
+          <h1 className="text-red-500 p-1 font-bold">This post has been deleted!</h1>
+        </div>
+        <div className="border w-1/3 h-full"></div>
+      </div>
+    );
+  }
   return (
     <div className="hidden w-full h-full md:flex ">
       <div className="w-2/3 h-full border"></div>
