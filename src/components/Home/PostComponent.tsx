@@ -220,7 +220,7 @@ const PostComponent: React.FC = () => {
     try {
       const clickSound = new Audio(AudioClick);
       clickSound.play();
-      socket.emit("like-post", user, id);
+      socket.emit("like-post", { ...user, date: new Date() }, id);
     } catch (error) {
       console.log(error);
     } finally {

@@ -161,6 +161,10 @@ const UserAccount: React.FC = () => {
                 <li
                   className="border w-full md:w-auto min-w-[20em] items-center justify-center rounded-lg"
                   key={index}
+                  onClick={() => {
+                    navigate(`/post/${data?._id}`);
+                    setCurrent(5)
+                  }}
                 >
                   <LazyLoadComponent>
                     {data?.post?.images[0]?.includes("video") ? (
