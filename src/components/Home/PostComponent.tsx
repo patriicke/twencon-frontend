@@ -295,7 +295,7 @@ const PostComponent: React.FC = () => {
               className="w-full h-full rounded-full cursor-pointer"
               onClick={() => {
                 setCurrent(4);
-                navigate(`/${user?.username}`);
+                navigate(`/user/${user?.username}`);
                 sessionStorage.setItem("current", "4");
               }}
             />
@@ -461,7 +461,7 @@ const PostComponent: React.FC = () => {
               <div
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
                 onClick={() => {
-                  navigate(`/${data?.owner?.username}`);
+                  navigate(`/user/${data?.owner?.username}`);
                   setCurrent(4);
                   sessionStorage.setItem("current", "4");
                 }}
@@ -482,7 +482,7 @@ const PostComponent: React.FC = () => {
                     <div
                       className="font-medium text-[0.9em] md:text-[1em] cursor-pointer"
                       onClick={() => {
-                        navigate(`/${data?.owner?.username}`);
+                        navigate(`/user/${data?.owner?.username}`);
                         setCurrent(4);
                         sessionStorage.setItem("current", "4");
                       }}
@@ -492,7 +492,7 @@ const PostComponent: React.FC = () => {
                     <div
                       className="opacity-50 cursor-pointer"
                       onClick={() => {
-                        navigate(`/${data?.owner?.username}`);
+                        navigate(`/user/${data?.owner?.username}`);
                         setCurrent(4);
                         sessionStorage.setItem("current", "4");
                       }}

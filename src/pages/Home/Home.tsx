@@ -116,7 +116,8 @@ export const Home: React.FC = () => {
     }
   ];
   useEffect(() => {
-    if (document.location.href.includes("post")) setCurrent(5);
+    if (document.location.href.includes("/post")) setCurrent(5);
+    if (document.location.href.includes("/user")) setCurrent(4);
   }, [document.location.href]);
   return (
     <div className="h-screen relative overflow-hidden flex flex-col md:flex-row-reverse z-auto bg-white">
@@ -206,7 +207,7 @@ export const Home: React.FC = () => {
                   setCurrent(index);
                   sessionStorage.setItem("current", index.toString());
                   index == 4
-                    ? navigate(`/${userData?.username}`)
+                    ? navigate(`/user/${userData?.username}`)
                     : navigate("/");
                 }}
               >

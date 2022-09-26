@@ -47,7 +47,7 @@ const SuggestionComponent: React.FC = () => {
                   <div
                     className="flex gap-2 items-center justify-between "
                     onClick={() => {
-                      navigate(`/${data?.username}`);
+                      navigate(`/user/${data?.username}`);
                       setCurrent(4);
                       sessionStorage.setItem("current", "4");
                     }}

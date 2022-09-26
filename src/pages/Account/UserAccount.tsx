@@ -1,5 +1,10 @@
-import { Favorite, FavoriteBorder } from "@mui/icons-material";
-import React, { useContext, useEffect, useState } from "react";
+import {
+  Favorite,
+  FavoriteBorder,
+  MoreHoriz,
+  MoreVert
+} from "@mui/icons-material";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +16,7 @@ import { follow } from "../../hooks";
 import { socket } from "../../context/chatContext";
 import "./account.css";
 import UserAccountSkeleton from "../../components/Sketeleton/UserAccount/UserAccountSkeleton";
+import { Button } from "@mui/material";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const [posts, setPosts] = useState<any>([]);
@@ -20,10 +26,19 @@ const UserAccount: React.FC = () => {
   const { setCurrent } = useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
+  const [deletePostShow, setDeletePostShow] = useState<boolean>(false);
+  const [currentPost, setCurrentPost] = useState<number>(0);
   const navigate = useNavigate();
+  const deletePostElement = useRef<any>(null);
   const getPosts = async () => {
     await useGetPosts(setPosts);
   };
+  useEffect(() => {
+    document.addEventListener("mousedown", () => {
+      if (!deletePostElement?.current?.contains(event?.target))
+        setDeletePostShow(false);
+    });
+  }, [deletePostElement]);
   useEffect(() => {
     getPosts();
   }, []);
@@ -65,6 +80,8 @@ const UserAccount: React.FC = () => {
       </div>
     );
   }
+  
+
   return (
     <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
       <div className="border h-[20em] w-full bg-gray-200 rounded-md flex flex-col">
@@ -159,13 +176,37 @@ const UserAccount: React.FC = () => {
             .map((data: any, index: any) => {
               return (
                 <li
-                  className="border w-full md:w-auto min-w-[20em] items-center justify-center rounded-lg"
+                  className="border w-full md:w-auto min-w-[20em] items-center justify-center rounded-lg relative"
                   key={index}
-                  onClick={() => {
-                    navigate(`/post/${data?._id}`);
-                    setCurrent(5)
-                  }}
                 >
+                  {user?.email == data?.owner?.email && (
+                    <div
+                      onClick={() => {
+                        setCurrentPost(index);
+                        setDeletePostShow((current: any) => !current);
+                      }}
+                      className="absolute top-1 right-1 cursor-pointer rounded-md z-50 w-10 flex flex-col items-center justify-center"
+                    >
+                      <div>
+                        <MoreHoriz
+                          className={`bg-gray-200  rounded-md w-10 duration-100`}
+                        />
+                      </div>
+                      <div
+                        className={`${
+                          deletePostShow && currentPost == index ? "" : "hidden"
+                        } bg-gray-200 w-[8em] h-[2.5em] absolute right-2 top-8 rounded-md flex items-center justify-center`}
+                        ref={deletePostElement}
+                      >
+                        <Button
+                          variant="contained"
+                          className="bg-red-500 h-[1.8em] text-[0.8em]"
+                        >
+                          DELETE
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                   <LazyLoadComponent>
                     {data?.post?.images[0]?.includes("video") ? (
                       <video
@@ -182,7 +223,13 @@ const UserAccount: React.FC = () => {
                       <img src={data?.post?.images[0]} />
                     )}
                   </LazyLoadComponent>
-                  <div className="overlay flex flex-col">
+                  <div
+                    className="overlay flex flex-col"
+                    onClick={() => {
+                      navigate(`/post/${data?._id}`);
+                      setCurrent(5);
+                    }}
+                  >
                     <span className="text-center">
                       {data?.post?.description}
                     </span>

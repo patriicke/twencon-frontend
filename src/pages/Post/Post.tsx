@@ -17,7 +17,6 @@ const Post: React.FC = () => {
   }, []);
   const buttons = ["Likes", "Comments"];
   const [currentShow, setCurrentShow] = useState<number>(0);
-  console.log(post);
   return (
     <div className="hidden w-full h-full md:flex ">
       <div className="w-2/3 h-full border"></div>
@@ -63,7 +62,7 @@ const Post: React.FC = () => {
                   <div
                     className="flex gap-2 items-center bg-gray-200 p-1 rounded-md hover:bg-gray-300 cursor-pointer"
                     onClick={() => {
-                      navigate(`/${data.username}`);
+                      navigate(`/user/${data.username}`);
                       setCurrent(4);
                       sessionStorage.setItem("current", "4");
                     }}
@@ -120,7 +119,7 @@ const Post: React.FC = () => {
                     <div
                       className="flex gap-2 items-center bg-gray-200 p-1 rounded-md hover:bg-gray-300 cursor-pointer"
                       onClick={() => {
-                        navigate(`/${data?.from?.username}`);
+                        navigate(`/user/${data?.from?.username}`);
                         setCurrent(4);
                         sessionStorage.setItem("current", "4");
                       }}
