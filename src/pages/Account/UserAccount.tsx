@@ -220,7 +220,11 @@ const UserAccount: React.FC = () => {
             <div className="flex py-2 gap-3 text-[1.2em]">
               <div className="flex gap-2 cursor-pointer">
                 <span>{userAccount?.followers?.length}</span>
-                <span className="font-bold">followers</span>
+                <span className="font-bold">
+                  {userAccount?.followers?.length == 1
+                    ? "follower"
+                    : "followers"}
+                </span>
               </div>
               <div className="flex gap-2 cursor-pointer">
                 <span>{userAccount?.following?.length}</span>
