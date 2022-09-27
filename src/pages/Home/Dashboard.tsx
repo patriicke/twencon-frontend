@@ -76,7 +76,7 @@ const Dashboard: React.FC = () => {
                 src={data.url}
                 className="w-full rounded-md md:w-1/2 flex items-center justify-center"
               />
-              <div className="w-full py-5 md:w-1/2 flex items-center justify-center">
+              <div className="w-full py-5 md:w-1/2 flex items-center justify-center bg-white">
                 <p className="lg:w-[60%] text-[1.2em]">{data.description}</p>
               </div>
             </div>
