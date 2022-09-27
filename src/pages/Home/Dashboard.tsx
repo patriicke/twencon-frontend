@@ -48,7 +48,7 @@ const Dashboard: React.FC = () => {
           />
           <div className="text-[0.9em] text-gray-700 dark:text-white md:text-[1.2em] md:max-w-xl">
             You can create more than one group for free. You can post photos and
-            videos and get feedback from your friends. Be the to invite your
+            videos and get feedback from your friends. Be the one to invite your
             friends and family members first!
           </div>
           <div className="flex flex-col space-y-3 min-h-11 md:flex-row md:space-x-2 md:space-y-0 md:justify-center md:items-center lg:justify-start lg:mt-4 ">
