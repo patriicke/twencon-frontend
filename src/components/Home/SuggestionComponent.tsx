@@ -7,12 +7,14 @@ import { socket } from "./../../context/chatContext";
 import Person from "./../../assets/person/person.png";
 import HomePageContext from "../../context/HomePageContext";
 import Loading from "./../../assets/loading/loading.gif";
+import SuggestionSkeleteon from "../Sketeleton/SuggestionSkeleton/SuggestionSkeleteon";
 const SuggestionComponent: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const [users, setUsers] = useState<any>([]);
   const { setCurrent } = useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingSuggestions, setLoadingSuggestions] = useState<boolean>(true);
   const [currentFollowing, setCurrentFollowing] = useState<number>(0);
   const navigate = useNavigate();
   useEffect(() => {
@@ -27,8 +29,12 @@ const SuggestionComponent: React.FC = () => {
       console.log(error);
     } finally {
       setLoading(false);
+      setLoadingSuggestions(false);
     }
   });
+  if (loadingSuggestions) {
+    return <SuggestionSkeleteon />;
+  }
   return (
     <div className="hidden w-2/5 border md:flex items-center justify-center h-full">
       <div className="h-full w-4/5 flex flex-col gap-2">

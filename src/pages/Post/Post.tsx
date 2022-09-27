@@ -11,6 +11,7 @@ import ReactPlayer from "react-player";
 import { EmojiEmotions, Favorite, FavoriteBorder } from "@mui/icons-material";
 import Picker from "emoji-picker-react";
 import { socket } from "../../context/chatContext";
+import AudioClick from "./../../assets/audio/click.mp3";
 const Post: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const postId = useParams();
@@ -20,6 +21,13 @@ const Post: React.FC = () => {
   const { setCurrent, posts, setPosts } = useContext<any>(HomePageContext);
   const [postLoading, setPostLoading] = useState<any>(true);
   const [textComment, setTextComment] = useState<string>("");
+  const [loadingPostingComment, setLoadingPostingComment] =
+    useState<boolean>(false);
+  const [likeAnimation, setLikeAnimation] = useState<boolean>(false);
+  const buttons = ["Likes", "Comments"];
+  const [currentShow, setCurrentShow] = useState<number>(0);
+  const [showCommentEmojiElement, setShowCommentEmojiElement] =
+    useState<boolean>(false);
   useEffect(() => {
     if (document.location.href.includes("post"))
       getPost(postId, setPost, setPostLoading);
@@ -30,10 +38,12 @@ const Post: React.FC = () => {
         if (currentPost?._id == post?._id) setPost(post);
       });
   }, [posts]);
-  const buttons = ["Likes", "Comments"];
-  const [currentShow, setCurrentShow] = useState<number>(0);
-  const [showCommentEmojiElement, setShowCommentEmojiElement] =
-    useState<boolean>(false);
+  useEffect(() => {
+    document.addEventListener("mousedown", () => {
+      if (!commentEmojiElement.current?.contains(event?.target))
+        setShowCommentEmojiElement(false);
+    });
+  }, [showCommentEmojiElement]);
   const onEmojiClickPostComment = (event?: any, emojiObject?: any) => {
     let msg = "";
     if (textComment) {
@@ -42,8 +52,6 @@ const Post: React.FC = () => {
     msg = msg + `${emojiObject.emoji}`;
     setTextComment(msg);
   };
-  const [loadingPostingComment, setLoadingPostingComment] =
-    useState<boolean>(false);
   const comment = async () => {
     setLoadingPostingComment(true);
     try {
@@ -55,6 +63,20 @@ const Post: React.FC = () => {
       console.log(error);
     } finally {
       setTextComment("");
+    }
+  };
+  const like = async () => {
+    try {
+      const clickSound = new Audio(AudioClick);
+      clickSound.play();
+      socket.emit("like-post", { ...user, date: new Date() }, post?._id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLikeAnimation(true);
+      setTimeout(() => {
+        setLikeAnimation(false);
+      }, 500);
     }
   };
   if (postLoading) {
@@ -74,27 +96,41 @@ const Post: React.FC = () => {
   }
   try {
     socket.off("like").on("like", (data) => {
-      setPost(data);
+      setPost((currentData: any) => {
+        return { ...currentData, likes: data?.post?.likes };
+      });
+      const newState = posts.map((post: any) => {
+        if (post._id === data?.post?._id) {
+          return { ...post, likes: data?.post?.likes };
+        }
+        return post;
+      });
+      setPosts(newState);
     });
     socket.off("comment").on("comment", (data) => {
-      // setPost((curretData: any) => {
-      //   return { ...curretData, comments: data?.post?.comments };
-      // });
-      console.log(data);
+      setPost((currentData: any) => {
+        return { ...currentData, comments: data?.post?.comments };
+      });
+      const newState = posts.map((post: any) => {
+        if (post._id === data?.post?._id) {
+          return { ...post, comments: data?.post?.comments };
+        }
+        return post;
+      });
+      setPosts(newState);
+      setLoadingPostingComment(false);
     });
   } catch (error) {
     console.log(error);
+  } finally {
   }
-  // console.log(post);
+
   return (
     <div className="w-full h-full md:flex ">
       <div className="w-full md:w-2/3 h-full border flex justify-center p-1">
         <div className="flex gap-2 w-full md:w-3/5">
           <div className="p-2">
-            <div
-              className="border w-full p-2 flex gap-2 rounded-md select-none"
-              onDoubleClick={() => navigate(`/post/${post?._id}`)}
-            >
+            <div className="border w-full p-2 flex gap-2 rounded-md select-none">
               <div
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
                 onClick={() => {
@@ -177,9 +213,13 @@ const Post: React.FC = () => {
                 )}
                 <div>
                   <div className="flex justify-between items-center p-2 px-5">
-                    <div className={`flex justify-center items-center gap-2`}>
+                    <div
+                      className={`flex justify-center items-center gap-2 ${
+                        likeAnimation && "likeBtn"
+                      }`}
+                    >
                       <span
-                        // onClick={() => like(post?._id)}
+                        onClick={like}
                         className="flex items-center justify-center"
                       >
                         {post?.likes?.find((currentUser: any) => {
@@ -231,7 +271,7 @@ const Post: React.FC = () => {
                       </span>
                       {showCommentEmojiElement && (
                         <div
-                          className="absolute top-[2em] left-0 bg-white z-50"
+                          className="absolute bottom-[2.5em] left-0 bg-white z-50"
                           ref={commentEmojiElement}
                         >
                           <Picker
