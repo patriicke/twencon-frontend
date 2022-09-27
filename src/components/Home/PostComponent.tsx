@@ -559,7 +559,7 @@ const PostComponent: React.FC = () => {
                             [index1]: {
                               ...allPostsObject[index1],
                               postCurrentImage:
-                                allPostsObject[index1].postCurrentImage - 1
+                                allPostsObject[index1]?.postCurrentImage - 1
                             }
                           };
                         });
@@ -581,7 +581,7 @@ const PostComponent: React.FC = () => {
                             [index1]: {
                               ...allPostsObject[index1],
                               postCurrentImage:
-                                allPostsObject[index1].postCurrentImage + 1
+                                allPostsObject[index1]?.postCurrentImage + 1
                             }
                           };
                         });
@@ -617,7 +617,10 @@ const PostComponent: React.FC = () => {
                       </span>
                     </div>
                     <div className="flex gap-2 items-center justify-center">
-                      <span className="flex items-center justify-center">
+                      <span
+                        className="flex items-center justify-center"
+                        onClick={() => navigate(`/post/${data._id}`)}
+                      >
                         {(data?.comments as any)?.length <= 0 ? (
                           <i className="fa-regular fa-comment text-[1.3em] opacity-70 cursor-pointer"></i>
                         ) : (
