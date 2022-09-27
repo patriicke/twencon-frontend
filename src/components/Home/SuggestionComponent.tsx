@@ -120,7 +120,6 @@ const SuggestionComponent: React.FC = () => {
             })}
         </div>
       </div>
-      {/* <div>a</div> */}
     </div>
   );
 };

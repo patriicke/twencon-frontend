@@ -1,15 +1,15 @@
-import {
-  Favorite,
-  FavoriteBorder,
-  MoreHoriz,
-  MoreVert
-} from "@mui/icons-material";
+import { Favorite, FavoriteBorder, MoreHoriz } from "@mui/icons-material";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HomePageContext from "../../context/HomePageContext";
-import { deletePost, getUserAccount, useGetPosts } from "../../hooks";
+import {
+  deletePost,
+  getAllUsers,
+  getUserAccount,
+  useGetPosts
+} from "../../hooks";
 import Person from "./../../assets/person/person.png";
 import Loading from "./../../assets/loading/loading.gif";
 import { follow } from "../../hooks";
@@ -19,6 +19,7 @@ import UserAccountSkeleton from "../../components/Sketeleton/UserAccount/UserAcc
 import { Button } from "@mui/material";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
+  const [users, setUsers] = useState<any>([]);
   // const {posts, setPosts} = useState<any>([]);
   const [userAccount, setUserAccount] = useState<any>({});
   const locationArray = document.location.href.split("/");
@@ -30,12 +31,18 @@ const UserAccount: React.FC = () => {
   const [currentPost, setCurrentPost] = useState<number>(0);
   const [showPopUp, setShowPopUp] = useState<boolean>(false);
   const [deletePostLoading, setDeletePostLoading] = useState<boolean>(false);
+  const [currentNavigation, setCurrentNavigation] = useState<number>(0);
   const navigate = useNavigate();
   const deletePostElement = useRef<any>(null);
+  const [currentFollowing, setCurrentFollowing] = useState<boolean>(false);
   const getPosts = async () => {
     await useGetPosts(setPosts);
   };
-
+  const [navigations, setNavigations] = useState<string[]>([
+    "POSTS",
+    "FOLLOWERS",
+    "FOLLOWING"
+  ]);
   useEffect(() => {
     document.addEventListener("mousedown", () => {
       if (!deletePostElement?.current?.contains(event?.target)) {
@@ -45,6 +52,9 @@ const UserAccount: React.FC = () => {
   });
   useEffect(() => {
     getPosts();
+    getAllUsers(setUsers);
+    let n = sessionStorage.getItem("currentNavigation");
+    setCurrentNavigation(n ? Number(n) : 0);
   }, []);
   useEffect(() => {
     const username = locationArray[locationArray.length - 1];
@@ -70,6 +80,7 @@ const UserAccount: React.FC = () => {
           return user._id == userAccount._id;
         });
         setUserAccount(user[0]);
+        setUsers(data.users);
       });
     } catch (error) {
       console.log(error);
@@ -244,7 +255,32 @@ const UserAccount: React.FC = () => {
           </div>
         </div>
         <div className="overflow-auto h-[calc(100%_-_20em)] w-full mt-2 border p-2 rounded-md">
-          <ul className="image-gallery overflow-auto w-full">
+          <div className="w-full pb-2 flex justify-center border-b mb-2 gap-2">
+            {navigations.map((data: any, index: any) => {
+              return (
+                <div
+                  className={`${
+                    currentNavigation == index && "border-b-2"
+                  } border-blue-500 `}
+                  key={index}
+                >
+                  <Button
+                    onClick={() => {
+                      setCurrentNavigation(index);
+                      sessionStorage.setItem("currentNavigation", index);
+                    }}
+                  >
+                    {data}
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+          <ul
+            className={`image-gallery overflow-auto w-full ${
+              currentNavigation == 0 ? "" : "hidden"
+            }`}
+          >
             {(posts as any)
               .filter((post: any) => {
                 return post?.owner?.email === userAccount?.email;
@@ -378,7 +414,220 @@ const UserAccount: React.FC = () => {
                   </li>
                 );
               })}
+            {
+              <div
+                className={`${
+                  (posts as any)
+                    .filter((post: any) => {
+                      return post?.owner?.email === userAccount?.email;
+                    })
+                    ?.sort((a: any, b: any) => {
+                      let fa = a.date,
+                        fb = b.date;
+                      if (fb > fa) return 1;
+                      if (fb < fa) return -1;
+                      return 0;
+                    })?.length < 1
+                    ? ""
+                    : "hidden"
+                } font-semibold text-red-500`}
+              >
+                No posts yet!
+              </div>
+            }
           </ul>
+          <div
+            className={`flex flex-col gap-2 ${
+              currentNavigation == 1 ? "" : "hidden"
+            }  justify-center items-center`}
+          >
+            {(userAccount?.followers as any)?.map((data: any, index: any) => {
+              return (
+                <div
+                  key={index}
+                  className="flex gap-2 items-center justify-between p-1 rounded-lg bg-gray-100  hover:bg-gray-300 cursor-pointer min-w-[25em] max-w-[30em]"
+                >
+                  <div
+                    className="flex gap-2 items-center justify-between "
+                    onClick={() => {
+                      navigate(`/user/${data?.username}`);
+                      setCurrent(4);
+                      sessionStorage.setItem("current", "4");
+                    }}
+                  >
+                    <img
+                      src={data?.profile == "icon" ? Person : data?.profile}
+                      alt={data?.fullname}
+                      className="w-12 rounded-full border-2"
+                    />
+                    <div className="text-[0.8em]">
+                      <div>{data?.fullname}</div>
+                      <div className="text-blue-500">@{data?.username}</div>
+                    </div>
+                  </div>
+                  {data?.email !== user?.email ? (
+                    <>
+                      {users
+                        ?.filter((user: any) => {
+                          return user?._id == data?._id;
+                        })[0]
+                        ?.followers?.find((currentUser: any) => {
+                          return currentUser?.email == user?.email;
+                        }) ? (
+                        <button
+                          className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
+                          onClick={() => {
+                            setCurrentFollowing(index);
+                            setLoading(true);
+                            let date = new Date();
+                            follow({ ...user, date }, { ...data, date });
+                          }}
+                          onMouseEnter={() => {
+                            setShowContent(true);
+                            setCurrentFollowing(index);
+                          }}
+                          onMouseLeave={() => {
+                            setShowContent(false);
+                            setCurrentFollowing(index);
+                          }}
+                          disabled={loading && currentFollowing == index}
+                        >
+                          {loading && currentFollowing == index ? (
+                            <img src={Loading} alt="" className="w-5" />
+                          ) : showContent && currentFollowing == index ? (
+                            "Unfollow"
+                          ) : (
+                            "Following"
+                          )}
+                        </button>
+                      ) : (
+                        <button
+                          className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
+                          onClick={() => {
+                            setCurrentFollowing(index);
+                            setLoading(true);
+                            let date = new Date();
+                            follow({ ...user, date }, { ...data, date });
+                          }}
+                          disabled={loading && currentFollowing == index}
+                        >
+                          {loading && currentFollowing == index ? (
+                            <img src={Loading} alt="" className="w-5" />
+                          ) : (
+                            "Follow"
+                          )}
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <div className="bg-gray-200 text-blue-500 p-1 px-3 text-[0.8em] rounded-[2em] z-50">
+                      You
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {userAccount?.followers.length < 1 && (
+              <div className="font-semibold text-red-500">No follower yet!</div>
+            )}
+          </div>
+          <div
+            className={`flex flex-col gap-2 ${
+              currentNavigation == 2 ? "" : "hidden"
+            }  justify-center items-center `}
+          >
+            {(userAccount?.following as any)?.map((data: any, index: any) => {
+              return (
+                <div
+                  key={index}
+                  className="flex gap-2 items-center justify-between p-1 rounded-lg bg-gray-100  hover:bg-gray-300 cursor-pointer min-w-[25em] max-w-[30em]"
+                >
+                  <div
+                    className="flex gap-2 items-center justify-between "
+                    onClick={() => {
+                      navigate(`/user/${data?.username}`);
+                      setCurrent(4);
+                      sessionStorage.setItem("current", "4");
+                    }}
+                  >
+                    <img
+                      src={data?.profile == "icon" ? Person : data?.profile}
+                      alt={data?.fullname}
+                      className="w-12 rounded-full border-2"
+                    />
+                    <div className="text-[0.8em]">
+                      <div>{data?.fullname}</div>
+                      <div className="text-blue-500">@{data?.username}</div>
+                    </div>
+                  </div>
+                  {data?.email !== user?.email ? (
+                    <>
+                      {users
+                        ?.filter((user: any) => {
+                          return user?._id == data?._id;
+                        })[0]
+                        ?.following?.find((currentUser: any) => {
+                          return currentUser?.email == userAccount?.email;
+                        }) ? (
+                        <button
+                          className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
+                          onClick={() => {
+                            setCurrentFollowing(index);
+                            setLoading(true);
+                            let date = new Date();
+                            follow({ ...user, date }, { ...data, date });
+                          }}
+                          onMouseEnter={() => {
+                            setShowContent(true);
+                            setCurrentFollowing(index);
+                          }}
+                          onMouseLeave={() => {
+                            setShowContent(false);
+                            setCurrentFollowing(index);
+                          }}
+                          disabled={loading && currentFollowing == index}
+                        >
+                          {loading && currentFollowing == index ? (
+                            <img src={Loading} alt="" className="w-5" />
+                          ) : showContent && currentFollowing == index ? (
+                            "Unfollow"
+                          ) : (
+                            "Following"
+                          )}
+                        </button>
+                      ) : (
+                        <button
+                          className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
+                          onClick={() => {
+                            setCurrentFollowing(index);
+                            setLoading(true);
+                            let date = new Date();
+                            follow({ ...user, date }, { ...data, date });
+                          }}
+                          disabled={loading && currentFollowing == index}
+                        >
+                          {loading && currentFollowing == index ? (
+                            <img src={Loading} alt="" className="w-5" />
+                          ) : (
+                            "Follow"
+                          )}
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <div className="bg-gray-200 text-blue-500 p-1 px-3 text-[0.8em] rounded-[2em] z-50">
+                      You
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {userAccount?.following.length < 1 && (
+              <div className="font-semibold text-red-500">
+                You are not following anyone!
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
