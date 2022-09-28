@@ -18,7 +18,7 @@ const SuggestionComponent: React.FC = () => {
   const [currentFollowing, setCurrentFollowing] = useState<number>(0);
   const navigate = useNavigate();
   useEffect(() => {
-    getAllUsers(setUsers);
+    getAllUsers(setUsers, setLoadingSuggestions);
   }, []);
   useEffect(() => {
     try {
@@ -29,7 +29,6 @@ const SuggestionComponent: React.FC = () => {
       console.log(error);
     } finally {
       setLoading(false);
-      setLoadingSuggestions(false);
     }
   });
   if (loadingSuggestions) {

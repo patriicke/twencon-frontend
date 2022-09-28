@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useUserData } from "../../hooks";
+import { getAllUsers, useGetPosts, useUserData } from "../../hooks";
 import { userDataAction } from "../../features/user/userSlice";
 import Logo from "./../../assets/logo/logo.png";
 import {
@@ -22,10 +22,14 @@ import Post from "../Post/Post";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userData = useSelector((state: any) => state.user.userData);
-  const { current, setCurrent } = useContext<any>(HomePageContext);
+  const user = useSelector((state: any) => state.user.userData);
+  const { current, setCurrent, setUsers, setPosts } =
+    useContext<any>(HomePageContext);
+  const [messageNotifications, setMessageNotifications] = useState<number>(0);
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
+    getAllUsers(setUsers);
+    useGetPosts(setPosts);
   }, []);
   useEffect(() => {
     const title: string = "Twencon";
@@ -38,6 +42,7 @@ export const Home: React.FC = () => {
         break;
       case 2:
         document.title = `${title} Notification`;
+        break;
       case 3:
         document.title = `${title} Chats`;
         break;
@@ -52,11 +57,10 @@ export const Home: React.FC = () => {
     const previousCurrent = sessionStorage.getItem("current");
     if (previousCurrent) setCurrent(Number(previousCurrent));
   }, []);
-  const [messageNotifications, setMessageNotifications] = useState<number>(0);
   useEffect(() => {
     let count = 0;
-    for (const room in userData?.newMessages) {
-      count += userData?.newMessages[room];
+    for (const room in user?.newMessages) {
+      count += user?.newMessages[room];
     }
     if (count != 0)
       document
@@ -66,9 +70,8 @@ export const Home: React.FC = () => {
       document
         .querySelector("[name=logo]")
         ?.setAttribute("href", "./src/assets/logo/logo.png");
-
     setMessageNotifications(count);
-  }, [userData]);
+  }, [user]);
   const navigations: {
     icons: any;
     name: string;
@@ -99,13 +102,13 @@ export const Home: React.FC = () => {
     {
       icons: (
         <>
-          {userData?.profile == "icon" ? (
+          {user?.profile == "icon" ? (
             <div className="border-2 rounded-full p-[0.1em]">
               <img src={Person} className="w-10 rounded-full" />
             </div>
-          ) : userData?.profile ? (
+          ) : user?.profile ? (
             <div className="border-2 rounded-full p-[0.1em]">
-              <img src={userData?.profile} className="w-10 rounded-full" />
+              <img src={user?.profile} className="w-10 rounded-full" />
             </div>
           ) : (
             <PhotoSkeleton />
@@ -209,7 +212,7 @@ export const Home: React.FC = () => {
                   setCurrent(index);
                   sessionStorage.setItem("current", index.toString());
                   index == 4
-                    ? navigate(`/user/${userData?.username}`)
+                    ? navigate(`/user/${user?.username}`)
                     : navigate("/");
                 }}
               >

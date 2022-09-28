@@ -6,6 +6,7 @@ export const MainHome: React.FC = () => {
   const [current, setCurrent] = useState<number>(0);
   const [showPost, setShowPost] = useState<boolean>(false);
   const [posts, setPosts] = useState<any>([]);
+  const [users, setUsers] = useState<any>([]);
   return (
     <>
       {localStorage.getItem("acc_token") == null ? (
@@ -18,7 +19,9 @@ export const MainHome: React.FC = () => {
             showPost,
             setShowPost,
             posts,
-            setPosts
+            setPosts,
+            users,
+            setUsers
           }}
         >
           <Home />

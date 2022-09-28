@@ -130,8 +130,12 @@ export const useUserData = async (
     const request = await api.post("/home", { acc_token });
     const response = request.data;
     dispatch(userDataAction(response.foundUser));
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log();
+    if (error.response.status == 404) {
+      navigate("/");
+      localStorage.clear();
+    }
   }
 };
 /* Reset password */
@@ -235,13 +239,18 @@ export const getUserAccount = async (
   }
 };
 /* Get users */
-export const getAllUsers = async (setUsers: any) => {
+export const getAllUsers = async (
+  setUsers: any,
+  setLoadingSuggestions?: any
+) => {
   try {
     const request = await api.get("/auth/users");
     const response = request.data;
     setUsers(response);
   } catch (error) {
     console.log(error);
+  } finally {
+    if (setLoadingSuggestions) setLoadingSuggestions(false);
   }
 };
 /*Follow */
@@ -312,4 +321,12 @@ export const deletePost = async (
     setDeletePostLoading(false);
     setShowPopUp(false);
   }
+};
+
+export const poster = (userId: any, users: any) => {
+  let poster = users?.filter((user: any) => {
+    return user?._id == userId;
+  })[0];
+  return poster
+
 };

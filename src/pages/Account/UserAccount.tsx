@@ -4,12 +4,7 @@ import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HomePageContext from "../../context/HomePageContext";
-import {
-  deletePost,
-  getAllUsers,
-  getUserAccount,
-  useGetPosts
-} from "../../hooks";
+import { deletePost, getUserAccount, poster } from "../../hooks";
 import Person from "./../../assets/person/person.png";
 import Loading from "./../../assets/loading/loading.gif";
 import { follow } from "../../hooks";
@@ -19,12 +14,11 @@ import UserAccountSkeleton from "../../components/Sketeleton/UserAccount/UserAcc
 import { Button } from "@mui/material";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
-  const [users, setUsers] = useState<any>([]);
-  // const {posts, setPosts} = useState<any>([]);
   const [userAccount, setUserAccount] = useState<any>({});
   const locationArray = document.location.href.split("/");
   const [loading, setLoading] = useState<boolean>(false);
-  const { setCurrent, posts, setPosts } = useContext<any>(HomePageContext);
+  const { setCurrent, posts, setPosts, users, setUsers } =
+    useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [deletePostShow, setDeletePostShow] = useState<boolean>(false);
@@ -35,9 +29,6 @@ const UserAccount: React.FC = () => {
   const navigate = useNavigate();
   const deletePostElement = useRef<any>(null);
   const [currentFollowing, setCurrentFollowing] = useState<boolean>(false);
-  const getPosts = async () => {
-    await useGetPosts(setPosts);
-  };
   const [navigations, setNavigations] = useState<string[]>([
     "POSTS",
     "FOLLOWERS",
@@ -51,8 +42,6 @@ const UserAccount: React.FC = () => {
     });
   });
   useEffect(() => {
-    getPosts();
-    getAllUsers(setUsers);
     let n = sessionStorage.getItem("currentNavigation");
     setCurrentNavigation(n ? Number(n) : 0);
   }, []);
@@ -112,6 +101,8 @@ const UserAccount: React.FC = () => {
       </div>
     );
   }
+  document.title = `${userAccount?.fullname} (${userAccount?.username})`;
+  console.log(users)
   return (
     <>
       {showPopUp && (
@@ -181,8 +172,8 @@ const UserAccount: React.FC = () => {
               <div className="rounded-full absolute right-3 bottom-3 border border-gray-500 p-2 px-4 cursor-pointer opacity-80 font-semibold">
                 Edit your profile
               </div>
-            ) : userAccount?.followers?.find((currentUser: any) => {
-                return currentUser?._id == user?._id;
+            ) : userAccount?.followers?.find((currentId: any) => {
+                return currentId == user?._id;
               }) ? (
               <button
                 className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-gray-500 text-white hover:bg-red-500"
@@ -450,22 +441,28 @@ const UserAccount: React.FC = () => {
                   <div
                     className="flex gap-2 items-center justify-between "
                     onClick={() => {
-                      navigate(`/user/${data?.username}`);
+                      navigate(`/user/${poster(data, users)?.username}`);
                       setCurrent(4);
                       sessionStorage.setItem("current", "4");
                     }}
                   >
                     <img
-                      src={data?.profile == "icon" ? Person : data?.profile}
-                      alt={data?.fullname}
+                      src={
+                        poster(data, users)?.profile == "icon"
+                          ? Person
+                          : poster(data, users)?.profile
+                      }
+                      alt={poster(data, users)?.fullname}
                       className="w-12 rounded-full border-2"
                     />
                     <div className="text-[0.8em]">
-                      <div>{data?.fullname}</div>
-                      <div className="text-blue-500">@{data?.username}</div>
+                      <div>{poster(data, users)?.fullname}</div>
+                      <div className="text-blue-500">
+                        @{poster(data, users)?.username}
+                      </div>
                     </div>
                   </div>
-                  {data?.email !== user?.email ? (
+                  {poster(data, users)?.email !== user?.email ? (
                     <>
                       {users
                         ?.filter((user: any) => {
@@ -545,29 +542,35 @@ const UserAccount: React.FC = () => {
                   <div
                     className="flex gap-2 items-center justify-between "
                     onClick={() => {
-                      navigate(`/user/${data?.username}`);
+                      navigate(`/user/${poster(data, users)?.username}`);
                       setCurrent(4);
                       sessionStorage.setItem("current", "4");
                     }}
                   >
                     <img
-                      src={data?.profile == "icon" ? Person : data?.profile}
-                      alt={data?.fullname}
+                      src={
+                        poster(data, users)?.profile == "icon"
+                          ? Person
+                          : poster(data, users)?.profile
+                      }
+                      alt={poster(data, users)?.fullname}
                       className="w-12 rounded-full border-2"
                     />
                     <div className="text-[0.8em]">
-                      <div>{data?.fullname}</div>
-                      <div className="text-blue-500">@{data?.username}</div>
+                      <div>{poster(data, users)?.fullname}</div>
+                      <div className="text-blue-500">
+                        @{poster(data, users)?.username}
+                      </div>
                     </div>
                   </div>
-                  {data?.email !== user?.email ? (
+                  {poster(data, users)?.email !== user?.email ? (
                     <>
                       {users
                         ?.filter((user: any) => {
-                          return user?._id == data?._id;
+                          return user?._id == poster(data, users)?._id;
                         })[0]
-                        ?.following?.find((currentUser: any) => {
-                          return currentUser?.email == userAccount?.email;
+                        ?.following?.find((currentId: any) => {
+                          return currentId == userAccount?._id;
                         }) ? (
                         <button
                           className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
@@ -623,9 +626,7 @@ const UserAccount: React.FC = () => {
               );
             })}
             {userAccount?.following.length < 1 && (
-              <div className="font-semibold text-red-500">
-                You are not following anyone!
-              </div>
+              <div className="font-semibold text-red-500">No followings!</div>
             )}
           </div>
         </div>
