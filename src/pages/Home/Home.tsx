@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAllUsers, useGetPosts, useUserData } from "../../hooks";
@@ -23,9 +23,14 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.userData);
-  const { current, setCurrent, setUsers, setPosts } =
+  const { current, setCurrent, setUsers, setPosts, users } =
     useContext<any>(HomePageContext);
   const [messageNotifications, setMessageNotifications] = useState<number>(0);
+  const [searchElementShow, setSearchElementShow] = useState<boolean>(false);
+  const searchElement = useRef<any>(null);
+  const [searchString, setSearchString] = useState<string>("");
+  const [foundUsers, setFoundUsers] = useState<any>([]);
+  const [noUserFound, setNoUserFound] = useState<boolean>(false);
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
     getAllUsers(setUsers);
@@ -118,6 +123,31 @@ export const Home: React.FC = () => {
     if (document.location.href.includes("/post")) setCurrent(5);
     if (document.location.href.includes("/user")) setCurrent(4);
   }, [document.location.href]);
+  useEffect(() => {
+    const click = () => {
+      if (!searchElement?.current?.contains(event?.target))
+        setSearchElementShow(false);
+    };
+    document.addEventListener("mousedown", click);
+    return () => document.removeEventListener("mousedown", click);
+  });
+  useEffect(() => {
+    if (searchString != "") {
+      let fusers = users?.filter((user: any) => {
+        return (
+          user?.fullname?.toLowerCase()?.includes(searchString.toLowerCase()) ||
+          user?.username?.toLowerCase()?.includes(searchString.toLowerCase())
+        );
+      });
+      if (fusers?.length < 1) {
+        setNoUserFound(true);
+        setFoundUsers([]);
+      } else {
+        setNoUserFound(false);
+      }
+      setFoundUsers(fusers);
+    } else setFoundUsers([]);
+  }, [searchString]);
   return (
     <div className="h-screen relative overflow-hidden flex flex-col md:flex-row-reverse z-auto bg-white">
       <div className="h-[calc(100vh_-_4em)] w-full md:h-screen flex flex-col">
@@ -159,13 +189,53 @@ export const Home: React.FC = () => {
               </div>
             )}
           </div>
-          <div className="flex items-center">
-            <div className="flex items-center justify-end border p-2 rounded-md md:w-[20em] xl:w-[25em] max-h-[3em]">
+          <div className="flex items-center relative">
+            <div
+              className="flex items-center justify-end border p-2 rounded-md md:w-[20em] xl:w-[25em] max-h-[3em]"
+              onClick={() => setSearchElementShow(true)}
+            >
               <input
                 className="w-[95%] outline-none text-[0.85em] h-[1.5em] md:text-[1em] "
                 placeholder="Search Twencon"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setSearchString(e.target.value);
+                }}
+                value={searchString}
               />
               <Search className="md:text-[1.5em] cursor-pointer" />
+            </div>
+            <div
+              className={`absolute top-full w-full h-[20em] bg-gray-100 border rounded-md z-50 overflow-auto p-2 ${
+                searchElementShow ? "" : "hidden"
+              }`}
+              ref={searchElement}
+            >
+              {noUserFound ? (
+                <div>
+                  <span className="text-red-500 font-semibold">
+                    {searchString}
+                  </span>{" "}
+                  is not found!
+                </div>
+              ) : (
+                <div className="font-semibold">Search for friends</div>
+              )}
+              {foundUsers?.map((user: any) => {
+                return (
+                  <div
+                    onClick={() => {
+                      navigate(`/user/${user?.username}`);
+                      setSearchElementShow(false);
+                      setSearchString("");
+                      setCurrent(4);
+                      sessionStorage.setItem("current", "4");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {user?.fullname}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -206,7 +276,7 @@ export const Home: React.FC = () => {
                 onClick={() => {
                   setCurrent(index);
                   sessionStorage.setItem("current", index.toString());
-                  sessionStorage.setItem("prevCurrent", "0")
+                  sessionStorage.setItem("prevCurrent", "0");
                   index == 4
                     ? navigate(`/user/${user?.username}`)
                     : navigate("/");

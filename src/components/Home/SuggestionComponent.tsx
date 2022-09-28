@@ -66,7 +66,7 @@ const SuggestionComponent: React.FC = () => {
                     return currentUser?.id == user?._id;
                   }) ? (
                     <button
-                      className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
+                      className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40"
                       onClick={() => {
                         setCurrentFollowing(index);
                         setLoading(true);
@@ -97,7 +97,7 @@ const SuggestionComponent: React.FC = () => {
                     </button>
                   ) : (
                     <button
-                      className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
+                      className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40"
                       onClick={() => {
                         setCurrentFollowing(index);
                         setLoading(true);
