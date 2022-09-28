@@ -4,10 +4,10 @@ import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HomePageContext from "../../context/HomePageContext";
-import { deletePost, getUserAccount, poster } from "../../hooks";
+import { deletePost, getUserAccount } from "../../hooks";
 import Person from "./../../assets/person/person.png";
 import Loading from "./../../assets/loading/loading.gif";
-import { follow } from "../../hooks";
+import { follow, poster } from "../../hooks";
 import { socket } from "../../context/chatContext";
 import "./account.css";
 import UserAccountSkeleton from "../../components/Sketeleton/UserAccount/UserAccountSkeleton";
@@ -42,7 +42,7 @@ const UserAccount: React.FC = () => {
     });
   });
   useEffect(() => {
-    let n = sessionStorage.getItem("currentNavigation");
+    let n = localStorage.getItem("currentNavigation");
     setCurrentNavigation(n ? Number(n) : 0);
   }, []);
   useEffect(() => {
@@ -50,7 +50,7 @@ const UserAccount: React.FC = () => {
     if (document.location.href.includes("post")) return;
     if (!username) {
       setCurrent(0);
-      sessionStorage.setItem("current", "0");
+      localStorage.setItem("current", "0");
       navigate(`/`);
       setLoadingData(true);
       return;
@@ -102,7 +102,7 @@ const UserAccount: React.FC = () => {
     );
   }
   document.title = `${userAccount?.fullname} (${userAccount?.username})`;
-  console.log(users)
+  console.log(users);
   return (
     <>
       {showPopUp && (
@@ -172,14 +172,17 @@ const UserAccount: React.FC = () => {
               <div className="rounded-full absolute right-3 bottom-3 border border-gray-500 p-2 px-4 cursor-pointer opacity-80 font-semibold">
                 Edit your profile
               </div>
-            ) : userAccount?.followers?.find((currentId: any) => {
-                return currentId == user?._id;
+            ) : userAccount?.followers?.find((data: any) => {
+                return data?.id == user?._id;
               }) ? (
               <button
                 className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-gray-500 text-white hover:bg-red-500"
                 onClick={() => {
                   let date = new Date();
-                  follow({ ...user, date }, { ...userAccount, date });
+                  follow(
+                    { id: user?._id, date },
+                    { id: userAccount?._id, date }
+                  );
                   setLoading(true);
                 }}
                 onMouseEnter={() => {
@@ -202,7 +205,11 @@ const UserAccount: React.FC = () => {
                 className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-blue-500 text-white"
                 onClick={() => {
                   let date = new Date();
-                  follow({ ...user, date }, { ...userAccount, date });
+                  follow(
+                    { id: user?._id, date },
+                    { id: userAccount?._id, date }
+                  );
+
                   setLoading(true);
                 }}
               >
@@ -236,7 +243,7 @@ const UserAccount: React.FC = () => {
                 <span>
                   {
                     (posts as any).filter((post: any) => {
-                      return post?.owner?.email === userAccount?.email;
+                      return post?.owner === userAccount?._id;
                     }).length
                   }
                 </span>
@@ -258,7 +265,7 @@ const UserAccount: React.FC = () => {
                   <Button
                     onClick={() => {
                       setCurrentNavigation(index);
-                      sessionStorage.setItem("currentNavigation", index);
+                      localStorage.setItem("currentNavigation", index);
                     }}
                   >
                     {data}
@@ -274,7 +281,7 @@ const UserAccount: React.FC = () => {
           >
             {(posts as any)
               .filter((post: any) => {
-                return post?.owner?.email === userAccount?.email;
+                return post?.owner === userAccount?._id;
               })
               ?.sort((a: any, b: any) => {
                 let fa = a.date,
@@ -410,7 +417,7 @@ const UserAccount: React.FC = () => {
                 className={`${
                   (posts as any)
                     .filter((post: any) => {
-                      return post?.owner?.email === userAccount?.email;
+                      return post?.owner === userAccount?._id;
                     })
                     ?.sort((a: any, b: any) => {
                       let fa = a.date,
@@ -441,35 +448,35 @@ const UserAccount: React.FC = () => {
                   <div
                     className="flex gap-2 items-center justify-between "
                     onClick={() => {
-                      navigate(`/user/${poster(data, users)?.username}`);
+                      navigate(`/user/${poster(data?.id, users)?.username}`);
                       setCurrent(4);
-                      sessionStorage.setItem("current", "4");
+                      localStorage.setItem("current", "4");
                     }}
                   >
                     <img
                       src={
-                        poster(data, users)?.profile == "icon"
+                        poster(data?.id, users)?.profile == "icon"
                           ? Person
-                          : poster(data, users)?.profile
+                          : poster(data?.id, users)?.profile
                       }
-                      alt={poster(data, users)?.fullname}
+                      alt={poster(data?.id, users)?.fullname}
                       className="w-12 rounded-full border-2"
                     />
                     <div className="text-[0.8em]">
-                      <div>{poster(data, users)?.fullname}</div>
+                      <div>{poster(data?.id, users)?.fullname}</div>
                       <div className="text-blue-500">
-                        @{poster(data, users)?.username}
+                        @{poster(data?.id, users)?.username}
                       </div>
                     </div>
                   </div>
-                  {poster(data, users)?.email !== user?.email ? (
+                  {poster(data?.id, users)?.email !== user?.email ? (
                     <>
                       {users
                         ?.filter((user: any) => {
-                          return user?._id == data?._id;
+                          return user?._id == data?.id;
                         })[0]
                         ?.followers?.find((currentUser: any) => {
-                          return currentUser?.email == user?.email;
+                          return currentUser?.id == user?._id;
                         }) ? (
                         <button
                           className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
@@ -477,7 +484,10 @@ const UserAccount: React.FC = () => {
                             setCurrentFollowing(index);
                             setLoading(true);
                             let date = new Date();
-                            follow({ ...user, date }, { ...data, date });
+                            follow(
+                              { id: user?._id, date },
+                              { id: data?.id, date }
+                            );
                           }}
                           onMouseEnter={() => {
                             setShowContent(true);
@@ -504,7 +514,10 @@ const UserAccount: React.FC = () => {
                             setCurrentFollowing(index);
                             setLoading(true);
                             let date = new Date();
-                            follow({ ...user, date }, { ...data, date });
+                            follow(
+                              { id: user?._id, date },
+                              { id: data?.id, date }
+                            );
                           }}
                           disabled={loading && currentFollowing == index}
                         >
@@ -542,35 +555,35 @@ const UserAccount: React.FC = () => {
                   <div
                     className="flex gap-2 items-center justify-between "
                     onClick={() => {
-                      navigate(`/user/${poster(data, users)?.username}`);
+                      navigate(`/user/${poster(data?.id, users)?.username}`);
                       setCurrent(4);
-                      sessionStorage.setItem("current", "4");
+                      localStorage.setItem("current", "4");
                     }}
                   >
                     <img
                       src={
-                        poster(data, users)?.profile == "icon"
+                        poster(data?.id, users)?.profile == "icon"
                           ? Person
-                          : poster(data, users)?.profile
+                          : poster(data?.id, users)?.profile
                       }
-                      alt={poster(data, users)?.fullname}
+                      alt={poster(data?.id, users)?.fullname}
                       className="w-12 rounded-full border-2"
                     />
                     <div className="text-[0.8em]">
-                      <div>{poster(data, users)?.fullname}</div>
+                      <div>{poster(data?.id, users)?.fullname}</div>
                       <div className="text-blue-500">
-                        @{poster(data, users)?.username}
+                        @{poster(data?.id, users)?.username}
                       </div>
                     </div>
                   </div>
-                  {poster(data, users)?.email !== user?.email ? (
+                  {poster(data?.id, users)?.email !== user?.email ? (
                     <>
                       {users
                         ?.filter((user: any) => {
-                          return user?._id == poster(data, users)?._id;
+                          return user?._id == poster(data?.id, users)?._id;
                         })[0]
-                        ?.following?.find((currentId: any) => {
-                          return currentId == userAccount?._id;
+                        ?.following?.find((currentUser: any) => {
+                          return currentUser?.id == user?._id;
                         }) ? (
                         <button
                           className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
@@ -578,7 +591,10 @@ const UserAccount: React.FC = () => {
                             setCurrentFollowing(index);
                             setLoading(true);
                             let date = new Date();
-                            follow({ ...user, date }, { ...data, date });
+                            follow(
+                              { id: user?._id, date },
+                              { id: data?.id, date }
+                            );
                           }}
                           onMouseEnter={() => {
                             setShowContent(true);
@@ -605,7 +621,10 @@ const UserAccount: React.FC = () => {
                             setCurrentFollowing(index);
                             setLoading(true);
                             let date = new Date();
-                            follow({ ...user, date }, { ...data, date });
+                            follow(
+                              { id: user?._id, date },
+                              { id: data?.id, date }
+                            );
                           }}
                           disabled={loading && currentFollowing == index}
                         >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dashboard from "./Dashboard";
 import Home from "./Home";
 import HomePageContext from "../../context/HomePageContext";
@@ -7,6 +7,10 @@ export const MainHome: React.FC = () => {
   const [showPost, setShowPost] = useState<boolean>(false);
   const [posts, setPosts] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
+  useEffect(() => {
+    const previousCurrent = localStorage.getItem("current");
+    if (previousCurrent) setCurrent(Number(previousCurrent));
+  }, []);
   return (
     <>
       {localStorage.getItem("acc_token") == null ? (

@@ -322,7 +322,6 @@ export const deletePost = async (
     setShowPopUp(false);
   }
 };
-
 export const poster = (userId: any, users: any) => {
   let poster = users?.filter((user: any) => {
     return user?._id == userId;

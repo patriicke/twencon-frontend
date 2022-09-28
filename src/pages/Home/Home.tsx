@@ -54,10 +54,6 @@ export const Home: React.FC = () => {
     }
   }, [current]);
   useEffect(() => {
-    const previousCurrent = sessionStorage.getItem("current");
-    if (previousCurrent) setCurrent(Number(previousCurrent));
-  }, []);
-  useEffect(() => {
     let count = 0;
     for (const room in user?.newMessages) {
       count += user?.newMessages[room];
@@ -131,7 +127,7 @@ export const Home: React.FC = () => {
             onClick={() => {
               navigate("/");
               setCurrent(0);
-              sessionStorage.setItem("current", "0");
+              localStorage.setItem("current", "0");
             }}
           >
             <img src={Logo} />
@@ -173,7 +169,6 @@ export const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        {/* This is where the components will be put */}
         <div className={`h-[92%] w-full ${current === 0 ? "block" : "hidden"}`}>
           <HomeComponent />
         </div>
@@ -196,7 +191,7 @@ export const Home: React.FC = () => {
             onClick={() => {
               navigate("/");
               setCurrent(0);
-              sessionStorage.setItem("current", "0");
+              localStorage.setItem("current", "0");
             }}
           >
             <img src={Logo} />
@@ -210,7 +205,7 @@ export const Home: React.FC = () => {
                 className="cursor-pointer"
                 onClick={() => {
                   setCurrent(index);
-                  sessionStorage.setItem("current", index.toString());
+                  localStorage.setItem("current", index.toString());
                   index == 4
                     ? navigate(`/user/${user?.username}`)
                     : navigate("/");

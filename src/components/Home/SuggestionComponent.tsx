@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getAllUsers } from "../../hooks";
 import { follow } from "../../hooks";
 import { socket } from "./../../context/chatContext";
 import Person from "./../../assets/person/person.png";
@@ -10,16 +9,11 @@ import Loading from "./../../assets/loading/loading.gif";
 import SuggestionSkeleteon from "../Sketeleton/SuggestionSkeleton/SuggestionSkeleteon";
 const SuggestionComponent: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
-  const [users, setUsers] = useState<any>([]);
-  const { setCurrent } = useContext<any>(HomePageContext);
+  const { setCurrent, users, setUsers } = useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingSuggestions, setLoadingSuggestions] = useState<boolean>(true);
   const [currentFollowing, setCurrentFollowing] = useState<number>(0);
   const navigate = useNavigate();
-  useEffect(() => {
-    getAllUsers(setUsers, setLoadingSuggestions);
-  }, []);
   useEffect(() => {
     try {
       socket.off("follow").on("follow", (data) => {
@@ -31,7 +25,7 @@ const SuggestionComponent: React.FC = () => {
       setLoading(false);
     }
   });
-  if (loadingSuggestions) {
+  if (!users) {
     return <SuggestionSkeleteon />;
   }
   return (
@@ -54,7 +48,7 @@ const SuggestionComponent: React.FC = () => {
                     onClick={() => {
                       navigate(`/user/${data?.username}`);
                       setCurrent(4);
-                      sessionStorage.setItem("current", "4");
+                      localStorage.setItem("current", "4");
                     }}
                   >
                     <img
@@ -68,7 +62,7 @@ const SuggestionComponent: React.FC = () => {
                     </div>
                   </div>
                   {data?.followers?.find((currentUser: any) => {
-                    return currentUser?.email == user?.email;
+                    return currentUser?.id == user?._id;
                   }) ? (
                     <button
                       className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
@@ -76,7 +70,11 @@ const SuggestionComponent: React.FC = () => {
                         setCurrentFollowing(index);
                         setLoading(true);
                         let date = new Date();
-                        follow({ ...user, date }, { ...data, date });
+                        follow(
+                          { id: user?._id, date },
+                          { id: data?._id, date }
+                        );
+                        console.log(user?._id);
                       }}
                       onMouseEnter={() => {
                         setShowContent(true);
@@ -103,7 +101,10 @@ const SuggestionComponent: React.FC = () => {
                         setCurrentFollowing(index);
                         setLoading(true);
                         let date = new Date();
-                        follow({ ...user, date }, { ...data, date });
+                        follow(
+                          { id: user?._id, date },
+                          { id: data?._id, date }
+                        );
                       }}
                       disabled={loading && currentFollowing == index}
                     >

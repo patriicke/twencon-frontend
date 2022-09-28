@@ -12,13 +12,15 @@ import { EmojiEmotions, Favorite, FavoriteBorder } from "@mui/icons-material";
 import Picker from "emoji-picker-react";
 import { socket } from "../../context/chatContext";
 import AudioClick from "./../../assets/audio/click.mp3";
+import { poster } from "../../hooks";
 const Post: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const postId = useParams();
   const [post, setPost] = useState<any>({});
   const navigate = useNavigate();
   const commentEmojiElement = useRef<any>(null);
-  const { setCurrent, posts, setPosts } = useContext<any>(HomePageContext);
+  const { setCurrent, posts, setPosts, users } =
+    useContext<any>(HomePageContext);
   const [postLoading, setPostLoading] = useState<any>(true);
   const [textComment, setTextComment] = useState<string>("");
   const [loadingPostingComment, setLoadingPostingComment] =
@@ -58,7 +60,7 @@ const Post: React.FC = () => {
       if (textComment == "" || textComment == null)
         return setLoadingPostingComment(false);
       const date = new Date();
-      socket.emit("create-comment", user, post._id, textComment, date);
+      socket.emit("create-comment", user?._id, post._id, textComment, date);
     } catch (error) {
       console.log(error);
     } finally {
@@ -69,7 +71,11 @@ const Post: React.FC = () => {
     try {
       const clickSound = new Audio(AudioClick);
       clickSound.play();
-      socket.emit("like-post", { ...user, date: new Date() }, post?._id);
+      socket.emit(
+        "like-post",
+        { user: user?._id, date: new Date() },
+        post?._id
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -79,6 +85,7 @@ const Post: React.FC = () => {
       }, 500);
     }
   };
+  console.log(post);
   if (postLoading) {
     return <UserPostSkeleton />;
   }
@@ -134,16 +141,16 @@ const Post: React.FC = () => {
               <div
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
                 onClick={() => {
-                  navigate(`/user/${post?.owner?.username}`);
+                  navigate(`/user/${poster(post?.owner, users)?.username}`);
                   setCurrent(4);
                   sessionStorage.setItem("current", "4");
                 }}
               >
-                {post?.owner?.profile === "icon" ? (
+                {poster(post?.owner, users)?.profile === "icon" ? (
                   <img src={Person} alt="" className="rounded-full w-full" />
                 ) : (
                   <img
-                    src={post?.owner?.profile}
+                    src={poster(post?.owner, users)?.profile}
                     alt=""
                     className="rounded-full"
                   />
@@ -155,22 +162,26 @@ const Post: React.FC = () => {
                     <div
                       className="font-medium text-[0.9em] md:text-[1em] cursor-pointer"
                       onClick={() => {
-                        navigate(`/user/${post?.owner?.username}`);
+                        navigate(
+                          `/user/${poster(post?.owner, users)?.username}`
+                        );
                         setCurrent(4);
                         sessionStorage.setItem("current", "4");
                       }}
                     >
-                      {post?.owner?.fullname}
+                      {poster(post?.owner, users)?.fullname}
                     </div>
                     <div
                       className="opacity-50 cursor-pointer"
                       onClick={() => {
-                        navigate(`/user/${post?.owner?.username}`);
+                        navigate(
+                          `/user/${poster(post?.owner, users)?.username}`
+                        );
                         setCurrent(4);
                         sessionStorage.setItem("current", "4");
                       }}
                     >
-                      @{post?.owner?.username}
+                      @{poster(post?.owner, users)?.username}
                     </div>
                     <div className="text-blue-500">
                       {calculateDate(post?.date)}
@@ -222,8 +233,8 @@ const Post: React.FC = () => {
                         onClick={like}
                         className="flex items-center justify-center"
                       >
-                        {post?.likes?.find((currentUser: any) => {
-                          return currentUser._id == user?._id;
+                        {post?.likes?.find((currentId: any) => {
+                          return currentId.user == user?._id;
                         }) == undefined ? (
                           <FavoriteBorder className="md:text-[1.5em] opacity-70 cursor-pointer" />
                         ) : (
@@ -352,22 +363,22 @@ const Post: React.FC = () => {
                   <div
                     className="flex gap-2 items-center bg-gray-200 p-1 rounded-md hover:bg-gray-300 cursor-pointer"
                     onClick={() => {
-                      navigate(`/user/${post.username}`);
+                      navigate(`/user/${poster(post?.user, users).username}`);
                       setCurrent(4);
                       sessionStorage.setItem("current", "4");
                     }}
                     key={index}
                   >
                     <img
-                      src={post.profile == "icon" ? Person : post.profile}
-                      alt={post.fullname}
+                      src={poster(post?.user, users)?.profile == "icon" ? Person : poster(post?.user, users)?.profile}
+                      alt={poster(post?.user, users)?.fullname}
                       className="w-12 rounded-full border-2"
                     />
                     <div className="text-[0.8em]">
                       <div>
-                        {post.fullname} {post?.email == user?.email && `(You)`}
+                        {poster(post?.user, users)?.fullname} {post?.email == user?.email && `(You)`}
                       </div>
-                      <div className="text-blue-500">@{post.username}</div>
+                      <div className="text-blue-500">@{poster(post?.user, users)?.username}</div>
                     </div>
                     <div className="text-[0.8em] h-full p-1 text-blue-500">
                       {calculateDate(post?.date)}
@@ -409,27 +420,30 @@ const Post: React.FC = () => {
                     <div
                       className="flex gap-2 items-center bg-gray-200 p-1 rounded-md hover:bg-gray-300 cursor-pointer"
                       onClick={() => {
-                        navigate(`/user/${post?.from?.username}`);
+                        navigate(
+                          `/user/${poster(post?.from, users)?.username}`
+                        );
                         setCurrent(4);
                         sessionStorage.setItem("current", "4");
                       }}
                     >
                       <img
                         src={
-                          post?.from?.profile == "icon"
+                          poster(post?.from, users)?.profile == "icon"
                             ? Person
-                            : post?.from?.profile
+                            : poster(post?.from, users)?.profile
                         }
-                        alt={post?.from?.fullname}
+                        alt={poster(post?.from, users)?.fullname}
                         className="w-12 rounded-full border-2"
                       />
                       <div className="text-[0.8em]">
                         <div>
-                          {post?.from?.fullname}{" "}
-                          {post?.from?.email == user?.email && `(You)`}
+                          {poster(post?.from, users)?.fullname}{" "}
+                          {poster(post?.from, users)?.email == user?.email &&
+                            `(You)`}
                         </div>
                         <div className="text-blue-500">
-                          @{post?.from?.username}
+                          @{poster(post?.from, users)?.username}
                         </div>
                       </div>
                       <div className="h-full p-1 text-[0.8em] text-blue-500">
