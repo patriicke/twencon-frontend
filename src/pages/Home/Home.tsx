@@ -127,7 +127,7 @@ export const Home: React.FC = () => {
             onClick={() => {
               navigate("/");
               setCurrent(0);
-              localStorage.setItem("current", "0");
+              sessionStorage.setItem("current", "0");
             }}
           >
             <img src={Logo} />
@@ -191,7 +191,7 @@ export const Home: React.FC = () => {
             onClick={() => {
               navigate("/");
               setCurrent(0);
-              localStorage.setItem("current", "0");
+              sessionStorage.setItem("current", "0");
             }}
           >
             <img src={Logo} />
@@ -205,7 +205,8 @@ export const Home: React.FC = () => {
                 className="cursor-pointer"
                 onClick={() => {
                   setCurrent(index);
-                  localStorage.setItem("current", index.toString());
+                  sessionStorage.setItem("current", index.toString());
+                  sessionStorage.setItem("prevCurrent", "0")
                   index == 4
                     ? navigate(`/user/${user?.username}`)
                     : navigate("/");

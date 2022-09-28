@@ -29,7 +29,7 @@ const PostComponent: React.FC = () => {
   const navigate = useNavigate();
   const user = useSelector((state: any) => state?.user?.userData);
   const [postText, setPostText] = useState<string>("");
-  const { setCurrent, posts, setPosts, users, setUsers } =
+  const { setCurrent, posts, setPosts, users, current } =
     useContext<any>(HomePageContext);
   const [showEmojiFile, setShowEmojiFile] = useState<boolean>(false);
   const [allPostsObject, setAllPostsObject] = useState<any>();
@@ -306,7 +306,8 @@ const PostComponent: React.FC = () => {
               onClick={() => {
                 setCurrent(4);
                 navigate(`/user/${user?.username}`);
-                localStorage.setItem("current", "4");
+                sessionStorage.setItem("current", "4");
+                sessionStorage.setItem("prevCurrent", current.toString());
               }}
             />
           </div>
@@ -512,7 +513,8 @@ const PostComponent: React.FC = () => {
                     onClick={() => {
                       navigate(`/user/${poster(data?.owner, users)?.username}`);
                       setCurrent(4);
-                      localStorage.setItem("current", "4");
+                      sessionStorage.setItem("current", "4");
+                      sessionStorage.setItem("prevCurrent", current.toString());
                     }}
                   >
                     {poster(data?._id, users)?.profile === "icon" ? (
@@ -539,7 +541,11 @@ const PostComponent: React.FC = () => {
                               `/user/${poster(data?.owner, users)?.username}`
                             );
                             setCurrent(4);
-                            localStorage.setItem("current", "4");
+                            sessionStorage.setItem("current", "4");
+                            sessionStorage.setItem(
+                              "prevCurrent",
+                              current.toString()
+                            );
                           }}
                         >
                           {poster(data?.owner, users)?.fullname}
@@ -551,7 +557,11 @@ const PostComponent: React.FC = () => {
                               `/user/${poster(data?.owner, users)?.username}`
                             );
                             setCurrent(4);
-                            localStorage.setItem("current", "4");
+                            sessionStorage.setItem("current", "4");
+                            sessionStorage.setItem(
+                              "prevCurrent",
+                              current.toString()
+                            );
                           }}
                         >
                           @{poster(data?.owner, users)?.username}

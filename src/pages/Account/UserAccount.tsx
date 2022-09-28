@@ -42,15 +42,13 @@ const UserAccount: React.FC = () => {
     });
   });
   useEffect(() => {
-    let n = localStorage.getItem("currentNavigation");
+    let n = sessionStorage.getItem("currentNavigation");
     setCurrentNavigation(n ? Number(n) : 0);
   }, []);
   useEffect(() => {
     const username = locationArray[locationArray.length - 1];
     if (document.location.href.includes("post")) return;
     if (!username) {
-      setCurrent(0);
-      localStorage.setItem("current", "0");
       navigate(`/`);
       setLoadingData(true);
       return;
@@ -265,7 +263,7 @@ const UserAccount: React.FC = () => {
                   <Button
                     onClick={() => {
                       setCurrentNavigation(index);
-                      localStorage.setItem("currentNavigation", index);
+                      sessionStorage.setItem("currentNavigation", index);
                     }}
                   >
                     {data}
@@ -450,7 +448,7 @@ const UserAccount: React.FC = () => {
                     onClick={() => {
                       navigate(`/user/${poster(data?.id, users)?.username}`);
                       setCurrent(4);
-                      localStorage.setItem("current", "4");
+                      sessionStorage.setItem("current", "4");
                     }}
                   >
                     <img
@@ -557,7 +555,7 @@ const UserAccount: React.FC = () => {
                     onClick={() => {
                       navigate(`/user/${poster(data?.id, users)?.username}`);
                       setCurrent(4);
-                      localStorage.setItem("current", "4");
+                      sessionStorage.setItem("current", "4");
                     }}
                   >
                     <img
@@ -580,7 +578,7 @@ const UserAccount: React.FC = () => {
                     <>
                       {users
                         ?.filter((user: any) => {
-                          return user?._id == poster(data?.id, users)?._id;
+                          return user?._id == poster(data, users)?._id;
                         })[0]
                         ?.following?.find((currentUser: any) => {
                           return currentUser?.id == user?._id;

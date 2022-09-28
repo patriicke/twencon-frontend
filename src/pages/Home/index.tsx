@@ -3,13 +3,19 @@ import Dashboard from "./Dashboard";
 import Home from "./Home";
 import HomePageContext from "../../context/HomePageContext";
 export const MainHome: React.FC = () => {
-  const [current, setCurrent] = useState<number>(0);
+  const [current, setCurrent] = useState<number>(
+    sessionStorage.getItem("current")
+      ? Number(sessionStorage.getItem("current"))
+      : 0
+  );
   const [showPost, setShowPost] = useState<boolean>(false);
   const [posts, setPosts] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
   useEffect(() => {
-    const previousCurrent = localStorage.getItem("current");
+    const previousCurrent = sessionStorage.getItem("current");
     if (previousCurrent) setCurrent(Number(previousCurrent));
+    console.log(previousCurrent);
+    // setCurrent(2);
   }, []);
   return (
     <>

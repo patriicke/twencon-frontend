@@ -48,7 +48,8 @@ const SuggestionComponent: React.FC = () => {
                     onClick={() => {
                       navigate(`/user/${data?.username}`);
                       setCurrent(4);
-                      localStorage.setItem("current", "4");
+                      sessionStorage.setItem("current", "4");
+                      sessionStorage.setItem("prevCurrent", "0")
                     }}
                   >
                     <img
