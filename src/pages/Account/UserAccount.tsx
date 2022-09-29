@@ -61,7 +61,6 @@ const UserAccount: React.FC = () => {
   useEffect(() => {
     let n = sessionStorage.getItem("currentNavigation");
     setCurrentNavigation(n ? Number(n) : 0);
-    if (sessionStorage.getItem("edit") == "true") setIsEditProfile(true);
   }, []);
   useEffect(() => {
     const username = locationArray[locationArray.length - 1];
@@ -93,6 +92,11 @@ const UserAccount: React.FC = () => {
       setLoading(false);
     }
   });
+  useEffect(() => {
+    if (sessionStorage.getItem("edit") == "true") {
+      if (userAccount?._id == user?._id) setIsEditProfile(true);
+    }
+  });
   if (loadingData) {
     return (
       <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
@@ -121,7 +125,7 @@ const UserAccount: React.FC = () => {
   return (
     <>
       {isEditProfile ? (
-        <EditProfile />
+        <EditProfile userAccount={userAccount} />
       ) : (
         <>
           {showPopUp && (
