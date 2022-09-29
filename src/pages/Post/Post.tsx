@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Button, Skeleton, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { calculateDate, getPost } from "../../hooks";
@@ -8,7 +8,13 @@ import Person from "./../../assets/person/person.png";
 import UserPostSkeleton from "../../components/Sketeleton/UserPostSkeleton/UserPostSkeleton";
 import Loading from "./../../assets/loading/loading.gif";
 import ReactPlayer from "react-player";
-import { EmojiEmotions, Favorite, FavoriteBorder } from "@mui/icons-material";
+import {
+  ChevronLeft,
+  ChevronRight,
+  EmojiEmotions,
+  Favorite,
+  FavoriteBorder
+} from "@mui/icons-material";
 import Picker from "emoji-picker-react";
 import { socket } from "../../context/chatContext";
 import AudioClick from "./../../assets/audio/click.mp3";
@@ -30,6 +36,7 @@ const Post: React.FC = () => {
   const [currentShow, setCurrentShow] = useState<number>(0);
   const [showCommentEmojiElement, setShowCommentEmojiElement] =
     useState<boolean>(false);
+  const [currentImage, setCurrentImage] = useState<number>(0);
   useEffect(() => {
     if (document.location.href.includes("post"))
       getPost(postId, setPost, setPostLoading);
@@ -198,7 +205,7 @@ const Post: React.FC = () => {
                             <div className="flex items-center justify-center min-h-[15em] videos">
                               {image?.includes("video") ? (
                                 <ReactPlayer
-                                  url={post?.post?.images[0]}
+                                  url={post?.post?.images[currentImage]}
                                   controls
                                   muted={true}
                                   loop
@@ -206,7 +213,7 @@ const Post: React.FC = () => {
                                 />
                               ) : (
                                 <img
-                                  src={post?.post?.images[0]}
+                                  src={post?.post?.images[currentImage]}
                                   className="rounded-md"
                                 />
                               )}
@@ -215,6 +222,30 @@ const Post: React.FC = () => {
                         );
                       }
                     )}
+                    <span
+                      className="absolute top-[45%] cursor-pointer bg-white border rounded-full p-[0.1em]"
+                      hidden={currentImage == 0 ? true : false}
+                      onClick={() => {
+                        if (currentImage == 0) {
+                        } else {
+                          setCurrentImage((current: any) => current - 1);
+                        }
+                      }}
+                    >
+                      <ChevronLeft className="text-[1.6em]" />
+                    </span>
+                    <span
+                      className="absolute top-[45%] right-0 cursor-pointer bg-white border rounded-full p-[0.1em]"
+                      hidden={currentImage >= post?.post?.images?.length - 1}
+                      onClick={() => {
+                        if (currentImage >= post?.post?.images?.length - 1) {
+                        } else {
+                          setCurrentImage((current: any) => current + 1);
+                        }
+                      }}
+                    >
+                      <ChevronRight className="text-[1.6em]" />
+                    </span>
                   </div>
                 )}
                 <div>
