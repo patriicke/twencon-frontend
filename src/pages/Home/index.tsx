@@ -7,6 +7,7 @@ export const MainHome: React.FC = () => {
   const [showPost, setShowPost] = useState<boolean>(false);
   const [posts, setPosts] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
+  const [isEditProfile, setIsEditProfile] = useState<boolean>(false);
   useEffect(() => {
     if (document.location.href.includes("/post")) setCurrent(5);
     else if (document.location.href.includes("/user")) setCurrent(4);
@@ -32,7 +33,9 @@ export const MainHome: React.FC = () => {
             posts,
             setPosts,
             users,
-            setUsers
+            setUsers,
+            isEditProfile,
+            setIsEditProfile
           }}
         >
           <Home />

@@ -128,21 +128,19 @@ export const Home: React.FC = () => {
     return () => document.removeEventListener("mousedown", click);
   });
   useEffect(() => {
-    if (searchString != "" || !searchString) {
-      let fusers = users?.filter((user: any) => {
-        return (
-          user?.fullname?.toLowerCase()?.includes(searchString.toLowerCase()) ||
-          user?.username?.toLowerCase()?.includes(searchString.toLowerCase())
-        );
-      });
-      if (fusers?.length < 1) {
-        setNoUserFound(true);
-        setFoundUsers([]);
-      } else {
-        setNoUserFound(false);
-      }
-      setFoundUsers(fusers);
-    } else setFoundUsers([]);
+    if (searchString == "") return;
+    let fusers = users?.filter((user: any) => {
+      return (
+        user?.fullname?.toLowerCase()?.includes(searchString?.toLowerCase()) ||
+        user?.username?.toLowerCase()?.includes(searchString?.toLowerCase())
+      );
+    });
+    if (fusers?.length < 1) {
+      setFoundUsers([]);
+      return setNoUserFound(true);
+    }
+    setFoundUsers(fusers);
+    return setNoUserFound(false);
   }, [searchString]);
   return (
     <div className="h-screen relative overflow-hidden flex flex-col md:flex-row-reverse z-auto bg-white">
@@ -206,7 +204,14 @@ export const Home: React.FC = () => {
               }`}
               ref={searchElement}
             >
-              {noUserFound ? (
+              {searchString == "" ? (
+                <div className=" h-full w-full">
+                  <h1 className="font-medium">Recent Searches</h1>
+                  <div className="w-full h-[calc(100%_-_4em)] flex items-center justify-center">
+                    No recent searches
+                  </div>
+                </div>
+              ) : noUserFound ? (
                 <div>
                   User{" "}
                   <span className="text-red-500 font-semibold">
@@ -215,49 +220,34 @@ export const Home: React.FC = () => {
                   is not found!
                 </div>
               ) : (
-                <>
-                  {searchString == "" || !searchString ? (
-                    <div className=" h-full w-full">
-                      <h1 className="font-medium">Recent Searches</h1>
-                      <div className="w-full h-[calc(100%_-_4em)] flex items-center justify-center">
-                        No recent searches
+                <div className="flex flex-col gap-2">
+                  {foundUsers?.map((user: any, index: any) => {
+                    return (
+                      <div
+                        className="flex gap-2 items-center cursor-pointer bg-gray-200 rounded-md p-[0.2em] hover:bg-gray-300"
+                        onClick={() => {
+                          navigate(`/user/${user?.username}`);
+                          setCurrent(4);
+                          setSearchString("");
+                          setSearchElementShow(false);
+                          sessionStorage.setItem("current", "4");
+                          sessionStorage.setItem("prevCurrent", "0");
+                        }}
+                        key={index}
+                      >
+                        <img
+                          src={user?.profile == "icon" ? Person : user?.profile}
+                          alt={user?.fullname}
+                          className="w-12 rounded-full border-2"
+                        />
+                        <div className="text-[0.8em]">
+                          <div>{user?.fullname}</div>
+                          <div className="text-blue-500">@{user?.username}</div>
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col gap-2">
-                      {foundUsers?.map((user: any, index: any) => {
-                        return (
-                          <div
-                            className="flex gap-2 items-center cursor-pointer bg-gray-200 rounded-md p-[0.2em] hover:bg-gray-300"
-                            onClick={() => {
-                              navigate(`/user/${user?.username}`);
-                              setCurrent(4);
-                              setSearchString("");
-                              setSearchElementShow(false);
-                              sessionStorage.setItem("current", "4");
-                              sessionStorage.setItem("prevCurrent", "0");
-                            }}
-                            key={index}
-                          >
-                            <img
-                              src={
-                                user?.profile == "icon" ? Person : user?.profile
-                              }
-                              alt={user?.fullname}
-                              className="w-12 rounded-full border-2"
-                            />
-                            <div className="text-[0.8em]">
-                              <div>{user?.fullname}</div>
-                              <div className="text-blue-500">
-                                @{user?.username}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </>
+                    );
+                  })}
+                </div>
               )}
             </div>
           </div>

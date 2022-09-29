@@ -1,5 +1,11 @@
 import { Favorite, FavoriteBorder, MoreHoriz } from "@mui/icons-material";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -19,8 +25,15 @@ const UserAccount: React.FC = () => {
   const [userAccount, setUserAccount] = useState<any>({});
   const locationArray = document.location.href.split("/");
   const [loading, setLoading] = useState<boolean>(false);
-  const { setCurrent, posts, setPosts, users, setUsers } =
-    useContext<any>(HomePageContext);
+  const {
+    setCurrent,
+    posts,
+    setPosts,
+    users,
+    setUsers,
+    isEditProfile,
+    setIsEditProfile
+  } = useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [deletePostShow, setDeletePostShow] = useState<boolean>(false);
@@ -28,7 +41,6 @@ const UserAccount: React.FC = () => {
   const [showPopUp, setShowPopUp] = useState<boolean>(false);
   const [deletePostLoading, setDeletePostLoading] = useState<boolean>(false);
   const [currentNavigation, setCurrentNavigation] = useState<number>(0);
-  const [isEditProfile, setIsEditProfile] = useState<boolean>(false);
   const navigate = useNavigate();
   const deletePostElement = useRef<any>(null);
   const [currentFollowing, setCurrentFollowing] = useState<boolean>(false);
@@ -49,6 +61,7 @@ const UserAccount: React.FC = () => {
   useEffect(() => {
     let n = sessionStorage.getItem("currentNavigation");
     setCurrentNavigation(n ? Number(n) : 0);
+    if (sessionStorage.getItem("edit") == "true") setIsEditProfile(true);
   }, []);
   useEffect(() => {
     const username = locationArray[locationArray.length - 1];
@@ -183,6 +196,7 @@ const UserAccount: React.FC = () => {
                     className="rounded-full absolute right-3 bottom-3 border border-gray-500 p-2 px-4 cursor-pointer opacity-80 font-semibold"
                     onClick={() => {
                       setIsEditProfile(true);
+                      sessionStorage.setItem("edit", "true");
                     }}
                   >
                     Edit your profile
