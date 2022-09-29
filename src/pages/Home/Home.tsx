@@ -132,7 +132,7 @@ export const Home: React.FC = () => {
     return () => document.removeEventListener("mousedown", click);
   });
   useEffect(() => {
-    if (searchString != "") {
+    if (searchString != "" || !searchString) {
       let fusers = users?.filter((user: any) => {
         return (
           user?.fullname?.toLowerCase()?.includes(searchString.toLowerCase()) ||
@@ -195,7 +195,7 @@ export const Home: React.FC = () => {
               onClick={() => setSearchElementShow(true)}
             >
               <input
-                className="w-[95%] outline-none text-[0.85em] h-[1.5em] md:text-[1em] "
+                className="w-[95%] outline-none text-[0.85em] h-[1.5em] md:text-[1em] text-opacity-60 "
                 placeholder="Search Twencon"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setSearchString(e.target.value);
@@ -212,30 +212,57 @@ export const Home: React.FC = () => {
             >
               {noUserFound ? (
                 <div>
+                  User{" "}
                   <span className="text-red-500 font-semibold">
                     {searchString}
                   </span>{" "}
                   is not found!
                 </div>
               ) : (
-                <div className="font-semibold">Search for friends</div>
+                <>
+                  {searchString == "" ? (
+                    <div className=" h-full w-full">
+                      <h1 className="font-medium">Recent Searches</h1>
+                      <div className="w-full h-[calc(100%_-_4em)] flex items-center justify-center">
+                        No recent searches
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {foundUsers?.map((user: any, index: any) => {
+                        return (
+                          <div
+                            className="flex gap-2 items-center cursor-pointer bg-gray-200 rounded-md p-[0.2em] hover:bg-gray-300"
+                            onClick={() => {
+                              navigate(`/user/${user?.username}`);
+                              setCurrent(4);
+                              setSearchString("");
+                              setSearchElementShow(false);
+                              sessionStorage.setItem("current", "4");
+                              sessionStorage.setItem("prevCurrent", "0");
+                            }}
+                            key={index}
+                          >
+                            <img
+                              src={
+                                user?.profile == "icon" ? Person : user?.profile
+                              }
+                              alt={user?.fullname}
+                              className="w-12 rounded-full border-2"
+                            />
+                            <div className="text-[0.8em]">
+                              <div>{user?.fullname}</div>
+                              <div className="text-blue-500">
+                                @{user?.username}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
               )}
-              {foundUsers?.map((user: any) => {
-                return (
-                  <div
-                    onClick={() => {
-                      navigate(`/user/${user?.username}`);
-                      setSearchElementShow(false);
-                      setSearchString("");
-                      setCurrent(4);
-                      sessionStorage.setItem("current", "4");
-                    }}
-                    className="cursor-pointer"
-                  >
-                    {user?.fullname}
-                  </div>
-                );
-              })}
             </div>
           </div>
         </div>

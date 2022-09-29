@@ -50,7 +50,9 @@ const UserAccount: React.FC = () => {
     if (document.location.href.includes("post")) return;
     if (!username) {
       navigate(`/`);
+      setCurrent(0);
       setLoadingData(true);
+      sessionStorage.setItem("current", "0");
       return;
     }
     if (username == user?.username) {
@@ -100,7 +102,6 @@ const UserAccount: React.FC = () => {
     );
   }
   document.title = `${userAccount?.fullname} (${userAccount?.username})`;
-  console.log(users);
   return (
     <>
       {showPopUp && (
@@ -313,7 +314,7 @@ const UserAccount: React.FC = () => {
                           className={`bg-gray-200 w-[8em] min-h-[2.5em] absolute right-2 top-8 rounded-md flex items-center justify-center duration-200 flex-col gap-2 p-2`}
                           ref={deletePostElement}
                         >
-                          {user?.email == data?.owner?.email && (
+                          {user?._id == data?.owner && (
                             <Button
                               variant="contained"
                               className="bg-red-500 h-[1.9em] text-[0.8em] w-[8em] hover:bg-red-500"
@@ -370,7 +371,7 @@ const UserAccount: React.FC = () => {
                         >
                           <span className="flex items-center justify-center">
                             {data?.likes.find((currentUser: any) => {
-                              return currentUser._id == user?._id;
+                              return currentUser.id == user?._id;
                             }) == undefined ? (
                               <FavoriteBorder className="md:text-[2em] opacity-70 cursor-pointer" />
                             ) : (

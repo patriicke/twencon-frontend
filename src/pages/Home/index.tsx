@@ -14,9 +14,7 @@ export const MainHome: React.FC = () => {
   useEffect(() => {
     const previousCurrent = sessionStorage.getItem("current");
     if (previousCurrent) setCurrent(Number(previousCurrent));
-    console.log(previousCurrent);
-    // setCurrent(2);
-  }, []);
+  }, [document.location.href]);
   return (
     <>
       {localStorage.getItem("acc_token") == null ? (

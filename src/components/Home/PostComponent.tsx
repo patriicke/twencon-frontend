@@ -226,7 +226,7 @@ const PostComponent: React.FC = () => {
     try {
       const clickSound = new Audio(AudioClick);
       clickSound.play();
-      socket.emit("like-post", { user: user?._id, date: new Date() }, id);
+      socket.emit("like-post", { id: user?._id, date: new Date() }, id);
     } catch (error) {
       console.log(error);
     } finally {
@@ -347,7 +347,6 @@ const PostComponent: React.FC = () => {
                     } else {
                       setCurrentImage((current) => current - 1);
                     }
-                    console.log(currentImage);
                   }}
                 >
                   <ChevronLeft className="text-[1.6em]" />
@@ -359,7 +358,6 @@ const PostComponent: React.FC = () => {
                     } else {
                       setCurrentImage((current) => current + 1);
                     }
-                    console.log(currentImage);
                   }}
                   hidden={currentImage >= imageURLs.length - 1}
                 >
@@ -672,7 +670,7 @@ const PostComponent: React.FC = () => {
                             className="flex items-center justify-center"
                           >
                             {data?.likes.find((currentId: any) => {
-                              return currentId.user == user?._id;
+                              return currentId.id == user?._id;
                             }) == undefined ? (
                               <FavoriteBorder className="md:text-[1.5em] opacity-70 cursor-pointer" />
                             ) : (
