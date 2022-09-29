@@ -326,6 +326,5 @@ export const poster = (userId: any, users: any) => {
   let poster = users?.filter((user: any) => {
     return user?._id == userId;
   })[0];
-  return poster
-
+  return poster;
 };

@@ -11,10 +11,13 @@ import Picker from "emoji-picker-react";
 import { ChatContext } from "../../../context/chatContext";
 import MessageSkeleton from "../../Sketeleton/MessageSkeleon/MessageSkeleton";
 import Person from "./../../../assets/person/person.png";
+import { poster } from "../../../hooks";
+import HomePageContext from "../../../context/HomePageContext";
 const Chat: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const user = useSelector((state: any) => state.user.userData);
   const [message, setMessage] = useState<string>("");
+  const { users } = useContext<any>(HomePageContext);
   const {
     socket,
     currentRoom,
@@ -53,7 +56,7 @@ const Chat: React.FC = () => {
       "message-room",
       roomId,
       message.trimEnd().trimStart(),
-      user,
+      user?._id,
       time,
       todayDate
     );
@@ -197,34 +200,35 @@ const Chat: React.FC = () => {
                     <div
                       key={index}
                       className={`flex ${
-                        data?.from?.fullname === user?.fullname
+                        poster(data?.from, users)?.fullname === user?.fullname
                           ? "justify-end"
                           : "justify-start"
                       }`}
                     >
                       <div
                         className={`px-2 break-words max-w-[70%] flex gap-1  ${
-                          data?.from?.fullname !== user?.fullname &&
+                          poster(data?.from, users)?.fullname !==
+                            user?.fullname &&
                           (messagesByDate[index - 1] as any)?.time ===
                             (messagesByDate[index] as any)?.time &&
-                          (messagesByDate[index - 1] as any)?.from?.email ===
-                            (messagesByDate[index] as any)?.from?.email &&
+                          (messagesByDate[index - 1] as any)?.from ===
+                            (messagesByDate[index] as any)?.from &&
                           "ml-11"
                         }`}
                       >
-                        {data?.from?.fullname !== user?.fullname && (
+                        {poster(data?.from, users)?.fullname !==
+                          user?.fullname && (
                           <div>
-                            {data?.from?.profile === "icon" ? (
+                            {poster(data?.from, users)?.profile === "icon" ? (
                               <div
                                 className={`border rounded-full min-w-[2.7em]
                                 ${
-                                  data?.from?.fullname !== user?.fullname &&
+                                  poster(data?.from, users)?.fullname !==
+                                    user?.fullname &&
                                   (messagesByDate[index - 1] as any)?.time ===
                                     (messagesByDate[index] as any)?.time &&
-                                  (messagesByDate[index - 1] as any)?.from
-                                    ?.email ===
-                                    (messagesByDate[index] as any)?.from
-                                      ?.email &&
+                                  (messagesByDate[index - 1] as any)?.from ===
+                                    (messagesByDate[index] as any)?.from &&
                                   "hidden"
                                 }
                               `}
@@ -237,15 +241,14 @@ const Chat: React.FC = () => {
                               </div>
                             ) : (
                               <img
-                                src={data?.from?.profile}
+                                src={poster(data?.from, users)?.profile}
                                 className={`${
-                                  data?.from?.email !== user?.email &&
+                                  poster(data?.from, users)?.email !==
+                                    user?.email &&
                                   (messagesByDate[index - 1] as any)?.time ===
                                     (messagesByDate[index] as any)?.time &&
-                                  (messagesByDate[index - 1] as any)?.from
-                                    ?.email ===
-                                    (messagesByDate[index] as any)?.from
-                                      ?.email &&
+                                  (messagesByDate[index - 1] as any)?.from ===
+                                    (messagesByDate[index] as any)?.from &&
                                   "hidden"
                                 } w-10 h-10 rounded-full border min-w-[2.5em]`}
                               />
@@ -257,27 +260,28 @@ const Chat: React.FC = () => {
                             <span
                               className={`px-2 opacity-60 font-light
                             ${
-                              data?.from?.email !== user?.email &&
+                              poster(data?.from, users)?.email !==
+                                user?.email &&
                               (messagesByDate[index - 1] as any)?.time ===
                                 (messagesByDate[index] as any)?.time &&
-                              (messagesByDate[index - 1] as any)?.from
-                                ?.email ===
-                                (messagesByDate[index] as any)?.from?.email &&
+                              (messagesByDate[index - 1] as any)?.from ===
+                                (messagesByDate[index] as any)?.from &&
                               "hidden"
                             }
                             ${
-                              data?.from?.username === user?.username &&
-                              "hidden"
+                              poster(data?.from, users)?.username ===
+                                user?.username && "hidden"
                             }
                             `}
                             >
-                              {data?.from?.username}
+                              {poster(data?.from, users)?.username}
                             </span>
                           )}
                           <span
                             id="message"
                             className={`${
-                              data?.from?.fullname === user?.fullname
+                              poster(data?.from, users)?.fullname ===
+                              user?.fullname
                                 ? "bg-[#1877F2] text-white"
                                 : "bg-[#E4E6EB]"
                             } text-[1rem] rounded-2xl px-4 py-2 font-light flex flex-col`}
