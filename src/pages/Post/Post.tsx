@@ -138,8 +138,8 @@ const Post: React.FC = () => {
     <div className="w-full h-full md:flex ">
       <div className="w-full md:w-2/3 h-full border flex justify-center p-1">
         <div className="flex gap-2 w-full md:w-3/5">
-          <div className="p-2 w-full">
-            <div className="border  p-2 flex gap-2 rounded-md select-none relative">
+          <div className="p-2 w-full ">
+            <div className="border  p-2 flex  gap-2 rounded-md select-none relative">
               <div
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
                 onClick={() => {
@@ -246,6 +246,26 @@ const Post: React.FC = () => {
                     >
                       <ChevronRight className="text-[1.6em]" />
                     </span>
+                  </div>
+                )}
+                {post?.post?.images?.length > 1 && (
+                  <div className="w-auto px-2 m-auto rounded-md h-[1.5em] bg-gray-200 flex justify-center items-center gap-2">
+                    {(post?.post?.images as any)?.map(
+                      (data: any, index: any) => {
+                        return (
+                          <div
+                            className="p-[0.15em] bg-white rounded-full"
+                            key={index}
+                          >
+                            <div
+                              className={`w-3 h-3 rounded-full ${
+                                currentImage == index ? "bg-red-500" : ""
+                              }`}
+                            ></div>
+                          </div>
+                        );
+                      }
+                    )}
                   </div>
                 )}
                 <div>
