@@ -80,7 +80,7 @@ const PostComponent: React.FC = () => {
     });
   }, [showEmojiFile, showCommentEmojiElement]);
   useEffect(() => {
-    useUserData(navigate, dispatch, userDataAction);
+    // useUserData(navigate, dispatch, userDataAction);
     useGetPosts(setPosts, setAllPostsObject, setLoadingAllPosts);
   }, []);
   try {
@@ -504,7 +504,10 @@ const PostComponent: React.FC = () => {
                   onClick={() => {
                     setCurrentPost(index1);
                   }}
-                  onDoubleClick={() => navigate(`/post/${data._id}`)}
+                  onDoubleClick={() => {
+                    navigate(`/post/${data._id}`);
+                    setCurrent(5);
+                  }}
                 >
                   <div
                     className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"

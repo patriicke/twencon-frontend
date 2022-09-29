@@ -71,11 +71,7 @@ const Post: React.FC = () => {
     try {
       const clickSound = new Audio(AudioClick);
       clickSound.play();
-      socket.emit(
-        "like-post",
-        { id: user?._id, date: new Date() },
-        post?._id
-      );
+      socket.emit("like-post", { id: user?._id, date: new Date() }, post?._id);
     } catch (error) {
       console.log(error);
     } finally {
@@ -84,7 +80,7 @@ const Post: React.FC = () => {
         setLikeAnimation(false);
       }, 500);
     }
-  };  
+  };
   if (postLoading) {
     return <UserPostSkeleton />;
   }
@@ -136,7 +132,7 @@ const Post: React.FC = () => {
       <div className="w-full md:w-2/3 h-full border flex justify-center p-1">
         <div className="flex gap-2 w-full md:w-3/5">
           <div className="p-2">
-            <div className="border w-full p-2 flex gap-2 rounded-md select-none">
+            <div className="border w-full p-2 flex gap-2 rounded-md select-none relative">
               <div
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
                 onClick={() => {
@@ -369,15 +365,22 @@ const Post: React.FC = () => {
                     key={index}
                   >
                     <img
-                      src={poster(post?.id, users)?.profile == "icon" ? Person : poster(post?.id, users)?.profile}
+                      src={
+                        poster(post?.id, users)?.profile == "icon"
+                          ? Person
+                          : poster(post?.id, users)?.profile
+                      }
                       alt={poster(post?.id, users)?.fullname}
                       className="w-12 rounded-full border-2"
                     />
                     <div className="text-[0.8em]">
                       <div>
-                        {poster(post?.id, users)?.fullname} {post?.email == user?.email && `(You)`}
+                        {poster(post?.id, users)?.fullname}{" "}
+                        {post?.email == user?.email && `(You)`}
                       </div>
-                      <div className="text-blue-500">@{poster(post?.id, users)?.username}</div>
+                      <div className="text-blue-500">
+                        @{poster(post?.id, users)?.username}
+                      </div>
                     </div>
                     <div className="text-[0.8em] h-full p-1 text-blue-500">
                       {calculateDate(post?.date)}

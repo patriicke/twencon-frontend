@@ -35,12 +35,14 @@ const UserAccount: React.FC = () => {
     "FOLLOWING"
   ]);
   useEffect(() => {
-    document.addEventListener("mousedown", () => {
+    const clickEvent = () => {
       if (!deletePostElement?.current?.contains(event?.target)) {
         setDeletePostShow(false);
       }
-    });
-  });
+    };
+    document.addEventListener("mousedown", clickEvent);
+    return () => removeEventListener("mousedown", clickEvent);
+  }, [deletePostElement]);
   useEffect(() => {
     let n = sessionStorage.getItem("currentNavigation");
     setCurrentNavigation(n ? Number(n) : 0);
@@ -50,9 +52,7 @@ const UserAccount: React.FC = () => {
     if (document.location.href.includes("post")) return;
     if (!username) {
       navigate(`/`);
-      setCurrent(0);
       setLoadingData(true);
-      sessionStorage.setItem("current", "0");
       return;
     }
     if (username == user?.username) {

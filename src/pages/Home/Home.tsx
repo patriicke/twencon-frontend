@@ -34,7 +34,7 @@ export const Home: React.FC = () => {
   useEffect(() => {
     useUserData(navigate, dispatch, userDataAction);
     getAllUsers(setUsers);
-    useGetPosts(setPosts);
+    // useGetPosts(setPosts);
   }, []);
   useEffect(() => {
     const title: string = "Twencon";
@@ -119,10 +119,6 @@ export const Home: React.FC = () => {
       name: "Account"
     }
   ];
-  useEffect(() => {
-    if (document.location.href.includes("/post")) setCurrent(5);
-    if (document.location.href.includes("/user")) setCurrent(4);
-  }, [document.location.href]);
   useEffect(() => {
     const click = () => {
       if (!searchElement?.current?.contains(event?.target))
@@ -220,7 +216,7 @@ export const Home: React.FC = () => {
                 </div>
               ) : (
                 <>
-                  {searchString == "" ? (
+                  {searchString == "" || !searchString ? (
                     <div className=" h-full w-full">
                       <h1 className="font-medium">Recent Searches</h1>
                       <div className="w-full h-[calc(100%_-_4em)] flex items-center justify-center">
