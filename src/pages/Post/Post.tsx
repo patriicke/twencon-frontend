@@ -138,8 +138,8 @@ const Post: React.FC = () => {
     <div className="w-full h-full md:flex ">
       <div className="w-full md:w-2/3 h-full border flex justify-center p-1">
         <div className="flex gap-2 w-full md:w-3/5">
-          <div className="p-2">
-            <div className="border w-full p-2 flex gap-2 rounded-md select-none relative">
+          <div className="p-2 w-full">
+            <div className="border  p-2 flex gap-2 rounded-md select-none relative">
               <div
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
                 onClick={() => {
