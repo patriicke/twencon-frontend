@@ -1,15 +1,22 @@
 import { Button, TextField } from "@mui/material";
-import React, { ReactElement, useContext, useEffect, useState } from "react";
+import React, {
+  ReactElement,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 import { useSelector } from "react-redux";
 import HomePageContext from "../../context/HomePageContext";
 import Person from "./../../assets/person/person.png";
 import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
 import { telephoneCheck, uploadImage } from "../../hooks";
+import { useNavigate } from "react-router-dom";
 const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
   const userData = useSelector((state: any) => state?.user?.userData);
-  const { setIsEditProfile, users, setUsers } =
-    useContext<any>(HomePageContext);
+  const navigate = useNavigate();
+  const { setIsEditProfile } = useContext<any>(HomePageContext);
   const [activeNavigation, setActiveNavigation] = useState<number>(0);
   const navigations: {
     component: ReactElement;
@@ -36,6 +43,7 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
   const [checkUpdate, setCheckUpdate] = useState<boolean>(false);
   const [passwordUpdateAlert, setPasswordUpdateAlert] =
     useState<boolean>(false);
@@ -46,6 +54,7 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
     currentPassword: false,
     password: false
   });
+  const [wordCount, setWordCount] = useState<number>(0);
   const [updateUserError, setUpdateUserError] = useState<{
     fullname: boolean;
     username: boolean;
@@ -69,9 +78,6 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
     } else {
       setImage(file);
       setPreviewImage(URL.createObjectURL(file));
-      setUser((user: any) => {
-        return { ...user, profile: URL.createObjectURL(file) };
-      });
     }
   };
   const removeProfileImage = () => {
@@ -81,7 +87,6 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
     setPreviewImage(null);
     setImage(null);
   };
-
   useEffect(() => {
     setUser(userData);
   }, [userData]);
@@ -95,12 +100,13 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
     if (curShNv) setActiveNavigation(Number(curShNv));
   }, []);
   useEffect(() => {
+    if (previewImage) return setCheckUpdate(true);
     if (userData?.username != user?.username) return setCheckUpdate(true);
     if (userData?.fullname != user?.fullname) return setCheckUpdate(true);
     if (userData?.profile != user?.profile) return setCheckUpdate(true);
     if (userData?.telephone != user?.telephone) return setCheckUpdate(true);
     setCheckUpdate(false);
-  }, [user]);
+  }, [user, previewImage]);
   const updatePassword = async () => {
     try {
       setPasswordUpdateLoading(true);
@@ -169,39 +175,27 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
         return setUpdateUserError((error: any) => {
           return { ...error, invalidTelephone: true };
         });
-      // if (userData?.profile != user?.profile && user?.profile != "icon") {
-      //   console.log("uploading image");
-      //   try {
-      //     const data = new FormData();
-      //     data.append("file", image);
-      //     data.append("upload_preset", "chatpresetimages");
-      //     let imageUrl = fetch(
-      //       "https://api.cloudinary.com/v1_1/dkpaiyjv5/image/upload",
-      //       {
-      //         method: "post",
-      //         body: data
-      //       }
-      //     );
-      //     setUser((user: any) => {
-      //       return { ...user, profile: imageUrl };
-      //     });
-      //   } catch (error) {
-      //     console.log(error);
-      //     setUpdating(false);
-      //   }
-      // }
       let request = await api.post("/auth/user/update", { user });
       let response = request.data;
+      if (image) {
+        try {
+          await uploadImage(image, setUpdating, response.email);
+        } catch (error) {
+          console.log(error);
+          return;
+        }
+      }
+      setImage(null);
+      setPreviewImage(null);
+      setUpdateSuccess(true);
+      setUser(response);
     } catch (error: any) {
       console.log(error);
-      if (
-        error.response.data.message ==
-        "Username already exists! Try using another username"
-      )
+      if (error.response.data.message.includes("username"))
         setUpdateUserError((error: any) => {
           return { ...error, userNameExist: true };
         });
-      if (error.response.data.message.includes("E11000"))
+      if (error.response.data.message.includes("telephone"))
         setUpdateUserError((error: any) => {
           return { ...error, telephoneExist: true };
         });
@@ -209,10 +203,73 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
       setUpdating(false);
     }
   };
+  const [message, setMessage] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [messageError, setMessageError] = useState<boolean>(false);
+  const [titleError, setTitleError] = useState<boolean>(false);
+  const [sendingMessageLoading, setSendingMessageLoading] =
+    useState<boolean>(false);
+  const form = useRef<any>(null);
+  const sendEmail = (e: any) => {
+    try {
+      e.preventDefault();
+      setSendingMessageLoading(false);
+      if (title == "") {
+        return setTitleError(true);
+      }
+      if (message == "") {
+        return setMessageError(true);
+      }
+      // emailjs
+      //   .sendForm(
+      //     "service_2zyhxvo",
+      //     "template_fgju61e",
+      //     form.current,
+      //     "m9V5ZuTC_c4g8ostk"
+      //   )
+      //   .then(
+      //     (result: any) => {
+      //       console.log(result.text);
+      //     },
+      //     (error: any) => {
+      //       console.log(error.text);
+      //     }
+      //   );
+      // e.target.reset();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSendingMessageLoading(false);
+    }
+  };
   return (
     <div
       className={`w-full xl:w-[60%] m-auto h-full p-2 md:p-5 border my-1 rounded-md bg-gray-100 flex flex-col gap-2`}
     >
+      {updateSuccess && (
+        <div className="absolute h-full w-full bg-gray-400 top-0 left-0 z-50 opacity-95 flex justify-center items-center">
+          <div className="flex flex-col gap-2 p-3 border-2 rounded-md bg-white">
+            <p className="font-medium">
+              Your account has been updated successfully
+            </p>
+            <div className="flex justify-end items-center">
+              <Button
+                variant="contained"
+                className="bg-blue-500"
+                onClick={() => {
+                  setUpdateSuccess(false);
+                  navigate(`/user/${user.username}`);
+                  document.location.replace(
+                    `${document.location.origin}/user/${user.username}`
+                  );
+                }}
+              >
+                OK
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       {passwordUpdateAlert && (
         <div className="absolute h-full w-full bg-gray-400 top-0 left-0 z-50 opacity-90 flex justify-center items-center">
           <div className="flex flex-col gap-2 p-3 border-2 rounded-md bg-white">
@@ -524,13 +581,73 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
           </div>
           <div className={`${activeNavigation == 2 ? "" : "hidden"}`}>
             <h1 className="font-medium text-[1.3em]">Help</h1>
-            <p className="opacity-70">
-              Send here problems you've overcome with and you will be answered
-              by our support team in few minutes.
+            <p className="opacity-80 py-1">
+              Send us problems you've got when using this application. You can
+              also share your experiences by describing how you see the app.
             </p>
-            <p className="opacity-70">
-              You can also share experience you've got!
+            <p className="opacity-50 py-1">
+              Our support team will reach you in less than 5 minutes.
             </p>
+            <form
+              className="py-2 flex flex-col gap-2"
+              onSubmit={sendEmail}
+              ref={form}
+            >
+              <h1 className="font-medium opacity-60 py-1 ">TITLE</h1>
+              <TextField
+                size="small"
+                name="subject"
+                value={title ? title : ""}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                  setTitle(e.target.value);
+                  setTitleError(false);
+                }}
+                autoComplete="off"
+                className="w-[20em]"
+                error={titleError}
+                helperText={titleError && "This title can't be empty"}
+              />
+              <h1 className="font-medium opacity-60 py-1 ">MESSAGE</h1>
+              <TextField
+                name="user_name"
+                className="hidden"
+                value={user?.fullname}
+              />
+              <TextField
+                name="user_email"
+                className="hidden"
+                value={user?.email}
+              />
+              <div className="relative  w-full sm:w-[30em]">
+                <span className="border -top-9 right-0 absolute px-2 p-1 rounded-md">
+                  {wordCount}/500
+                </span>
+                <textarea
+                  name="message"
+                  cols={30}
+                  rows={10}
+                  value={message ? message : ""}
+                  className={`border ${
+                    messageError ? "outline-red-500" : "outline-blue-500"
+                  } text-[0.9em] p-1 w-full outline-1 outline-offset-2`}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                    setMessage(e.target.value);
+                    setWordCount(e.target.value.length);
+                    setMessageError(false);
+                  }}
+                  maxLength={500}
+                ></textarea>
+              </div>
+              <div className="flex items-center justify-end  w-full sm:w-[30em] ">
+                <Button
+                  className="bg-blue-500 w-[6em] text-white"
+                  variant="contained"
+                  type="submit"
+                >
+                  SEND
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
