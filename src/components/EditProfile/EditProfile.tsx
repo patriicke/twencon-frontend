@@ -13,6 +13,7 @@ import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
 import { telephoneCheck, uploadImage } from "../../hooks";
 import { useNavigate } from "react-router-dom";
+import emailjs from "@emailjs/browser";
 const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
   const userData = useSelector((state: any) => state?.user?.userData);
   const navigate = useNavigate();
@@ -220,22 +221,22 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
       if (message == "") {
         return setMessageError(true);
       }
-      // emailjs
-      //   .sendForm(
-      //     "service_2zyhxvo",
-      //     "template_fgju61e",
-      //     form.current,
-      //     "m9V5ZuTC_c4g8ostk"
-      //   )
-      //   .then(
-      //     (result: any) => {
-      //       console.log(result.text);
-      //     },
-      //     (error: any) => {
-      //       console.log(error.text);
-      //     }
-      //   );
-      // e.target.reset();
+      emailjs
+        .sendForm(
+          "service_2zyhxvo",
+          "template_fgju61e",
+          form.current,
+          "m9V5ZuTC_c4g8ostk"
+        )
+        .then(
+          (result: any) => {
+            console.log(result.text);
+          },
+          (error: any) => {
+            console.log(error.text);
+          }
+        );
+      e.target.reset();
     } catch (error) {
       console.log(error);
     } finally {
@@ -628,7 +629,9 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
                   rows={10}
                   value={message ? message : ""}
                   className={`border ${
-                    messageError ? "outline-red-500" : "outline-blue-500"
+                    messageError
+                      ? "border-red-500 outline-red-500"
+                      : "outline-blue-500"
                   } text-[0.9em] p-1 w-full outline-1 outline-offset-2`}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                     setMessage(e.target.value);
