@@ -616,12 +616,12 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
               <TextField
                 name="user_name"
                 className="hidden"
-                value={user?.fullname}
+                value={user?.fullname ? user?.fullname : ""}
               />
               <TextField
                 name="user_email"
                 className="hidden"
-                value={user?.email}
+                value={user?.email ? user?.email : ""}
               />
               <div className="relative  w-full sm:w-[30em]">
                 <span className="border -top-9 right-0 absolute px-2 p-1 rounded-md">

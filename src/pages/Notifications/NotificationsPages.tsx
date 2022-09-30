@@ -3,7 +3,7 @@ import NotificatiosComponent from "../../components/NotificationComponent/Notifi
 import HomePageContext from "../../context/HomePageContext";
 const NotificationsPages: React.FC = () => {
   const { setCurrent } = useContext<any>(HomePageContext);
-  document.title = "Twencon";
+  document.title = "Twencon Notifications";
   useEffect(() => {
     setCurrent(2);
   }, []);
