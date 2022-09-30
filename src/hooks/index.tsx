@@ -32,6 +32,10 @@ export const uploadImage = async (
     setUploading(false);
   }
 };
+const updateImage = async () => {
+  try {
+  } catch (error) {}
+};
 /*Upload many images */
 export const uploadManyImages = async (images: any, setLoading: any) => {
   try {
@@ -327,4 +331,10 @@ export const poster = (userId: any, users: any) => {
     return user?._id == userId;
   })[0];
   return poster;
+};
+export const telephoneCheck = (telephone: string): boolean => {
+  return telephone.match(/^(\([0-9]{3}\) *|[0-9]{3}-*)[0-9]{3}-*[0-9]{4}$/) !==
+    null
+    ? true
+    : false;
 };

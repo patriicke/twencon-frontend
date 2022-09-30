@@ -5,9 +5,11 @@ import HomePageContext from "../../context/HomePageContext";
 import Person from "./../../assets/person/person.png";
 import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
+import { telephoneCheck, uploadImage } from "../../hooks";
 const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
   const userData = useSelector((state: any) => state?.user?.userData);
-  const { setIsEditProfile } = useContext<any>(HomePageContext);
+  const { setIsEditProfile, users, setUsers } =
+    useContext<any>(HomePageContext);
   const [activeNavigation, setActiveNavigation] = useState<number>(0);
   const navigations: {
     component: ReactElement;
@@ -30,13 +32,11 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
   const [image, setImage] = useState<any>(null);
   const [updating, setUpdating] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [fullName, setFullName] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
-  const [telephone, setTelephone] = useState<string>("");
   const [user, setUser] = useState<any>({});
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [checkUpdate, setCheckUpdate] = useState<boolean>(false);
   const [passwordUpdateAlert, setPasswordUpdateAlert] =
     useState<boolean>(false);
   const [passwordUpdateLoading, setPasswordUpdateLoading] =
@@ -46,6 +46,21 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
     currentPassword: false,
     password: false
   });
+  const [updateUserError, setUpdateUserError] = useState<{
+    fullname: boolean;
+    username: boolean;
+    telephone: boolean;
+    userNameExist: boolean;
+    invalidTelephone: boolean;
+    telephoneExist: boolean;
+  }>({
+    fullname: false,
+    username: false,
+    telephone: false,
+    userNameExist: false,
+    invalidTelephone: false,
+    telephoneExist: false
+  });
   const validateImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const file: any = e.target.files == null ? null : e.target.files[0];
@@ -54,18 +69,21 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
     } else {
       setImage(file);
       setPreviewImage(URL.createObjectURL(file));
+      setUser((user: any) => {
+        return { ...user, profile: URL.createObjectURL(file) };
+      });
     }
   };
   const removeProfileImage = () => {
     setUser((user: any) => {
       return { ...user, profile: "icon" };
     });
+    setPreviewImage(null);
+    setImage(null);
   };
+
   useEffect(() => {
     setUser(userData);
-    setFullName(userData?.fullname);
-    setUserName(userData?.username);
-    setTelephone(userData?.telephone);
   }, [userData]);
   useEffect(() => {
     if (sessionStorage.getItem("edit") == "true") {
@@ -76,6 +94,13 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
     let curShNv = sessionStorage.getItem("curShow");
     if (curShNv) setActiveNavigation(Number(curShNv));
   }, []);
+  useEffect(() => {
+    if (userData?.username != user?.username) return setCheckUpdate(true);
+    if (userData?.fullname != user?.fullname) return setCheckUpdate(true);
+    if (userData?.profile != user?.profile) return setCheckUpdate(true);
+    if (userData?.telephone != user?.telephone) return setCheckUpdate(true);
+    setCheckUpdate(false);
+  }, [user]);
   const updatePassword = async () => {
     try {
       setPasswordUpdateLoading(true);
@@ -122,6 +147,66 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
         });
     } finally {
       setPasswordUpdateLoading(false);
+    }
+  };
+  const updateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      setUpdating(true);
+      if (user?.fullname == "")
+        return setUpdateUserError((error: any) => {
+          return { ...error, fullname: true };
+        });
+      if (user?.username == "")
+        return setUpdateUserError((error: any) => {
+          return { ...error, username: true };
+        });
+      if (user?.telephone == "")
+        return setUpdateUserError((error: any) => {
+          return { ...error, telephone: true };
+        });
+      if (!telephoneCheck(user.telephone))
+        return setUpdateUserError((error: any) => {
+          return { ...error, invalidTelephone: true };
+        });
+      // if (userData?.profile != user?.profile && user?.profile != "icon") {
+      //   console.log("uploading image");
+      //   try {
+      //     const data = new FormData();
+      //     data.append("file", image);
+      //     data.append("upload_preset", "chatpresetimages");
+      //     let imageUrl = fetch(
+      //       "https://api.cloudinary.com/v1_1/dkpaiyjv5/image/upload",
+      //       {
+      //         method: "post",
+      //         body: data
+      //       }
+      //     );
+      //     setUser((user: any) => {
+      //       return { ...user, profile: imageUrl };
+      //     });
+      //   } catch (error) {
+      //     console.log(error);
+      //     setUpdating(false);
+      //   }
+      // }
+      let request = await api.post("/auth/user/update", { user });
+      let response = request.data;
+    } catch (error: any) {
+      console.log(error);
+      if (
+        error.response.data.message ==
+        "Username already exists! Try using another username"
+      )
+        setUpdateUserError((error: any) => {
+          return { ...error, userNameExist: true };
+        });
+      if (error.response.data.message.includes("E11000"))
+        setUpdateUserError((error: any) => {
+          return { ...error, telephoneExist: true };
+        });
+    } finally {
+      setUpdating(false);
     }
   };
   return (
@@ -255,48 +340,99 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
                 </div>
               </div>
             </div>
-            <div className="py-2">
-              <p className="text-[1.1em] opacity-60">Full names</p>
-              <TextField
-                size="small"
-                autoComplete="off"
-                value={fullName ? fullName : ""}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setFullName(e.target.value);
-                }}
-              />
-            </div>
-            <div className="py-2">
-              <p className="text-[1.1em] opacity-60">Username</p>
-              <TextField
-                size="small"
-                autoComplete="off"
-                value={userName ? userName : ""}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setUserName(e.target.value);
-                }}
-              />
-            </div>
-            <div className="py-2">
-              <p className="text-[1.1em] opacity-60">Telephone</p>
-              <TextField
-                size="small"
-                autoComplete="off"
-                value={telephone ? telephone : ""}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setTelephone(e.target.value);
-                }}
-              />
-            </div>
-            <div>
-              <Button
-                variant="contained"
-                className="bg-green-500 text-white"
-                disabled
-              >
-                UPDATE
-              </Button>
-            </div>
+            <form onSubmit={updateUser}>
+              <div className="py-2">
+                <p className="text-[1.1em] opacity-60">Full names</p>
+                <TextField
+                  size="small"
+                  autoComplete="off"
+                  value={user?.fullname ? user?.fullname : ""}
+                  error={updateUserError.fullname}
+                  helperText={
+                    updateUserError.fullname && "Enter your fullnames"
+                  }
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUser((user: any) => {
+                      return { ...user, fullname: e.target.value };
+                    });
+                    setUpdateUserError((error: any) => {
+                      return { ...error, fullname: false };
+                    });
+                  }}
+                />
+              </div>
+              <div className="py-2">
+                <p className="text-[1.1em] opacity-60">Username</p>
+                <TextField
+                  size="small"
+                  autoComplete="off"
+                  error={
+                    updateUserError.username || updateUserError.userNameExist
+                  }
+                  helperText={
+                    (updateUserError.username && "Enter username") ||
+                    (updateUserError.userNameExist &&
+                      "This username is already taken")
+                  }
+                  value={user?.username ? user?.username : ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUser((user: any) => {
+                      return { ...user, username: e.target.value };
+                    });
+                    setUpdateUserError((error: any) => {
+                      return { ...error, username: false };
+                    });
+                    setUpdateUserError((error: any) => {
+                      return { ...error, userNameExist: false };
+                    });
+                  }}
+                />
+              </div>
+              <div className="py-2">
+                <p className="text-[1.1em] opacity-60">Telephone</p>
+                <TextField
+                  size="small"
+                  autoComplete="off"
+                  value={user?.telephone ? user?.telephone : ""}
+                  error={
+                    updateUserError.telephone ||
+                    updateUserError.invalidTelephone ||
+                    updateUserError.telephoneExist
+                  }
+                  helperText={
+                    (updateUserError.telephone &&
+                      "Enter your telephone number") ||
+                    (updateUserError.invalidTelephone &&
+                      "Invalid telephone number") ||
+                    (updateUserError.telephoneExist &&
+                      "This telephone number is already taken!")
+                  }
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUser((user: any) => {
+                      return { ...user, telephone: e.target.value };
+                    });
+                    setUpdateUserError((error: any) => {
+                      return {
+                        ...error,
+                        telephone: false,
+                        invalidTelephone: false,
+                        telephoneExist: false
+                      };
+                    });
+                  }}
+                />
+              </div>
+              <div>
+                <Button
+                  variant="contained"
+                  className="bg-green-500 text-white"
+                  disabled={!checkUpdate || updating}
+                  type="submit"
+                >
+                  {updating ? <img src={Loading} className="w-5" /> : "UPDATE"}
+                </Button>
+              </div>
+            </form>
           </div>
           <div className={`${activeNavigation == 1 ? "" : "hidden"}`}>
             <h1 className="font-medium text-[1.3em]">Change your password</h1>
