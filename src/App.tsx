@@ -3,7 +3,7 @@ import Pages from "./pages";
 const App: React.FC = () => {
   return (
     <>
-      <div className={`${false ? "hidden" : ""}`}>
+      <div>
         <Pages />
       </div>
     </>

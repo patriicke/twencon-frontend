@@ -9,7 +9,7 @@ import Loading from "./../../assets/loading/loading.gif";
 import SuggestionSkeleteon from "../Sketeleton/SuggestionSkeleton/SuggestionSkeleteon";
 const SuggestionComponent: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
-  const { setCurrent, users, setUsers } = useContext<any>(HomePageContext);
+  const { users, setUsers } = useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentFollowing, setCurrentFollowing] = useState<number>(0);
@@ -47,9 +47,6 @@ const SuggestionComponent: React.FC = () => {
                     className="flex gap-2 items-center justify-between "
                     onClick={() => {
                       navigate(`/user/${data?.username}`);
-                      setCurrent(4);
-                      sessionStorage.setItem("current", "4");
-                      sessionStorage.setItem("prevCurrent", "0");
                     }}
                   >
                     <img

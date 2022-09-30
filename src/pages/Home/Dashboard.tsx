@@ -8,11 +8,11 @@ const Dashboard: React.FC = () => {
   const navigations: { name: string; href: string }[] = [
     {
       name: "GET STARTED",
-      href: "auth/signup"
+      href: "/auth/signup"
     },
     {
       name: "LOGIN",
-      href: "auth/login"
+      href: "/auth/login"
     }
   ];
   const pageDescription: { description: string; url: string }[] = [

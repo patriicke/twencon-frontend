@@ -130,7 +130,9 @@ export const useUserData = async (
 ) => {
   try {
     const acc_token = localStorage.getItem("acc_token");
-    if (acc_token == "undefined" || !acc_token) return navigate("/auth/login");
+    if (acc_token == "undefined") {
+      return localStorage.clear();
+    }
     const request = await api.post("/home", { acc_token });
     const response = request.data;
     dispatch(userDataAction(response.foundUser));

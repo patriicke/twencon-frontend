@@ -26,7 +26,8 @@ const Signup: React.FC = () => {
     cpassword: false,
     emailExist: false,
     usernameExist: false,
-    telephoneExist: false
+    telephoneExist: false,
+    invalidTelephoneNumber: false
   });
   const [signupData, setSignupData] = useState<ISignupData>({
     fullname: "",

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Notifications: React.FC = () => {
+const NotificatiosComponent: React.FC = () => {
   return (
     <div className="lg:w-[80%] xl:w-[60%] m-auto h-full my-2 border rounded-md">
       <h1 className="p-2 font-medium text-center">No notifications yet!</h1>
@@ -8,4 +8,4 @@ const Notifications: React.FC = () => {
   );
 };
 
-export default Notifications;
+export default NotificatiosComponent;

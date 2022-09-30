@@ -1,14 +1,13 @@
 import React, { useContext, useEffect } from "react";
-import HomeComponent from "../../components/Home/HomeComponent";
+import UserAccount from "../../components/Account/UserAccount";
 import HomePageContext from "../../context/HomePageContext";
 
-const Home: React.FC = () => {
+const UserPage: React.FC = () => {
   const { setCurrent } = useContext<any>(HomePageContext);
-  document.title = "Twencon";
   useEffect(() => {
-    setCurrent(0);
+    setCurrent(4);
   }, []);
-  return <HomeComponent />;
+  return <UserAccount />;
 };
 
-export default Home;
+export default UserPage;

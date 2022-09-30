@@ -242,7 +242,6 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
             setTitle("");
           }
         );
-
       e.target.reset();
     } catch (error) {
       console.log(error);

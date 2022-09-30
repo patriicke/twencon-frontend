@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { calculateDate, getPost } from "../../hooks";
 import HomePageContext from "../../context/HomePageContext";
 import Person from "./../../assets/person/person.png";
-import UserPostSkeleton from "../../components/Sketeleton/UserPostSkeleton/UserPostSkeleton";
+import UserPostSkeleton from "../Sketeleton/UserPostSkeleton/UserPostSkeleton";
 import Loading from "./../../assets/loading/loading.gif";
 import ReactPlayer from "react-player";
 import {
@@ -19,14 +19,13 @@ import Picker from "emoji-picker-react";
 import { socket } from "../../context/chatContext";
 import AudioClick from "./../../assets/audio/click.mp3";
 import { poster } from "../../hooks";
-const Post: React.FC = () => {
+const PostComponent: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const postId = useParams();
   const [post, setPost] = useState<any>({});
   const navigate = useNavigate();
   const commentEmojiElement = useRef<any>(null);
-  const { setCurrent, posts, setPosts, users } =
-    useContext<any>(HomePageContext);
+  const { posts, setPosts, users } = useContext<any>(HomePageContext);
   const [postLoading, setPostLoading] = useState<any>(true);
   const [textComment, setTextComment] = useState<string>("");
   const [loadingPostingComment, setLoadingPostingComment] =
@@ -108,7 +107,7 @@ const Post: React.FC = () => {
       setPost((currentData: any) => {
         return { ...currentData, likes: data?.post?.likes };
       });
-      const newState = posts.map((post: any) => {
+      const newState = posts?.map((post: any) => {
         if (post._id === data?.post?._id) {
           return { ...post, likes: data?.post?.likes };
         }
@@ -144,8 +143,6 @@ const Post: React.FC = () => {
                 className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
                 onClick={() => {
                   navigate(`/user/${poster(post?.owner, users)?.username}`);
-                  setCurrent(4);
-                  sessionStorage.setItem("current", "4");
                 }}
               >
                 {poster(post?.owner, users)?.profile === "icon" ? (
@@ -167,8 +164,6 @@ const Post: React.FC = () => {
                         navigate(
                           `/user/${poster(post?.owner, users)?.username}`
                         );
-                        setCurrent(4);
-                        sessionStorage.setItem("current", "4");
                       }}
                     >
                       {poster(post?.owner, users)?.fullname}
@@ -179,8 +174,6 @@ const Post: React.FC = () => {
                         navigate(
                           `/user/${poster(post?.owner, users)?.username}`
                         );
-                        setCurrent(4);
-                        sessionStorage.setItem("current", "4");
                       }}
                     >
                       @{poster(post?.owner, users)?.username}
@@ -410,8 +403,6 @@ const Post: React.FC = () => {
                     className="flex gap-2 items-center bg-gray-200 p-1 rounded-md hover:bg-gray-300 cursor-pointer"
                     onClick={() => {
                       navigate(`/user/${poster(post?.id, users).username}`);
-                      setCurrent(4);
-                      sessionStorage.setItem("current", "4");
                     }}
                     key={index}
                   >
@@ -476,8 +467,6 @@ const Post: React.FC = () => {
                         navigate(
                           `/user/${poster(post?.from, users)?.username}`
                         );
-                        setCurrent(4);
-                        sessionStorage.setItem("current", "4");
                       }}
                     >
                       <img
@@ -516,4 +505,4 @@ const Post: React.FC = () => {
   );
 };
 
-export default Post;
+export default PostComponent;

@@ -1,14 +1,13 @@
 import React, { useContext, useEffect } from "react";
-import HomeComponent from "../../components/Home/HomeComponent";
+import NotificatiosComponent from "../../components/NotificationComponent/NotificationsComponent";
 import HomePageContext from "../../context/HomePageContext";
-
-const Home: React.FC = () => {
+const NotificationsPages: React.FC = () => {
   const { setCurrent } = useContext<any>(HomePageContext);
   document.title = "Twencon";
   useEffect(() => {
-    setCurrent(0);
+    setCurrent(2);
   }, []);
-  return <HomeComponent />;
+  return <NotificatiosComponent />;
 };
 
-export default Home;
+export default NotificationsPages;

@@ -1,6 +1,5 @@
 import { Favorite, FavoriteBorder, MoreHoriz } from "@mui/icons-material";
 import React, {
-  createContext,
   useContext,
   useEffect,
   useRef,
@@ -18,7 +17,6 @@ import { socket } from "../../context/chatContext";
 import "./account.css";
 import UserAccountSkeleton from "../../components/Sketeleton/UserAccount/UserAccountSkeleton";
 import { Button } from "@mui/material";
-import { is } from "immer/dist/internal";
 import EditProfile from "../../components/EditProfile/EditProfile";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
@@ -26,7 +24,6 @@ const UserAccount: React.FC = () => {
   const locationArray = document.location.href.split("/");
   const [loading, setLoading] = useState<boolean>(false);
   const {
-    setCurrent,
     posts,
     setPosts,
     users,
@@ -275,7 +272,7 @@ const UserAccount: React.FC = () => {
                   <div className="flex gap-2">
                     <span>
                       {
-                        (posts as any).filter((post: any) => {
+                        (posts as any)?.filter((post: any) => {
                           return post?.owner === userAccount?._id;
                         }).length
                       }
@@ -313,7 +310,7 @@ const UserAccount: React.FC = () => {
                 }`}
               >
                 {(posts as any)
-                  .filter((post: any) => {
+                  ?.filter((post: any) => {
                     return post?.owner === userAccount?._id;
                   })
                   ?.sort((a: any, b: any) => {
@@ -393,7 +390,6 @@ const UserAccount: React.FC = () => {
                           className="overlay flex flex-col"
                           onClick={() => {
                             navigate(`/post/${data?._id}`);
-                            setCurrent(5);
                           }}
                         >
                           <span className="text-center">
@@ -451,7 +447,7 @@ const UserAccount: React.FC = () => {
                   <div
                     className={`${
                       (posts as any)
-                        .filter((post: any) => {
+                        ?.filter((post: any) => {
                           return post?.owner === userAccount?._id;
                         })
                         ?.sort((a: any, b: any) => {
@@ -487,8 +483,6 @@ const UserAccount: React.FC = () => {
                             navigate(
                               `/user/${poster(data?.id, users)?.username}`
                             );
-                            setCurrent(4);
-                            sessionStorage.setItem("current", "4");
                           }}
                         >
                           <img
@@ -600,8 +594,6 @@ const UserAccount: React.FC = () => {
                             navigate(
                               `/user/${poster(data?.id, users)?.username}`
                             );
-                            setCurrent(4);
-                            sessionStorage.setItem("current", "4");
                           }}
                         >
                           <img
