@@ -19,6 +19,8 @@ import HomeComponent from "../../components/Home/HomeComponent";
 import UserAccount from "../Account/UserAccount";
 import HomePageContext from "../../context/HomePageContext";
 import Post from "../Post/Post";
+import Favorite from "../../components/Favorite/Favorite";
+import NotificationsPage from "./../../components/Notification/Notifications";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -254,6 +256,12 @@ export const Home: React.FC = () => {
         </div>
         <div className={`h-[92%] w-full ${current === 0 ? "block" : "hidden"}`}>
           <HomeComponent />
+        </div>
+        <div className={`h-[92%] ${current === 1 ? "block" : "hidden"}`}>
+          <Favorite />
+        </div>
+        <div className={`h-[92%] ${current === 2 ? "block" : "hidden"}`}>
+          <NotificationsPage />
         </div>
         <div className={`h-[92%] ${current === 3 ? "block" : "hidden"}`}>
           <Messages />
