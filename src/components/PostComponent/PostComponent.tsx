@@ -77,6 +77,48 @@ const PostComponent: React.FC = () => {
     try {
       const clickSound = new Audio(AudioClick);
       clickSound.play();
+      let likeExist = post?.likes?.find((curentUser: any) => {
+        return curentUser.id == user._id;
+      });
+      if (likeExist) {
+        const newState = posts.map((cpost: any) => {
+          if (cpost._id === post._id) {
+            return {
+              ...cpost,
+              likes: cpost?.likes.filter((cuser: any) => {
+                return cuser.id != user?._id;
+              })
+            };
+          }
+          return cpost;
+        });
+        setPosts(newState);
+        setPost((post: any) => {
+          return {
+            ...post,
+            likes: post?.likes.filter((cuser: any) => {
+              return cuser.id != user?._id;
+            })
+          };
+        });
+      } else {
+        const newState = posts.map((cpost: any) => {
+          if (cpost._id === post._id) {
+            return {
+              ...cpost,
+              likes: [...cpost.likes, { id: user._id, date: new Date() }]
+            };
+          }
+          return cpost;
+        });
+        setPosts(newState);
+        setPost((post: any) => {
+          return {
+            ...post,
+            likes: [...post.likes, { id: user._id, date: new Date() }]
+          };
+        });
+      }
       socket.emit("like-post", { id: user?._id, date: new Date() }, post?._id);
     } catch (error) {
       console.log(error);
@@ -104,16 +146,18 @@ const PostComponent: React.FC = () => {
   }
   try {
     socket.off("like").on("like", (data) => {
-      setPost((currentData: any) => {
-        return { ...currentData, likes: data?.post?.likes };
-      });
-      const newState = posts?.map((post: any) => {
-        if (post._id === data?.post?._id) {
-          return { ...post, likes: data?.post?.likes };
-        }
-        return post;
-      });
-      setPosts(newState);
+      if (data.liker != user._id) {
+        setPost((currentData: any) => {
+          return { ...currentData, likes: data?.post?.likes };
+        });
+        const newState = posts?.map((post: any) => {
+          if (post._id === data?.post?._id) {
+            return { ...post, likes: data?.post?.likes };
+          }
+          return post;
+        });
+        setPosts(newState);
+      }
     });
     socket.off("comment").on("comment", (data) => {
       setPost((currentData: any) => {

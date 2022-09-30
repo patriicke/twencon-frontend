@@ -12,7 +12,6 @@ import { Button, Skeleton, TextField } from "@mui/material";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userDataAction } from "../../features/user/userSlice";
 import { poster, useGetPosts, useUserData } from "../../hooks";
 import Picker from "emoji-picker-react";
 import Loading from "./../../assets/loading/loading.gif";
@@ -85,13 +84,15 @@ const PostComponent: React.FC = () => {
   }, []);
   try {
     socket.off("like").on("like", (data) => {
-      const newState = posts.map((post: any) => {
-        if (post._id === data?.post?._id) {
-          return { ...post, likes: data?.post?.likes };
-        }
-        return post;
-      });
-      setPosts(newState);
+      if (data?.liker != user?._id) {
+        const newState = posts.map((post: any) => {
+          if (post._id === data?.post?._id) {
+            return { ...post, likes: data?.post?.likes };
+          }
+          return post;
+        });
+        setPosts(newState);
+      }
     });
     socket.off("post").on("post", (data) => {
       if (data?.owner == user?._id) {
@@ -226,6 +227,35 @@ const PostComponent: React.FC = () => {
     try {
       const clickSound = new Audio(AudioClick);
       clickSound.play();
+      let post = posts[currentPost];
+      let likeExist = post?.likes?.find((curentUser: any) => {
+        return curentUser.id == user._id;
+      });
+      if (likeExist) {
+        const newState = posts.map((cpost: any) => {
+          if (cpost._id === id) {
+            return {
+              ...cpost,
+              likes: cpost?.likes.filter((cuser: any) => {
+                return cuser.id != user?._id;
+              })
+            };
+          }
+          return cpost;
+        });
+        setPosts(newState);
+      } else {
+        const newState = posts.map((cpost: any) => {
+          if (cpost._id === id) {
+            return {
+              ...cpost,
+              likes: [...cpost.likes, { id: user._id, date: new Date() }]
+            };
+          }
+          return cpost;
+        });
+        setPosts(newState);
+      }
       socket.emit("like-post", { id: user?._id, date: new Date() }, id);
     } catch (error) {
       console.log(error);
@@ -672,7 +702,7 @@ const PostComponent: React.FC = () => {
                             onClick={() => like(data?._id)}
                             className="flex items-center justify-center"
                           >
-                            {data?.likes.find((currentId: any) => {
+                            {data?.likes?.find((currentId: any) => {
                               return currentId.id == user?._id;
                             }) == undefined ? (
                               <FavoriteBorder className="md:text-[1.5em] opacity-70 cursor-pointer" />
