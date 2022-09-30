@@ -13,7 +13,7 @@ import api from "./../../api";
 import Loading from "./../../assets/loading/loading.gif";
 import { telephoneCheck, uploadImage } from "../../hooks";
 import { useNavigate } from "react-router-dom";
-// import emailjs from "@emailjs/browser";
+import emailjs from "@emailjs/browser";
 const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
   const userData = useSelector((state: any) => state?.user?.userData);
   const navigate = useNavigate();
@@ -231,18 +231,21 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
         .then(
           (result: any) => {
             console.log(result.text);
+            setSendingMessageLoading(false);
+            setMessage("");
+            setTitle("");
           },
           (error: any) => {
             console.log(error.text);
+            setSendingMessageLoading(false);
+            setMessage("");
+            setTitle("");
           }
         );
+
       e.target.reset();
-      setMessage("")
-      setTitle("")
     } catch (error) {
       console.log(error);
-    } finally {
-      setSendingMessageLoading(false);
     }
   };
   return (
@@ -650,9 +653,11 @@ const EditProfile: React.FC<{ userAccount: any }> = ({ userAccount }) => {
                   type="submit"
                   disabled={sendingMessageLoading}
                 >
-                  {
-                    sendingMessageLoading ? <img src={Loading} />:"SEND"
-                  }
+                  {sendingMessageLoading ? (
+                    <img src={Loading} className="w-6" />
+                  ) : (
+                    "SEND"
+                  )}
                 </Button>
               </div>
             </form>
