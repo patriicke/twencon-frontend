@@ -434,8 +434,12 @@ const PostComponent: React.FC = () => {
             {post?.likes?.length == 0
               ? "No likes yet!"
               : post?.likes?.length == 1
-              ? `${post?.likes?.length} person liked your post.`
-              : `${post?.likes?.length} people liked your post.`}
+              ? `${post?.likes?.length} person liked ${
+                  user?._id == post?.owner ? "your" : "this"
+                } post.`
+              : `${post?.likes?.length} people liked ${
+                  user?._id == post?.owner ? "your" : "this"
+                } post.`}
           </h1>
           <div className="w-full h-[calc(100%_-_2em)] overflow-auto p-1 flex flex-col gap-2">
             {post?.likes
@@ -494,8 +498,12 @@ const PostComponent: React.FC = () => {
             {post?.comments?.length == 0
               ? "No comments yet!"
               : post?.comments?.length == 1
-              ? `${post?.comments?.length} comment on your post.`
-              : `${post?.comments?.length} comments on your post.`}
+              ? `${post?.comments?.length} comment on ${
+                  user?._id == post?.owner ? "your" : "this"
+                } post.`
+              : `${post?.comments?.length} comments on ${
+                  user?._id == post?.owner ? "your" : "this"
+                } post.`}
           </h1>
           <div className="w-full h-[calc(100%_-_2em)] overflow-auto p-1 flex flex-col gap-2">
             {post?.comments

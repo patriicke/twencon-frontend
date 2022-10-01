@@ -19,12 +19,46 @@ const SuggestionComponent: React.FC = () => {
     try {
       socket.off("follow").on("follow", (data) => {
         setUsers(data.users);
-        setLoading(false);
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   });
+  const followBtn = (date: Date) => {
+    let currentUser = users[currentFollowing + 1];
+    // console.log(currentUser);
+    let followExist = currentUser?.followers?.find((cuser: any) => {
+      return cuser.id == user?._id;
+    });
+    if (followExist) {
+      const newState = users?.map((cuser: any) => {
+        if (cuser._id === user?._id) {
+          return {
+            ...cuser,
+            followers: cuser?.followers.filter((cuser: any) => {
+              return cuser.id != user?._id;
+            })
+          };
+        }
+        return cuser;
+      });
+      setUsers(newState);
+    } else {
+      const newState = users?.map((cuser: any) => {
+        console.log(cuser);
+        if (cuser._id === user?._id) {
+          return {
+            ...cuser,
+            followers: [...cuser?.followers, { id: user._id, date }]
+          };
+        }
+        return cuser;
+      });
+      setUsers(newState);
+    }
+  };
   if (!users) {
     return <SuggestionSkeleteon />;
   }
@@ -76,6 +110,7 @@ const SuggestionComponent: React.FC = () => {
                         setCurrentFollowing(index);
                         setLoading(true);
                         let date = new Date();
+                        followBtn(date);
                         follow(
                           { id: user?._id, date },
                           { id: data?._id, date }
@@ -106,6 +141,7 @@ const SuggestionComponent: React.FC = () => {
                         setCurrentFollowing(index);
                         setLoading(true);
                         let date = new Date();
+                        followBtn(date);
                         follow(
                           { id: user?._id, date },
                           { id: data?._id, date }
