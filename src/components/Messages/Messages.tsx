@@ -31,7 +31,7 @@ const Messages: React.FC = () => {
         setShowTabs
       }}
     >
-      <div className="h-full w-full flex">
+      <div className="h-full w-full flex delay-100">
         <SideBar />
         <Chat />
         <Details />

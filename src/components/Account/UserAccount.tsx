@@ -162,7 +162,7 @@ const UserAccount: React.FC = () => {
             </div>
           )}
           <div
-            className={`lg:w-[80%] xl:w-[50%] m-auto h-full my-2 relative ${
+            className={`lg:w-[80%] xl:w-[50%] m-auto h-full my-2 relative delay-100 ${
               showPopUp
                 ? "blur-md opacity-75 pointer-events-none select-none"
                 : ""
@@ -600,11 +600,15 @@ const UserAccount: React.FC = () => {
                             </div>
                           </div>
                         </div>
-                        {poster(data?.id, users)?.email !== user?.email ? (
+                        {poster(data?.id, users).email == user?.email ? (
+                          <div className="bg-gray-200 text-blue-500 p-1 px-3 text-[0.8em] rounded-[2em] z-50">
+                            You
+                          </div>
+                        ) : (
                           <>
                             {users
                               ?.filter((user: any) => {
-                                return user?._id == poster(data, users)?._id;
+                                return user?._id == data?.id;
                               })[0]
                               ?.following?.find((currentUser: any) => {
                                 return currentUser?.id == user?._id;
@@ -660,15 +664,12 @@ const UserAccount: React.FC = () => {
                               </button>
                             )}
                           </>
-                        ) : (
-                          <div className="bg-gray-200 text-blue-500 p-1 px-3 text-[0.8em] rounded-[2em] z-50">
-                            You
-                          </div>
                         )}
                       </div>
                     );
                   }
                 )}
+
                 {userAccount?.following.length < 1 && (
                   <div className="font-semibold text-red-500">
                     No followings!

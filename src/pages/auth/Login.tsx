@@ -90,7 +90,7 @@ const Login: React.FC = () => {
       const response = request.data;
       localStorage.setItem("acc_token", response.acc_token);
       setLoading(false);
-      navigate("/");
+      window.location.replace(window.location.origin);
     } catch (error) {
       setInputError((current) => {
         return {

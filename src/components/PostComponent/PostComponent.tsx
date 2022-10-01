@@ -179,7 +179,7 @@ const PostComponent: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-full md:flex ">
+    <div className="w-full h-full md:flex delay-100">
       <div className="w-full md:w-2/3 h-full border flex justify-center p-1">
         <div className="flex gap-2 w-full md:w-3/5">
           <div className="p-2 w-full ">

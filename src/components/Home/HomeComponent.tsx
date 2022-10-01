@@ -17,7 +17,7 @@ const HomeComponent: React.FC = () => {
     console.log(error);
   }
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-full items-center justify-center delay-100">
       <PostComponent />
       <SuggestionComponent />
     </div>
