@@ -15,8 +15,9 @@
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 ::-webkit-scrollbar-thumb {
   background: #ccc;
+  border-radius: 2px;
 }

@@ -18,7 +18,9 @@ const SuggestionComponent: React.FC = () => {
   useEffect(() => {
     try {
       socket.off("follow").on("follow", (data) => {
-        setUsers(data.users);
+        if (user?._id != data?.follower) {
+          setUsers(data.users);
+        }
       });
     } catch (error) {
       console.log(error);
@@ -26,18 +28,16 @@ const SuggestionComponent: React.FC = () => {
       setLoading(false);
     }
   });
-  const followBtn = (date: Date) => {
-    let currentUser = users[currentFollowing + 1];
-    // console.log(currentUser);
+  const followBtn = (currentUser: any, date: Date) => {
     let followExist = currentUser?.followers?.find((cuser: any) => {
       return cuser.id == user?._id;
     });
     if (followExist) {
       const newState = users?.map((cuser: any) => {
-        if (cuser._id === user?._id) {
+        if (cuser._id === currentUser?._id) {
           return {
             ...cuser,
-            followers: cuser?.followers.filter((cuser: any) => {
+            followers: cuser?.followers?.filter((cuser: any) => {
               return cuser.id != user?._id;
             })
           };
@@ -47,8 +47,7 @@ const SuggestionComponent: React.FC = () => {
       setUsers(newState);
     } else {
       const newState = users?.map((cuser: any) => {
-        console.log(cuser);
-        if (cuser._id === user?._id) {
+        if (cuser._id === currentUser?._id) {
           return {
             ...cuser,
             followers: [...cuser?.followers, { id: user._id, date }]
@@ -105,12 +104,12 @@ const SuggestionComponent: React.FC = () => {
                     return currentUser?.id == user?._id;
                   }) ? (
                     <button
-                      className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40"
+                      className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40 delay-100"
                       onClick={() => {
                         setCurrentFollowing(index);
                         setLoading(true);
                         let date = new Date();
-                        followBtn(date);
+                        followBtn(data, date);
                         follow(
                           { id: user?._id, date },
                           { id: data?._id, date }
@@ -139,9 +138,8 @@ const SuggestionComponent: React.FC = () => {
                       className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40"
                       onClick={() => {
                         setCurrentFollowing(index);
-                        setLoading(true);
                         let date = new Date();
-                        followBtn(date);
+                        followBtn(data, date);
                         follow(
                           { id: user?._id, date },
                           { id: data?._id, date }

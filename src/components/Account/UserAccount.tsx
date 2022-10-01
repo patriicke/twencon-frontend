@@ -2,7 +2,7 @@ import { Favorite, FavoriteBorder, MoreHoriz } from "@mui/icons-material";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import HomePageContext from "../../context/HomePageContext";
 import { deletePost, formatUrl, getUserAccount } from "../../hooks";
 import Person from "./../../assets/person/person.png";
@@ -16,7 +16,6 @@ import EditProfile from "../../components/EditProfile/EditProfile";
 const UserAccount: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const [userAccount, setUserAccount] = useState<any>({});
-  const locationArray = document.location.href.split("/");
   const [loading, setLoading] = useState<boolean>(false);
   const { posts, setPosts, users, setUsers, isEditProfile, setIsEditProfile } =
     useContext<any>(HomePageContext);
@@ -35,6 +34,7 @@ const UserAccount: React.FC = () => {
     "FOLLOWERS",
     "FOLLOWING"
   ]);
+  const { username } = useParams();
   useEffect(() => {
     const clickEvent = () => {
       if (!deletePostElement?.current?.contains(event?.target)) {
@@ -49,28 +49,18 @@ const UserAccount: React.FC = () => {
     setCurrentNavigation(n ? Number(n) : 0);
   }, []);
   useEffect(() => {
-    const username = locationArray[locationArray.length - 1];
-    if (document.location.href.includes("post")) return;
-    if (!username) {
-      navigate(`/`);
-      setLoadingData(true);
-      return;
-    }
-    if (username == user?.username) {
-      setUserAccount(user);
-      setLoadingData(false);
-    } else {
-      getUserAccount(username, setUserAccount, setLoadingData);
-    }
+    getUserAccount(username, setUserAccount, setLoadingData);
   }, [document.location.href]);
   useEffect(() => {
     try {
       socket.off("follow").on("follow", async (data) => {
-        const user = data?.users?.filter((user: any) => {
-          return user._id == userAccount._id;
-        });
-        setUserAccount(user[0]);
-        setUsers(data.users);
+        if (data.follower != user._id) {
+          const user = data?.users?.filter((user: any) => {
+            return user._id == userAccount._id;
+          });
+          setUserAccount(user[0]);
+          setUsers(data.users);
+        }
         setLoading(false);
       });
     } catch (error) {
@@ -82,6 +72,52 @@ const UserAccount: React.FC = () => {
       if (userAccount?._id == user?._id) setIsEditProfile(true);
     }
   });
+  const followBtn = (currentUser: any, date: Date) => {
+    let followExist = currentUser?.followers?.find((cuser: any) => {
+      return cuser.id == user?._id;
+    });
+    if (followExist) {
+      const newState = users?.map((cuser: any) => {
+        if (cuser._id === user?._id) {
+          return {
+            ...cuser,
+            followers: cuser?.followers?.filter((cuser: any) => {
+              return cuser.id != user?._id;
+            })
+          };
+        }
+        return cuser;
+      });
+      setUsers(newState);
+      setUserAccount((cuser: any) => {
+        return {
+          ...cuser,
+          followers: cuser?.followers?.filter((cuser: any) => {
+            return cuser.id != user?._id;
+          })
+        };
+      });
+    } else {
+      const newState = users?.map((cuser: any) => {
+        if (cuser._id === currentUser?._id) {
+          return {
+            ...cuser,
+            followers: [...cuser?.followers, { id: user._id, date }]
+          };
+        }
+        return cuser;
+      });
+      setUsers(newState);
+      setUserAccount((cuser: any) => {
+        return {
+          ...cuser,
+          followers: cuser?.followers?.filter((cuser: any) => {
+            return cuser.id != user?._id;
+          })
+        };
+      });
+    }
+  };
   if (loadingData) {
     return (
       <div className="lg:w-[80%] xl:w-[50%] m-auto h-full my-2">
@@ -197,11 +233,11 @@ const UserAccount: React.FC = () => {
                     className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-gray-500 text-white hover:bg-red-500"
                     onClick={() => {
                       let date = new Date();
+                      followBtn(userAccount, date);
                       follow(
                         { id: user?._id, date },
                         { id: userAccount?._id, date }
                       );
-                      setLoading(true);
                     }}
                     onMouseEnter={() => {
                       setShowContent(true);
@@ -223,12 +259,11 @@ const UserAccount: React.FC = () => {
                     className="rounded-full absolute right-3 bottom-3 p-2 px-4 cursor-pointer opacity-80 font-semibold bg-blue-500 text-white"
                     onClick={() => {
                       let date = new Date();
+                      followBtn(userAccount, date);
                       follow(
                         { id: user?._id, date },
                         { id: userAccount?._id, date }
                       );
-
-                      setLoading(true);
                     }}
                   >
                     {loading ? <img src={Loading} className="w-5" /> : "Follow"}
@@ -502,8 +537,8 @@ const UserAccount: React.FC = () => {
                                 className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
                                 onClick={() => {
                                   setCurrentFollowing(index);
-                                  setLoading(true);
                                   let date = new Date();
+                                  follow(data, date);
                                   follow(
                                     { id: user?._id, date },
                                     { id: data?.id, date }
@@ -532,8 +567,8 @@ const UserAccount: React.FC = () => {
                                 className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
                                 onClick={() => {
                                   setCurrentFollowing(index);
-                                  setLoading(true);
                                   let date = new Date();
+                                  follow(data, date);
                                   follow(
                                     { id: user?._id, date },
                                     { id: data?.id, date }
@@ -617,7 +652,6 @@ const UserAccount: React.FC = () => {
                                 className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
                                 onClick={() => {
                                   setCurrentFollowing(index);
-                                  setLoading(true);
                                   let date = new Date();
                                   follow(
                                     { id: user?._id, date },
@@ -647,8 +681,8 @@ const UserAccount: React.FC = () => {
                                 className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-50"
                                 onClick={() => {
                                   setCurrentFollowing(index);
-                                  setLoading(true);
                                   let date = new Date();
+                                  follow(data, date);
                                   follow(
                                     { id: user?._id, date },
                                     { id: data?.id, date }

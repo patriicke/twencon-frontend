@@ -2,6 +2,9 @@ import React from "react";
 import { Button } from "@mui/material";
 import Navigation from "../../components/Navigation";
 import Footer from "../../components/Footer";
+import FirstImage from "/first.jpg";
+import SecondImage from "/second.jpg";
+import ThirdImage from "/third.jpg";
 const Dashboard: React.FC = () => {
   document.title =
     "Welcome to Twencon! This is where you will connect to everyone you want.";
@@ -15,16 +18,16 @@ const Dashboard: React.FC = () => {
       href: "/auth/login"
     }
   ];
-  const pageDescription: { description: string; url: string }[] = [
+  const pageDescription: { description: string; url: any }[] = [
     {
       description:
         "Save more time on productive instead wasting it on team management.Our all in one solution will provide a significant boost.",
-      url: "https://images.unsplash.com/photo-1626387753307-5a329fa44578?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1631&q=80"
+      url: SecondImage
     },
     {
       description:
         "Save more time on productive instead wasting it on team management.Our all in one solution will provide a significant boost.",
-      url: "https://images.unsplash.com/photo-1640244674671-f32e0f186e12?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=08"
+      url: ThirdImage
     }
   ];
   return (
@@ -42,7 +45,7 @@ const Dashboard: React.FC = () => {
             </p>
           </div>
           <img
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+            src={FirstImage}
             alt=""
             className="animate-image row-span-4 lg:w-full rounded-md"
           />
