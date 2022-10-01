@@ -65,7 +65,6 @@ const Chat: React.FC = () => {
   };
   useEffect(() => {
     socket.off("room-messages").on("room-messages", (roomMessages: any) => {
-      console.log(roomMessages);
       setMessages(roomMessages);
       setLoading(false);
     });
@@ -222,9 +221,8 @@ const Chat: React.FC = () => {
                         {poster(data?.from, users)?.fullname !==
                           user?.fullname && (
                           <div>
-                            {poster(data?.from, users)?.profile ? (
-                              <div
-                                className={`border rounded-full min-w-[2.7em]
+                            <div
+                              className={`border rounded-full w-[2.7em] 
                                 ${
                                   poster(data?.from, users)?.fullname !==
                                     user?.fullname &&
@@ -234,8 +232,9 @@ const Chat: React.FC = () => {
                                     (messagesByDate[index] as any)?.from &&
                                   "hidden"
                                 }
-                              `}
-                              >
+                                `}
+                            >
+                              {poster(data?.from, users)?.profile ? (
                                 <img
                                   src={
                                     poster(data?.from, users)?.profile ===
@@ -246,12 +245,12 @@ const Chat: React.FC = () => {
                                         )
                                   }
                                   alt=""
-                                  className="rounded-full min-w-[2.7em]"
+                                  className="rounded-full "
                                 />
-                              </div>
-                            ) : (
-                              <PhotoSkeleton />
-                            )}
+                              ) : (
+                                <PhotoSkeleton />
+                              )}
+                            </div>
                           </div>
                         )}
                         <div>

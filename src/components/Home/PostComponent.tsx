@@ -552,7 +552,7 @@ const PostComponent: React.FC = () => {
                       {poster(data?.owner, users)?.profile ? (
                         <img
                           src={
-                            poster(data?._id, users)?.profile === "icon"
+                            poster(data?.owner, users)?.profile === "icon"
                               ? Person
                               : formatUrl(poster(data?.owner, users)?.profile)
                           }

@@ -31,7 +31,6 @@ const SideBar: React.FC = () => {
     const notifySound = new Audio(notificationSound);
     notifySound.play();
   };
-
   try {
     socket.off("new-user").on("new-user", (payload: any) => {
       setMembers(payload);
@@ -47,7 +46,6 @@ const SideBar: React.FC = () => {
           messagesArray?.messagesByDate[
             messagesArray?.messagesByDate?.length - 1
           ];
-        console.log(message);
         if (message?.from?.profile == "icon") {
           icon = Twencon;
         } else {
