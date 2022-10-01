@@ -268,7 +268,7 @@ const UserAccount: React.FC = () => {
                   </button>
                 )}
               </div>
-              <div className="h-1/2 bg-white p-2 pt-12">
+              <div className="h-1/2 bg-white p-2 pt-12 relative">
                 <div className="flex gap-2">
                   <h1 className="font-semibold opacity-80 text-[1.3em]">
                     {userAccount?.fullname}
@@ -299,6 +299,19 @@ const UserAccount: React.FC = () => {
                       }
                     </span>
                     <span className="font-bold">posts</span>
+                  </div>
+                  <div className="right-5 absolute flex items-center justify-center">
+                    <Button
+                      variant="contained"
+                      className="bg-red-500 text-[0.6em]"
+                      onClick={() => {
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        document.location.reload();
+                      }}
+                    >
+                      LOGOUT
+                    </Button>
                   </div>
                 </div>
               </div>
