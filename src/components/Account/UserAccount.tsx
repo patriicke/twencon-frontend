@@ -111,9 +111,7 @@ const UserAccount: React.FC = () => {
       setUserAccount((cuser: any) => {
         return {
           ...cuser,
-          followers: cuser?.followers?.filter((cuser: any) => {
-            return cuser.id != user?._id;
-          })
+          followers: [...cuser?.followers, { id: user._id, date }]
         };
       });
     }
