@@ -65,6 +65,7 @@ const Chat: React.FC = () => {
   };
   useEffect(() => {
     socket.off("room-messages").on("room-messages", (roomMessages: any) => {
+      console.log(roomMessages);
       setMessages(roomMessages);
       setLoading(false);
     });
