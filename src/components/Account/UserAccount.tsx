@@ -1,15 +1,10 @@
 import { Favorite, FavoriteBorder, MoreHoriz } from "@mui/icons-material";
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HomePageContext from "../../context/HomePageContext";
-import { deletePost, getUserAccount } from "../../hooks";
+import { deletePost, formatUrl, getUserAccount } from "../../hooks";
 import Person from "./../../assets/person/person.png";
 import Loading from "./../../assets/loading/loading.gif";
 import { follow, poster } from "../../hooks";
@@ -23,14 +18,8 @@ const UserAccount: React.FC = () => {
   const [userAccount, setUserAccount] = useState<any>({});
   const locationArray = document.location.href.split("/");
   const [loading, setLoading] = useState<boolean>(false);
-  const {
-    posts,
-    setPosts,
-    users,
-    setUsers,
-    isEditProfile,
-    setIsEditProfile
-  } = useContext<any>(HomePageContext);
+  const { posts, setPosts, users, setUsers, isEditProfile, setIsEditProfile } =
+    useContext<any>(HomePageContext);
   const [showContent, setShowContent] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [deletePostShow, setDeletePostShow] = useState<boolean>(false);
@@ -76,17 +65,16 @@ const UserAccount: React.FC = () => {
   }, [document.location.href]);
   useEffect(() => {
     try {
-      socket.off("follow").on("follow", (data) => {
+      socket.off("follow").on("follow", async (data) => {
         const user = data?.users?.filter((user: any) => {
           return user._id == userAccount._id;
         });
         setUserAccount(user[0]);
         setUsers(data.users);
+        setLoading(false);
       });
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   });
   useEffect(() => {
@@ -489,7 +477,7 @@ const UserAccount: React.FC = () => {
                             src={
                               poster(data?.id, users)?.profile == "icon"
                                 ? Person
-                                : poster(data?.id, users)?.profile
+                                : formatUrl(poster(data?.id, users)?.profile)
                             }
                             alt={poster(data?.id, users)?.fullname}
                             className="w-12 rounded-full border-2"
@@ -600,7 +588,7 @@ const UserAccount: React.FC = () => {
                             src={
                               poster(data?.id, users)?.profile == "icon"
                                 ? Person
-                                : poster(data?.id, users)?.profile
+                                : formatUrl(poster(data?.id, users)?.profile)
                             }
                             alt={poster(data?.id, users)?.fullname}
                             className="w-12 rounded-full border-2"

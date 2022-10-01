@@ -10,9 +10,9 @@ import {
 } from "@mui/icons-material";
 import { Button, Skeleton, TextField } from "@mui/material";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { poster, useGetPosts, useUserData } from "../../hooks";
+import { formatUrl, poster, useGetPosts } from "../../hooks";
 import Picker from "emoji-picker-react";
 import Loading from "./../../assets/loading/loading.gif";
 import axios from "axios";
@@ -24,7 +24,6 @@ import ReactPlayer from "react-player";
 import HomePageContext from "../../context/HomePageContext";
 import PostsSkeleton from "../Sketeleton/PostsSkeleton/PostsSkeleton";
 const PostComponent: React.FC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: any) => state?.user?.userData);
   const [postText, setPostText] = useState<string>("");
@@ -236,7 +235,7 @@ const PostComponent: React.FC = () => {
           if (cpost._id === id) {
             return {
               ...cpost,
-              likes: cpost?.likes.filter((cuser: any) => {
+              likes: cpost?.likes?.filter((cuser: any) => {
                 return cuser.id != user?._id;
               })
             };
@@ -312,14 +311,14 @@ const PostComponent: React.FC = () => {
       <div
         className={`h-full min-h-full w-full xl:w-4/5 2xl:w-3/5 p-2 md:px-4 flex flex-col gap-3 relative `}
       >
-        {newPosts.length < 1 ? null : (
+        {newPosts?.length < 1 ? null : (
           <div
             className="py-1 flex items-center justify-center fixed left-[26%] sm:left-[28%] top-[4em] md:top-[5em] bg-white z-10 cursor-pointer"
             onClick={viewNewPosts}
           >
             <div className="bg-blue-500 p-1 px-3 rounded-md text-white">
-              Click to check {newPosts.length} new{" "}
-              {newPosts.length == 1 ? " post" : " posts"}
+              Click to check {newPosts?.length} new{" "}
+              {newPosts?.length == 1 ? " post" : " posts"}
             </div>
           </div>
         )}
@@ -330,14 +329,11 @@ const PostComponent: React.FC = () => {
         >
           <div className="w-[2.5em] md:w-[4em] h-[2.5em] md:h-[4em] max-h-[4em] rounded-full border-2 flex justify-center items-center">
             <img
-              src={user?.profile === "icon" ? Person : user?.profile}
+              src={user?.profile === "icon" ? Person : formatUrl(user?.profile)}
               alt=""
               className="w-full h-full rounded-full cursor-pointer"
               onClick={() => {
-                setCurrent(4);
                 navigate(`/user/${user?.username}`);
-                sessionStorage.setItem("current", "4");
-                sessionStorage.setItem("prevCurrent", current.toString());
               }}
             />
           </div>
@@ -457,7 +453,7 @@ const PostComponent: React.FC = () => {
                 </span>
               </div>
               <div className="flex gap-2">
-                {postText != "" || imageURLs.length > 0 ? (
+                {postText != "" || imageURLs?.length > 0 ? (
                   <Button
                     variant="contained"
                     disabled={loading}
@@ -490,325 +486,322 @@ const PostComponent: React.FC = () => {
         <div className="flex items-center justify-center p-2">
           {loadingNewImages ? <img src={Loading} className="w-12" /> : null}
         </div>
-        {(posts as any)?.map((data: any, index1: any) => {
-          return (
-            <div key={index1}>
-              {loadingNewImages && posts[0]?._id == data._id ? (
-                <div className="flex gap-2 w-full border rounded-md p-2">
-                  <div>
-                    <Skeleton variant="circular" className="w-14 h-14" />
-                  </div>
-                  <div className="flex flex-col gap-1 w-full">
-                    <Skeleton
-                      variant="rectangular"
-                      className="w-full h-[17em] rounded-md"
-                    />
-                    <div className="flex justify-between">
-                      <div className="flex gap-2">
-                        <Skeleton variant="circular" className="w-7 h-7" />
-                        <Skeleton
-                          variant="rectangular"
-                          className="w-14 h-7 rounded-md"
-                        />
-                        <Skeleton
-                          variant="rectangular"
-                          className="w-14 h-7 rounded-md"
-                        />
-                        <Skeleton
-                          variant="rectangular"
-                          className="w-14 h-7 rounded-md"
-                        />
-                      </div>
-                      <div>
-                        <Skeleton
-                          className="w-16 h-7 rounded-md"
-                          variant="rectangular"
-                        />
+        {posts &&
+          (posts as any)?.map((data: any, index1: any) => {
+            return (
+              <div key={index1}>
+                {loadingNewImages && posts[0]?._id == data._id ? (
+                  <div className="flex gap-2 w-full border rounded-md p-2">
+                    <div>
+                      <Skeleton variant="circular" className="w-14 h-14" />
+                    </div>
+                    <div className="flex flex-col gap-1 w-full">
+                      <Skeleton
+                        variant="rectangular"
+                        className="w-full h-[17em] rounded-md"
+                      />
+                      <div className="flex justify-between">
+                        <div className="flex gap-2">
+                          <Skeleton variant="circular" className="w-7 h-7" />
+                          <Skeleton
+                            variant="rectangular"
+                            className="w-14 h-7 rounded-md"
+                          />
+                          <Skeleton
+                            variant="rectangular"
+                            className="w-14 h-7 rounded-md"
+                          />
+                          <Skeleton
+                            variant="rectangular"
+                            className="w-14 h-7 rounded-md"
+                          />
+                        </div>
+                        <div>
+                          <Skeleton
+                            className="w-16 h-7 rounded-md"
+                            variant="rectangular"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div
-                  className="border w-full p-2 flex gap-2 rounded-md select-none postId"
-                  onClick={() => {
-                    setCurrentPost(index1);
-                  }}
-                  onDoubleClick={() => {
-                    navigate(`/post/${data._id}`);
-                    setCurrent(5);
-                  }}
-                >
+                ) : (
                   <div
-                    className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
+                    className="border w-full p-2 flex gap-2 rounded-md select-none postId"
                     onClick={() => {
-                      navigate(`/user/${poster(data?.owner, users)?.username}`);
-                      setCurrent(4);
-                      sessionStorage.setItem("current", "4");
-                      sessionStorage.setItem("prevCurrent", current.toString());
+                      setCurrentPost(index1);
+                    }}
+                    onDoubleClick={() => {
+                      navigate(`/post/${data._id}`);
                     }}
                   >
-                    {poster(data?._id, users)?.profile === "icon" ? (
-                      <img
-                        src={Person}
-                        alt=""
-                        className="rounded-full w-full"
-                      />
-                    ) : (
-                      <img
-                        src={poster(data?.owner, users)?.profile}
-                        alt=""
-                        className="rounded-full"
-                      />
-                    )}
-                  </div>
-                  <div className="w-[calc(100%_-_4em)] flex flex-col gap-2">
-                    <div className="flex flex-col">
-                      <div className="flex gap-2 items-center">
-                        <div
-                          className="font-medium text-[0.9em] md:text-[1em] cursor-pointer"
-                          onClick={() => {
-                            navigate(
-                              `/user/${poster(data?.owner, users)?.username}`
-                            );
-                            setCurrent(4);
-                            sessionStorage.setItem("current", "4");
-                            sessionStorage.setItem(
-                              "prevCurrent",
-                              current.toString()
-                            );
-                          }}
-                        >
-                          {poster(data?.owner, users)?.fullname}
-                        </div>
-                        <div
-                          className="opacity-50 cursor-pointer"
-                          onClick={() => {
-                            navigate(
-                              `/user/${poster(data?.owner, users)?.username}`
-                            );
-                            setCurrent(4);
-                            sessionStorage.setItem("current", "4");
-                            sessionStorage.setItem(
-                              "prevCurrent",
-                              current.toString()
-                            );
-                          }}
-                        >
-                          @{poster(data?.owner, users)?.username}
-                        </div>
-                        <div className="text-blue-500">
-                          {calculateDate(data?.date)}
-                        </div>
-                      </div>
-                      <div className="font-normal py-1">
-                        {data?.post?.description}
-                      </div>
-                    </div>
-                    {(data?.post?.images as any)?.length <= 0 ? null : (
-                      <div className="relative w-full flex overflow-hidden rounded-md postHeight">
-                        {(data?.post?.images as any).map(
-                          (image: any, index2: number) => {
-                            return (
-                              <div
-                                className="flex items-center justify-center min-w-full rounded-md"
-                                key={index2}
-                              >
-                                <div className="flex items-center justify-center min-h-[15em] videos">
-                                  <LazyLoadComponent>
-                                    {image?.includes("video") ? (
-                                      <ReactPlayer
-                                        url={
-                                          data?.post?.images[
-                                            allPostsObject[index1]
-                                              ?.postCurrentImage
-                                          ]
-                                        }
-                                        controls
-                                        muted={true}
-                                        loop
-                                        playing={currentPost == index1}
-                                      />
-                                    ) : (
-                                      <img
-                                        src={
-                                          data?.post?.images[
-                                            allPostsObject[index1]
-                                              ?.postCurrentImage
-                                          ]
-                                        }
-                                        className="rounded-md"
-                                      />
-                                    )}
-                                  </LazyLoadComponent>
-                                </div>
-                              </div>
-                            );
-                          }
-                        )}
-                        <span
-                          className="absolute top-[45%] cursor-pointer bg-white border rounded-full p-[0.1em]"
-                          hidden={
-                            allPostsObject[index1]?.postTotalImages <= 1 ||
-                            allPostsObject[index1]?.postCurrentImage == 0
-                          }
-                          onClick={() => {
-                            setAllPostsObject((current: any) => {
-                              return {
-                                ...current,
-                                [index1]: {
-                                  ...allPostsObject[index1],
-                                  postCurrentImage:
-                                    allPostsObject[index1]?.postCurrentImage - 1
-                                }
-                              };
-                            });
-                          }}
-                        >
-                          <ChevronLeft className="text-[1.6em]" />
-                        </span>
-                        <span
-                          className="absolute top-[45%] right-0 cursor-pointer bg-white border rounded-full p-[0.1em]"
-                          hidden={
-                            allPostsObject[index1]?.postTotalImages <= 1 ||
-                            allPostsObject[index1]?.postCurrentImage ==
-                              allPostsObject[index1]?.postTotalImages - 1
-                          }
-                          onClick={() => {
-                            setAllPostsObject((current: any) => {
-                              return {
-                                ...current,
-                                [index1]: {
-                                  ...allPostsObject[index1],
-                                  postCurrentImage:
-                                    allPostsObject[index1]?.postCurrentImage + 1
-                                }
-                              };
-                            });
-                          }}
-                        >
-                          <ChevronRight className="text-[1.6em]" />
-                        </span>
-                      </div>
-                    )}
-                    <div>
-                      <div className="flex justify-between items-center p-2 px-5">
-                        <div
-                          className={`flex justify-center items-center gap-2 ${
-                            likeAnimation == data?._id && "likeBtn"
-                          }`}
-                        >
-                          <span
-                            onClick={() => like(data?._id)}
-                            className="flex items-center justify-center"
-                          >
-                            {data?.likes?.find((currentId: any) => {
-                              return currentId.id == user?._id;
-                            }) == undefined ? (
-                              <FavoriteBorder className="md:text-[1.5em] opacity-70 cursor-pointer" />
-                            ) : (
-                              <Favorite className="md:text-[1.5em] cursor-pointer text-red-500" />
-                            )}
-                          </span>
-                          <span className="text-[0.9em] flex items-center justify-center">
-                            {(data?.likes as any)?.length <= 0
-                              ? null
-                              : data?.likes?.length}
-                          </span>
-                        </div>
-                        <div className="flex gap-2 items-center justify-center">
-                          <span
-                            className="flex items-center justify-center"
-                            onClick={() => navigate(`/post/${data._id}`)}
-                          >
-                            {(data?.comments as any)?.length <= 0 ? (
-                              <i className="fa-regular fa-comment text-[1.3em] opacity-70 cursor-pointer"></i>
-                            ) : (
-                              <i className="fa-solid fa-comment text-[1.3em] opacity-70 cursor-pointer text-blue-500"></i>
-                            )}
-                          </span>
-                          <span className="text-[0.9em] flex items-center justify-center">
-                            {(data?.comments as any)?.length <= 0
-                              ? null
-                              : data?.comments.length}
-                          </span>
-                        </div>
-                        <div className="flex gap-2 items-center justify-center">
-                          <span className="flex items-center justify-center">
-                            <i className="fa-regular fa-share-from-square text-[1.3em]  opacity-70 cursor-pointer"></i>
-                          </span>
-                          <span className="text-[0.9em] flex items-center justify-center">
-                            {(data?.share as any)?.length <= 0 ? null : "10K"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center py-2 px-1 gap-1">
-                        <div className="relative">
-                          <span
-                            onClick={() => {
-                              setShowCommentEmojiElement(true);
-                            }}
-                            className="cursor-pointer"
-                          >
-                            <EmojiEmotions />
-                          </span>
-                          {showCommentEmojiElement && currentPost === index1 && (
-                            <div
-                              className="absolute top-[2em] left-0 bg-white z-50"
-                              ref={commentEmojiElement}
-                            >
-                              <Picker
-                                onEmojiClick={onEmojiClickPostComment}
-                                pickerStyle={{ width: "100%" }}
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <TextField
-                          placeholder="Post a comment"
-                          className="w-[85%]"
-                          autoComplete="off"
-                          size="small"
-                          value={textComment[index1] ? textComment[index1] : ""}
-                          onChange={(
-                            e: React.ChangeEvent<HTMLInputElement>
-                          ) => {
-                            setTextComment((current: any) => {
-                              return {
-                                ...current,
-                                [index1]: e.target.value
-                              };
-                            });
-                          }}
+                    <div
+                      className="w-[2.5em] md:w-[4em] h-[2.5em]  md:h-[4em] rounded-full border-2 flex items-center justify-center cursor-pointer"
+                      onClick={() => {
+                        navigate(
+                          `/user/${poster(data?.owner, users)?.username}`
+                        );
+                      }}
+                    >
+                      {poster(data?._id, users)?.profile === "icon" ? (
+                        <img
+                          src={Person}
+                          alt=""
+                          className="rounded-full w-full"
                         />
-                        <Button
-                          variant="contained"
-                          disabled={
-                            currentPost == index1 && loadingPostingComment
-                          }
-                          className="bg-blue-500 text-[0.8em] flex items-center justify-center"
-                          onClick={() =>
-                            comment(
-                              index1,
-                              posts[index1]?._id,
-                              textComment[index1]
-                            )
-                          }
-                        >
-                          {currentPost == index1 && loadingPostingComment ? (
-                            <img src={Loading} alt="" className="w-6" />
-                          ) : (
-                            "POST"
+                      ) : (
+                        <img
+                          src={formatUrl(poster(data?.owner, users)?.profile)}
+                          alt=""
+                          className="rounded-full"
+                        />
+                      )}
+                    </div>
+                    <div className="w-[calc(100%_-_4em)] flex flex-col gap-2">
+                      <div className="flex flex-col">
+                        <div className="flex gap-2 items-center">
+                          <div
+                            className="font-medium text-[0.9em] md:text-[1em] cursor-pointer"
+                            onClick={() => {
+                              navigate(
+                                `/user/${poster(data?.owner, users)?.username}`
+                              );
+                            }}
+                          >
+                            {poster(data?.owner, users)?.fullname}
+                          </div>
+                          <div
+                            className="opacity-50 cursor-pointer"
+                            onClick={() => {
+                              navigate(
+                                `/user/${poster(data?.owner, users)?.username}`
+                              );
+                              setCurrent(4);
+
+                              sessionStorage.setItem(
+                                "prevCurrent",
+                                current.toString()
+                              );
+                            }}
+                          >
+                            @{poster(data?.owner, users)?.username}
+                          </div>
+                          <div className="text-blue-500">
+                            {calculateDate(data?.date)}
+                          </div>
+                        </div>
+                        <div className="font-normal py-1">
+                          {data?.post?.description}
+                        </div>
+                      </div>
+                      {(data?.post?.images as any)?.length <= 0 ? null : (
+                        <div className="relative w-full flex overflow-hidden rounded-md postHeight">
+                          {(data?.post?.images as any).map(
+                            (image: any, index2: number) => {
+                              return (
+                                <div
+                                  className="flex items-center justify-center min-w-full rounded-md"
+                                  key={index2}
+                                >
+                                  <div className="flex items-center justify-center min-h-[15em] videos">
+                                    <LazyLoadComponent>
+                                      {image?.includes("video") ? (
+                                        <ReactPlayer
+                                          url={
+                                            data?.post?.images[
+                                              allPostsObject[index1]
+                                                ?.postCurrentImage
+                                            ]
+                                          }
+                                          controls
+                                          muted={true}
+                                          loop
+                                          playing={currentPost == index1}
+                                        />
+                                      ) : (
+                                        <img
+                                          src={
+                                            data?.post?.images[
+                                              allPostsObject[index1]
+                                                ?.postCurrentImage
+                                            ]
+                                          }
+                                          className="rounded-md"
+                                        />
+                                      )}
+                                    </LazyLoadComponent>
+                                  </div>
+                                </div>
+                              );
+                            }
                           )}
-                        </Button>
+                          <span
+                            className="absolute top-[45%] cursor-pointer bg-white border rounded-full p-[0.1em]"
+                            hidden={
+                              allPostsObject[index1]?.postTotalImages <= 1 ||
+                              allPostsObject[index1]?.postCurrentImage == 0
+                            }
+                            onClick={() => {
+                              setAllPostsObject((current: any) => {
+                                return {
+                                  ...current,
+                                  [index1]: {
+                                    ...allPostsObject[index1],
+                                    postCurrentImage:
+                                      allPostsObject[index1]?.postCurrentImage -
+                                      1
+                                  }
+                                };
+                              });
+                            }}
+                          >
+                            <ChevronLeft className="text-[1.6em]" />
+                          </span>
+                          <span
+                            className="absolute top-[45%] right-0 cursor-pointer bg-white border rounded-full p-[0.1em]"
+                            hidden={
+                              allPostsObject[index1]?.postTotalImages <= 1 ||
+                              allPostsObject[index1]?.postCurrentImage ==
+                                allPostsObject[index1]?.postTotalImages - 1
+                            }
+                            onClick={() => {
+                              setAllPostsObject((current: any) => {
+                                return {
+                                  ...current,
+                                  [index1]: {
+                                    ...allPostsObject[index1],
+                                    postCurrentImage:
+                                      allPostsObject[index1]?.postCurrentImage +
+                                      1
+                                  }
+                                };
+                              });
+                            }}
+                          >
+                            <ChevronRight className="text-[1.6em]" />
+                          </span>
+                        </div>
+                      )}
+                      <div>
+                        <div className="flex justify-between items-center p-2 px-5">
+                          <div
+                            className={`flex justify-center items-center gap-2 ${
+                              likeAnimation == data?._id && "likeBtn"
+                            }`}
+                          >
+                            <span
+                              onClick={() => like(data?._id)}
+                              className="flex items-center justify-center"
+                            >
+                              {data?.likes?.find((currentId: any) => {
+                                return currentId.id == user?._id;
+                              }) == undefined ? (
+                                <FavoriteBorder className="md:text-[1.5em] opacity-70 cursor-pointer" />
+                              ) : (
+                                <Favorite className="md:text-[1.5em] cursor-pointer text-red-500" />
+                              )}
+                            </span>
+                            <span className="text-[0.9em] flex items-center justify-center">
+                              {(data?.likes as any)?.length <= 0
+                                ? null
+                                : data?.likes?.length}
+                            </span>
+                          </div>
+                          <div className="flex gap-2 items-center justify-center">
+                            <span
+                              className="flex items-center justify-center"
+                              onClick={() => navigate(`/post/${data._id}`)}
+                            >
+                              {(data?.comments as any)?.length <= 0 ? (
+                                <i className="fa-regular fa-comment text-[1.3em] opacity-70 cursor-pointer"></i>
+                              ) : (
+                                <i className="fa-solid fa-comment text-[1.3em] opacity-70 cursor-pointer text-blue-500"></i>
+                              )}
+                            </span>
+                            <span className="text-[0.9em] flex items-center justify-center">
+                              {(data?.comments as any)?.length <= 0
+                                ? null
+                                : data?.comments.length}
+                            </span>
+                          </div>
+                          <div className="flex gap-2 items-center justify-center">
+                            <span className="flex items-center justify-center">
+                              <i className="fa-regular fa-share-from-square text-[1.3em]  opacity-70 cursor-pointer"></i>
+                            </span>
+                            <span className="text-[0.9em] flex items-center justify-center">
+                              {(data?.share as any)?.length <= 0 ? null : "10K"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-1 gap-1">
+                          <div className="relative">
+                            <span
+                              onClick={() => {
+                                setShowCommentEmojiElement(true);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <EmojiEmotions />
+                            </span>
+                            {showCommentEmojiElement && currentPost === index1 && (
+                              <div
+                                className="absolute top-[2em] left-0 bg-white z-50"
+                                ref={commentEmojiElement}
+                              >
+                                <Picker
+                                  onEmojiClick={onEmojiClickPostComment}
+                                  pickerStyle={{ width: "100%" }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                          <TextField
+                            placeholder="Post a comment"
+                            className="w-[85%]"
+                            autoComplete="off"
+                            size="small"
+                            value={
+                              textComment[index1] ? textComment[index1] : ""
+                            }
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setTextComment((current: any) => {
+                                return {
+                                  ...current,
+                                  [index1]: e.target.value
+                                };
+                              });
+                            }}
+                          />
+                          <Button
+                            variant="contained"
+                            disabled={
+                              currentPost == index1 && loadingPostingComment
+                            }
+                            className="bg-blue-500 text-[0.8em] flex items-center justify-center"
+                            onClick={() =>
+                              comment(
+                                index1,
+                                posts[index1]?._id,
+                                textComment[index1]
+                              )
+                            }
+                          >
+                            {currentPost == index1 && loadingPostingComment ? (
+                              <img src={Loading} alt="" className="w-6" />
+                            ) : (
+                              "POST"
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
+                )}
+              </div>
+            );
+          })}
       </div>
     </div>
   );

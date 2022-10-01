@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getAllUsers, useUserData } from "../../hooks";
+import { formatUrl, getAllUsers, useUserData } from "../../hooks";
 import { userDataAction } from "../../features/user/userSlice";
 import {
   Apps,
@@ -86,13 +86,14 @@ export const AllHomePagesComponent: React.FC<{
     {
       icons: (
         <>
-          {user?.profile == "icon" ? (
+          {user?.profile ? (
             <div className="border-2 rounded-full p-[0.1em]">
-              <img src={Person} className="w-10 rounded-full" />
-            </div>
-          ) : user?.profile ? (
-            <div className="border-2 rounded-full p-[0.1em]">
-              <img src={user?.profile} className="w-10 rounded-full" />
+              <img
+                src={
+                  user?.profile == "icon" ? Person : formatUrl(user?.profile)
+                }
+                className="w-10 rounded-full"
+              />
             </div>
           ) : (
             <PhotoSkeleton />
@@ -223,7 +224,9 @@ export const AllHomePagesComponent: React.FC<{
                           >
                             <img
                               src={
-                                user?.profile == "icon" ? Person : user?.profile
+                                user?.profile == "icon"
+                                  ? Person
+                                  : formatUrl(user?.profile)
                               }
                               alt={user?.fullname}
                               className="w-12 rounded-full border-2"

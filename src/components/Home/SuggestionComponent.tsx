@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { follow } from "../../hooks";
+import { follow, formatUrl } from "../../hooks";
 import { socket } from "./../../context/chatContext";
 import Person from "./../../assets/person/person.png";
 import HomePageContext from "../../context/HomePageContext";
@@ -18,11 +18,10 @@ const SuggestionComponent: React.FC = () => {
     try {
       socket.off("follow").on("follow", (data) => {
         setUsers(data.users);
+        setLoading(false);
       });
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   });
   if (!users) {
@@ -50,7 +49,11 @@ const SuggestionComponent: React.FC = () => {
                     }}
                   >
                     <img
-                      src={data?.profile == "icon" ? Person : data?.profile}
+                      src={
+                        data?.profile == "icon"
+                          ? Person
+                          : formatUrl(data?.profile)
+                      }
                       alt={data?.fullname}
                       className="w-12 rounded-full border-2"
                     />
@@ -72,7 +75,6 @@ const SuggestionComponent: React.FC = () => {
                           { id: user?._id, date },
                           { id: data?._id, date }
                         );
-                        console.log(user?._id);
                       }}
                       onMouseEnter={() => {
                         setShowContent(true);

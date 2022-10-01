@@ -21,7 +21,7 @@ export const uploadImage = async (
     );
     const urlData = await res.json();
     const request = await api.post("/auth/upload", {
-      profile: urlData.url,
+      profile: urlData.secure_url,
       email
     });
     const response = request.data;
@@ -31,10 +31,6 @@ export const uploadImage = async (
   } finally {
     setUploading(false);
   }
-};
-const updateImage = async () => {
-  try {
-  } catch (error) {}
 };
 /*Upload many images */
 export const uploadManyImages = async (images: any, setLoading: any) => {
@@ -145,7 +141,7 @@ export const useUserData = async (
   }
 };
 /* Reset password */
-export const restPassword = async () => {
+export const resetPassword = async () => {
   const request = await api.post("/reset/verify");
 };
 /* Reset all notifications from a room */
@@ -339,4 +335,11 @@ export const telephoneCheck = (telephone: string): boolean => {
     null
     ? true
     : false;
+};
+export const formatUrl = (url: string) => {
+  if (url) {
+    let givenUrl = url?.split("upload");
+    return `${givenUrl[0]}/upload/c_crop,g_face,h_700,w_700/r_max/c_scale,w_500/${givenUrl[1]}`;
+  }
+  return url;
 };

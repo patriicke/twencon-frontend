@@ -8,7 +8,7 @@ const HomeComponent: React.FC = () => {
   const { posts, setPosts } = useContext<any>(HomePageContext);
   try {
     socket.off("updated-posts").on("updated-posts", (data: any) => {
-      const newState = posts.filter((post: any) => {
+      const newState = posts?.filter((post: any) => {
         return post._id == data?.post?._id;
       });
       setPosts(newState);

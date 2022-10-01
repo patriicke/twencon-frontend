@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
 import Navigation from "../../../components/Navigation";
 import iphone12 from "./../../../assets/iphone12/iphone12.png";
