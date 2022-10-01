@@ -23,6 +23,7 @@ import AudioClick from "./../../assets/audio/click.mp3";
 import ReactPlayer from "react-player";
 import HomePageContext from "../../context/HomePageContext";
 import PostsSkeleton from "../Sketeleton/PostsSkeleton/PostsSkeleton";
+import PhotoSkeleton from "../Sketeleton/PhotoSkeleton/PhotoSkeleton";
 const PostComponent: React.FC = () => {
   const navigate = useNavigate();
   const user = useSelector((state: any) => state?.user?.userData);
@@ -78,7 +79,6 @@ const PostComponent: React.FC = () => {
     });
   }, [showEmojiFile, showCommentEmojiElement]);
   useEffect(() => {
-    // useUserData(navigate, dispatch, userDataAction);
     useGetPosts(setPosts, setAllPostsObject, setLoadingAllPosts);
   }, []);
   try {
@@ -328,14 +328,20 @@ const PostComponent: React.FC = () => {
           } `}
         >
           <div className="w-[2.5em] md:w-[4em] h-[2.5em] md:h-[4em] max-h-[4em] rounded-full border-2 flex justify-center items-center">
-            <img
-              src={user?.profile === "icon" ? Person : formatUrl(user?.profile)}
-              alt=""
-              className="w-full h-full rounded-full cursor-pointer"
-              onClick={() => {
-                navigate(`/user/${user?.username}`);
-              }}
-            />
+            {user?.profile ? (
+              <img
+                src={
+                  user?.profile === "icon" ? Person : formatUrl(user?.profile)
+                }
+                alt=""
+                className="w-full h-full rounded-full cursor-pointer"
+                onClick={() => {
+                  navigate(`/user/${user?.username}`);
+                }}
+              />
+            ) : (
+              <PhotoSkeleton />
+            )}
           </div>
           <div className="w-[calc(100%_-_4em)]">
             <div className="w-full">
@@ -543,18 +549,18 @@ const PostComponent: React.FC = () => {
                         );
                       }}
                     >
-                      {poster(data?._id, users)?.profile === "icon" ? (
+                      {poster(data?.owner, users)?.profile ? (
                         <img
-                          src={Person}
+                          src={
+                            poster(data?._id, users)?.profile === "icon"
+                              ? Person
+                              : formatUrl(poster(data?.owner, users)?.profile)
+                          }
                           alt=""
                           className="rounded-full w-full"
                         />
                       ) : (
-                        <img
-                          src={formatUrl(poster(data?.owner, users)?.profile)}
-                          alt=""
-                          className="rounded-full"
-                        />
+                        <PhotoSkeleton />
                       )}
                     </div>
                     <div className="w-[calc(100%_-_4em)] flex flex-col gap-2">

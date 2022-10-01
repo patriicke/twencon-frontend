@@ -7,6 +7,7 @@ import Person from "./../../assets/person/person.png";
 import HomePageContext from "../../context/HomePageContext";
 import Loading from "./../../assets/loading/loading.gif";
 import SuggestionSkeleteon from "../Sketeleton/SuggestionSkeleton/SuggestionSkeleteon";
+import PhotoSkeleton from "../Sketeleton/PhotoSkeleton/PhotoSkeleton";
 const SuggestionComponent: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const { users, setUsers } = useContext<any>(HomePageContext);
@@ -48,15 +49,19 @@ const SuggestionComponent: React.FC = () => {
                       navigate(`/user/${data?.username}`);
                     }}
                   >
-                    <img
-                      src={
-                        data?.profile == "icon"
-                          ? Person
-                          : formatUrl(data?.profile)
-                      }
-                      alt={data?.fullname}
-                      className="w-12 rounded-full border-2"
-                    />
+                    {data?.profile ? (
+                      <img
+                        src={
+                          data?.profile == "icon"
+                            ? Person
+                            : formatUrl(data?.profile)
+                        }
+                        alt={data?.fullname}
+                        className="w-12 rounded-full border-2"
+                      />
+                    ) : (
+                      <PhotoSkeleton />
+                    )}
                     <div className="text-[0.8em]">
                       <div>{data?.fullname}</div>
                       <div className="text-blue-500">@{data?.username}</div>

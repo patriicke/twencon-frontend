@@ -19,6 +19,7 @@ import Picker from "emoji-picker-react";
 import { socket } from "../../context/chatContext";
 import AudioClick from "./../../assets/audio/click.mp3";
 import { poster } from "../../hooks";
+import PhotoSkeleton from "../Sketeleton/PhotoSkeleton/PhotoSkeleton";
 const PostComponent: React.FC = () => {
   const user = useSelector((state: any) => state?.user?.userData);
   const postId = useParams();
@@ -189,14 +190,18 @@ const PostComponent: React.FC = () => {
                   navigate(`/user/${poster(post?.owner, users)?.username}`);
                 }}
               >
-                {poster(post?.owner, users)?.profile === "icon" ? (
-                  <img src={Person} alt="" className="rounded-full w-full" />
-                ) : (
+                {poster(post?.owner, users)?.profile ? (
                   <img
-                    src={poster(post?.owner, users)?.profile}
+                    src={
+                      poster(post?.owner, users)?.profile === "icon"
+                        ? Person
+                        : poster(post?.owner, users)?.profile
+                    }
                     alt=""
-                    className="rounded-full"
+                    className="rounded-full w-full"
                   />
+                ) : (
+                  <PhotoSkeleton />
                 )}
               </div>
               <div className="w-[calc(100%_-_4em)] flex flex-col gap-2">
@@ -437,8 +442,12 @@ const PostComponent: React.FC = () => {
               ?.sort((a: any, b: any) => {
                 let fa = a.date,
                   fb = b.date;
-                if (fb > fa) return 1;
-                if (fb < fa) return -1;
+                if (fa < fb) {
+                  return 1;
+                }
+                if (fa > fb) {
+                  return -1;
+                }
                 return 0;
               })
               ?.map((post: any, index: any) => {
@@ -513,15 +522,19 @@ const PostComponent: React.FC = () => {
                         );
                       }}
                     >
-                      <img
-                        src={
-                          poster(post?.from, users)?.profile == "icon"
-                            ? Person
-                            : poster(post?.from, users)?.profile
-                        }
-                        alt={poster(post?.from, users)?.fullname}
-                        className="w-12 rounded-full border-2"
-                      />
+                      {poster(post?.from, users)?.profile ? (
+                        <img
+                          src={
+                            poster(post?.from, users)?.profile == "icon"
+                              ? Person
+                              : poster(post?.from, users)?.profile
+                          }
+                          alt={poster(post?.from, users)?.fullname}
+                          className="w-12 rounded-full border-2"
+                        />
+                      ) : (
+                        <PhotoSkeleton />
+                      )}
                       <div className="text-[0.8em]">
                         <div>
                           {poster(post?.from, users)?.fullname}{" "}

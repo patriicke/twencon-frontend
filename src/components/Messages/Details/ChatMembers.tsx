@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import { ChatContext } from "../../../context/chatContext";
+import PhotoSkeleton from "../../Sketeleton/PhotoSkeleton/PhotoSkeleton";
 import Person from "./../../../assets/person/person.png";
 
 const ChatMembers: React.FC = () => {
@@ -11,8 +12,6 @@ const ChatMembers: React.FC = () => {
       {!privateMemberMessages ? (
         <ul className="flex flex-col space-y-2">
           {(members as []).map((data: any, index) => {
-            {
-            }
             return (
               <li
                 key={index}
@@ -20,16 +19,13 @@ const ChatMembers: React.FC = () => {
               `}
               >
                 <div className="flex items-center space-x-2">
-                  {data?.profile === "icon" ? (
+                  {data?.profile ? (
                     <img
-                      src={Person}
+                      src={data?.profile === "icon" ? Person : data?.profile}
                       className="w-14 h-14 border rounded-full"
                     />
                   ) : (
-                    <img
-                      src={data?.profile}
-                      className="w-14 h-14 border rounded-full"
-                    />
+                    <PhotoSkeleton />
                   )}
                   <p className="opacity-60">
                     {data?.fullname}
@@ -47,13 +43,13 @@ const ChatMembers: React.FC = () => {
               `}
           >
             <div className="flex items-center space-x-2">
-              {user?.profile === "icon" ? (
-                <img src={Person} className="w-14 h-14 border rounded-full" />
-              ) : (
+              {user?.profile ? (
                 <img
-                  src={user?.profile}
+                  src={user?.profile === "icon" ? Person : user?.profile}
                   className="w-14 h-14 border rounded-full"
                 />
+              ) : (
+                <PhotoSkeleton />
               )}
               <p className="opacity-60">
                 {user?.fullname} {" (You)"}
@@ -65,13 +61,17 @@ const ChatMembers: React.FC = () => {
               `}
           >
             <div className="flex items-center space-x-2">
-              {privateMemberMessages?.profile === "icon" ? (
-                <img src={Person} className="w-14 h-14 border rounded-full" />
-              ) : (
+              {privateMemberMessages?.profile ? (
                 <img
-                  src={privateMemberMessages?.profile}
+                  src={
+                    privateMemberMessages?.profile === "icon"
+                      ? Person
+                      : privateMemberMessages?.profile
+                  }
                   className="w-14 h-14 border rounded-full"
                 />
+              ) : (
+                <PhotoSkeleton />
               )}
               <p className="opacity-60">{privateMemberMessages?.fullname}</p>
             </div>

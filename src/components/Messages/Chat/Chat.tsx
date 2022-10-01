@@ -11,8 +11,9 @@ import Picker from "emoji-picker-react";
 import { ChatContext } from "../../../context/chatContext";
 import MessageSkeleton from "../../Sketeleton/MessageSkeleon/MessageSkeleton";
 import Person from "./../../../assets/person/person.png";
-import { poster } from "../../../hooks";
+import { formatUrl, poster } from "../../../hooks";
 import HomePageContext from "../../../context/HomePageContext";
+import PhotoSkeleton from "../../Sketeleton/PhotoSkeleton/PhotoSkeleton";
 const Chat: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const user = useSelector((state: any) => state.user.userData);
@@ -150,16 +151,17 @@ const Chat: React.FC = () => {
           ) : (
             <>
               <div className="flex items-center space-x-2">
-                {privateMemberMessages.profile === "icon" ? (
+                {privateMemberMessages.profile ? (
                   <img
-                    src={Person}
+                    src={
+                      privateMemberMessages.profile == "icon"
+                        ? Person
+                        : formatUrl(privateMemberMessages.profile)
+                    }
                     className=" w-10 md:w-14 md:h-14 border rounded-full"
                   />
                 ) : (
-                  <img
-                    src={privateMemberMessages?.profile}
-                    className="w-14 h-14 border rounded-full"
-                  />
+                  <PhotoSkeleton />
                 )}
                 <p>{privateMemberMessages?.fullname}</p>
               </div>
@@ -219,7 +221,7 @@ const Chat: React.FC = () => {
                         {poster(data?.from, users)?.fullname !==
                           user?.fullname && (
                           <div>
-                            {poster(data?.from, users)?.profile === "icon" ? (
+                            {poster(data?.from, users)?.profile ? (
                               <div
                                 className={`border rounded-full min-w-[2.7em]
                                 ${
@@ -234,24 +236,20 @@ const Chat: React.FC = () => {
                               `}
                               >
                                 <img
-                                  src={Person}
+                                  src={
+                                    poster(data?.from, users)?.profile ===
+                                    "icon"
+                                      ? Person
+                                      : formatUrl(
+                                          poster(data?.from, users)?.profile
+                                        )
+                                  }
                                   alt=""
                                   className="rounded-full min-w-[2.7em]"
                                 />
                               </div>
                             ) : (
-                              <img
-                                src={poster(data?.from, users)?.profile}
-                                className={`${
-                                  poster(data?.from, users)?.email !==
-                                    user?.email &&
-                                  (messagesByDate[index - 1] as any)?.time ===
-                                    (messagesByDate[index] as any)?.time &&
-                                  (messagesByDate[index - 1] as any)?.from ===
-                                    (messagesByDate[index] as any)?.from &&
-                                  "hidden"
-                                } w-10 h-10 rounded-full border min-w-[2.5em]`}
-                              />
+                              <PhotoSkeleton />
                             )}
                           </div>
                         )}

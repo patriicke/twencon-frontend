@@ -222,15 +222,19 @@ export const AllHomePagesComponent: React.FC<{
                             }}
                             key={index}
                           >
-                            <img
-                              src={
-                                user?.profile == "icon"
-                                  ? Person
-                                  : formatUrl(user?.profile)
-                              }
-                              alt={user?.fullname}
-                              className="w-12 rounded-full border-2"
-                            />
+                            {user?.profile ? (
+                              <img
+                                src={
+                                  user?.profile == "icon"
+                                    ? Person
+                                    : formatUrl(user?.profile)
+                                }
+                                alt={user?.fullname}
+                                className="w-12 rounded-full border-2"
+                              />
+                            ) : (
+                              <PhotoSkeleton />
+                            )}
                             <div className="text-[0.8em]">
                               <div>{user?.fullname}</div>
                               <div className="text-blue-500">
