@@ -28,8 +28,8 @@ const Success: React.FC = () => {
   const validateImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const file: any = e.target.files == null ? null : e.target.files[0];
-    if ((file.size as number) > 1048576) {
-      alert("Maximum file size should be atleast 1mb");
+    if ((file.size as number) > 2048576) {
+      alert("Maximum file size should be atleast 2mb");
     } else {
       setImage(file);
       setPreviewImage(URL.createObjectURL(file));
@@ -115,7 +115,7 @@ const Success: React.FC = () => {
             variant="contained"
             className="bg-light-blue w-2/5"
             onClick={() => {
-              navigate("/");
+              document.location.replace(document.location.origin);
             }}
             disabled={uploading}
           >
