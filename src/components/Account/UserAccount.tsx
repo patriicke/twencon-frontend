@@ -300,19 +300,21 @@ const UserAccount: React.FC = () => {
                     </span>
                     <span className="font-bold">posts</span>
                   </div>
-                  <div className="right-5 absolute flex items-center justify-center">
-                    <Button
-                      variant="contained"
-                      className="bg-red-500 text-[0.6em]"
-                      onClick={() => {
-                        localStorage.clear();
-                        sessionStorage.clear();
-                        document.location.reload();
-                      }}
-                    >
-                      LOGOUT
-                    </Button>
-                  </div>
+                  {user?._id == userAccount?._id && (
+                    <div className="right-5 absolute flex items-center justify-center">
+                      <Button
+                        variant="contained"
+                        className="bg-red-500 text-[0.6em]"
+                        onClick={() => {
+                          localStorage.clear();
+                          sessionStorage.clear();
+                          document.location.reload();
+                        }}
+                      >
+                        LOGOUT
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
