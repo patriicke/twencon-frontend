@@ -204,14 +204,14 @@ const UserAccount: React.FC = () => {
           >
             <div className="border h-[20em] w-full bg-gray-200 rounded-md flex flex-col">
               <div className="border rounded-full h-1/2 relative">
-                <div className="rounded-full absolute h-[10em] w-[10em] -bottom-10 left-2 hover:bg-gray-400 cursor-pointer p-[0.15em]  z-50">
+                <div className="rounded-full absolute h-[10em] w-[10em] -bottom-10 left-2 hover:bg-gray-400 cursor-pointer p-[0.15em] z-50">
                   <img
                     src={
                       userAccount?.profile == "icon"
                         ? Person
                         : userAccount?.profile
                     }
-                    className="rounded-full hover:opacity-80 w-full h-full"
+                    className="rounded-full hover:opacity-80 w-full h-full object-cover"
                   />
                 </div>
                 {user?.username === userAccount?.username ? (
