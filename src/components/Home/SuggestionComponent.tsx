@@ -65,7 +65,7 @@ const SuggestionComponent: React.FC = () => {
     <div className="hidden w-2/5 border md:flex items-center justify-center h-full">
       <div className="h-full w-4/6 flex flex-col gap-2">
         <h1>Suggestions for you</h1>
-        <div className="flex flex-col gap-2 ">
+        <div className="flex flex-col gap-2 overflow-auto h-[25em] p-2 border rounded-md">
           {(users as any)
             ?.filter((currentUser: any) => {
               return currentUser?._id != user?._id;
