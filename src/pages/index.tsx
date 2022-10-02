@@ -66,7 +66,8 @@ const Pages: React.FC = () => {
         <Route path="/create/verification" element={<VerificationCode />} />
         <Route path="/reset/verification" element={<VerificationResetPwd />} />
         <Route path="/create/success" element={<Success />} />
-        <Route path="/reset/success" element={<ResetSuccess />} />
+        <Route path="/reset/success" element={<ResetSuccess />
+      } />
         <Route path="/password/reset" element={<ResetPassword />} />
         <Route path="/password/reset/new" element={<EnterNewPasword />} />
         <Route path="*" element={<PageNotFound />} />

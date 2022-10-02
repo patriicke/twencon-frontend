@@ -63,7 +63,7 @@ const SuggestionComponent: React.FC = () => {
   }
   return (
     <div className="hidden w-2/5 border md:flex items-center justify-center h-full">
-      <div className="h-full w-4/5 flex flex-col gap-2">
+      <div className="h-full w-4/6 flex flex-col gap-2">
         <h1>Suggestions for you</h1>
         <div className="flex flex-col gap-2 ">
           {(users as any)
