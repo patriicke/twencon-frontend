@@ -22,7 +22,7 @@ const ResetPassword: React.FC = () => {
       const response = request.data;
       setLoading(false);
       localStorage.setItem("r_reference", response.r_reference);
-      navigate("/reset/verification ");
+      navigate("/reset/verification");
     } catch (error: any) {
       if (error.response.status == 404) setEmailError(true);
       console.log(error);
