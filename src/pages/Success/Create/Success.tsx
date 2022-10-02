@@ -37,7 +37,7 @@ const Success: React.FC = () => {
   };
   const handleSubmit = async () => {
     await uploadImage(image, setUploading, userData?.email);
-    navigate("/");
+    document.location.replace(document.location.origin);
   };
   return (
     <div className="h-screen w-full flex items-center justify-center relative">
