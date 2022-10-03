@@ -17,6 +17,7 @@ import NotificationsPages from "./Notifications/NotificationsPages";
 import AllHomePagesComponent from "../components/AllHomePagesCompoinet/AllHomePagesComponent";
 import FavoritePage from "./Favorite/FavoritePage";
 import MessagesPage from "./MessagePage/MessagePage";
+import Settings from "../components/Settings/Settings";
 const Pages: React.FC = () => {
   return (
     <Router>
@@ -27,6 +28,7 @@ const Pages: React.FC = () => {
           "/post/:postId",
           "/favorite",
           "/notifications",
+          "/settings/profile",
           "/messages"
         ].map((path: string, index) => {
           return (
@@ -51,6 +53,8 @@ const Pages: React.FC = () => {
                         <FavoritePage />
                       ) : path == "/notifications" ? (
                         <NotificationsPages />
+                      ) : path == "/settings/profile" ? (
+                        <Settings />
                       ) : (
                         <MessagesPage />
                       )
@@ -66,8 +70,7 @@ const Pages: React.FC = () => {
         <Route path="/create/verification" element={<VerificationCode />} />
         <Route path="/reset/verification" element={<VerificationResetPwd />} />
         <Route path="/create/success" element={<Success />} />
-        <Route path="/reset/success" element={<ResetSuccess />
-      } />
+        <Route path="/reset/success" element={<ResetSuccess />} />
         <Route path="/password/reset" element={<ResetPassword />} />
         <Route path="/password/reset/new" element={<EnterNewPasword />} />
         <Route path="*" element={<PageNotFound />} />
