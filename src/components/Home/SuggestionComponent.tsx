@@ -72,99 +72,95 @@ const SuggestionComponent: React.FC = () => {
             })
             ?.map((data: any, index: any) => {
               return (
-                <>
-                  {
-                    <div
-                      key={index}
-                      className={`flex gap-2 items-center justify-between p-1 rounded-lg bg-gray-100  hover:bg-gray-300 cursor-pointer ${
-                        data?.followers?.find((currentUser: any) => {
-                          return currentUser?.id == user?._id;
-                        })
-                          ? "hidden"
-                          : ""
-                      }`}
-                    >
-                      <div
-                        className="flex gap-2 items-center justify-between "
-                        onClick={() => {
-                          navigate(`/user/${data?.username}`);
-                        }}
-                      >
-                        {data?.profile ? (
-                          <img
-                            src={
-                              data?.profile == "icon"
-                                ? Person
-                                : formatUrl(data?.profile)
-                            }
-                            alt={data?.fullname}
-                            className="w-12 rounded-full border-2"
-                          />
-                        ) : (
-                          <PhotoSkeleton />
-                        )}
-                        <div className="text-[0.8em]">
-                          <div>{data?.fullname}</div>
-                          <div className="text-blue-500">@{data?.username}</div>
-                        </div>
-                      </div>
-                      {data?.followers?.find((currentUser: any) => {
-                        return currentUser?.id == user?._id;
-                      }) ? (
-                        <button
-                          className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40 delay-100"
-                          onClick={() => {
-                            setCurrentFollowing(index);
-                            setLoading(true);
-                            let date = new Date();
-                            followBtn(data, date);
-                            follow(
-                              { id: user?._id, date },
-                              { id: data?._id, date }
-                            );
-                          }}
-                          onMouseEnter={() => {
-                            setShowContent(true);
-                            setCurrentFollowing(index);
-                          }}
-                          onMouseLeave={() => {
-                            setShowContent(false);
-                            setCurrentFollowing(index);
-                          }}
-                          disabled={loading && currentFollowing == index}
-                        >
-                          {loading && currentFollowing == index ? (
-                            <img src={Loading} alt="" className="w-5" />
-                          ) : showContent && currentFollowing == index ? (
-                            "Unfollow"
-                          ) : (
-                            "Following"
-                          )}
-                        </button>
-                      ) : (
-                        <button
-                          className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40"
-                          onClick={() => {
-                            setCurrentFollowing(index);
-                            let date = new Date();
-                            followBtn(data, date);
-                            follow(
-                              { id: user?._id, date },
-                              { id: data?._id, date }
-                            );
-                          }}
-                          disabled={loading && currentFollowing == index}
-                        >
-                          {loading && currentFollowing == index ? (
-                            <img src={Loading} alt="" className="w-5" />
-                          ) : (
-                            "Follow"
-                          )}
-                        </button>
-                      )}
+                <div
+                  key={index}
+                  className={`flex gap-2 items-center justify-between p-1 rounded-lg bg-gray-100  hover:bg-gray-300 cursor-pointer ${
+                    data?.followers?.find((currentUser: any) => {
+                      return currentUser?.id == user?._id;
+                    })
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
+                  <div
+                    className="flex gap-2 items-center justify-between "
+                    onClick={() => {
+                      navigate(`/user/${data?.username}`);
+                    }}
+                  >
+                    {data?.profile ? (
+                      <img
+                        src={
+                          data?.profile == "icon"
+                            ? Person
+                            : formatUrl(data?.profile)
+                        }
+                        alt={data?.fullname}
+                        className="w-12 rounded-full border-2"
+                      />
+                    ) : (
+                      <PhotoSkeleton />
+                    )}
+                    <div className="text-[0.8em]">
+                      <div>{data?.fullname}</div>
+                      <div className="text-blue-500">@{data?.username}</div>
                     </div>
-                  }
-                </>
+                  </div>
+                  {data?.followers?.find((currentUser: any) => {
+                    return currentUser?.id == user?._id;
+                  }) ? (
+                    <button
+                      className="bg-gray-200 text-blue-500 hover:bg-red-500 hover:text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40 delay-100"
+                      onClick={() => {
+                        setCurrentFollowing(index);
+                        setLoading(true);
+                        let date = new Date();
+                        followBtn(data, date);
+                        follow(
+                          { id: user?._id, date },
+                          { id: data?._id, date }
+                        );
+                      }}
+                      onMouseEnter={() => {
+                        setShowContent(true);
+                        setCurrentFollowing(index);
+                      }}
+                      onMouseLeave={() => {
+                        setShowContent(false);
+                        setCurrentFollowing(index);
+                      }}
+                      disabled={loading && currentFollowing == index}
+                    >
+                      {loading && currentFollowing == index ? (
+                        <img src={Loading} alt="" className="w-5" />
+                      ) : showContent && currentFollowing == index ? (
+                        "Unfollow"
+                      ) : (
+                        "Following"
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-blue-500 text-white p-1 px-3 text-[0.8em] rounded-[2em] z-40"
+                      onClick={() => {
+                        setCurrentFollowing(index);
+                        let date = new Date();
+                        followBtn(data, date);
+                        follow(
+                          { id: user?._id, date },
+                          { id: data?._id, date }
+                        );
+                      }}
+                      disabled={loading && currentFollowing == index}
+                    >
+                      {loading && currentFollowing == index ? (
+                        <img src={Loading} alt="" className="w-5" />
+                      ) : (
+                        "Follow"
+                      )}
+                    </button>
+                  )}
+                </div>
               );
             })}
         </div>
