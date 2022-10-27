@@ -1,4 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+const enum typeStatus {
+  AUDIO,
+  MESSAGE
+}
 import {
   Call,
   InsertEmoticon,
@@ -20,6 +24,8 @@ const Chat: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const user = useSelector((state: any) => state.user.userData);
   const [message, setMessage] = useState<string>("");
+  const [stringAudio, setStringAudio] = useState<string>("");
+  const [changedAudio,setChangedAudio] = useState<boolean>(false);
   const [style,setStyle] = useState<{display:string}>({display:'none'});
   const { users } = useContext<any>(HomePageContext);
   const {
@@ -41,6 +47,9 @@ const Chat: React.FC = () => {
 
     return `${month}/${day}/${year}`;
   };
+  useEffect(() => {
+    setStringAudio("");
+  },[socket]);
   const todayDate = getFormattedDate();
   const handleSetStyle = () => {
     if(style.display == 'none'){
@@ -55,10 +64,10 @@ return;
       handleSetStyle();
   }
   
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: any,type:typeStatus) => {
     e.preventDefault();
-    if (!message) return;
-    if (message.trim().length == 0) {
+    if (!message && !stringAudio) return;
+    if (message.trim().length == 0 && !stringAudio){
       setMessage("");
       return;
     }
@@ -69,16 +78,37 @@ return;
         : today.getMinutes().toString();
     const time: string = today.getHours().toString() + ":" + minutes;
     const roomId = currentRoom;
+    if(type == typeStatus.AUDIO){
+      if(!stringAudio) return  alert("Don't send null message!");
+      console.log("string audio",stringAudio);
+      let blobFile:Blob = await fetch(stringAudio).then(r => r.blob());
+      console.log(blobFile);
+      const reader = new FileReader();
+       reader.readAsDataURL(blobFile);
+       reader.onloadend = () => {
+        socket.emit(
+          "message-room",
+          roomId,
+          reader.result,
+          user?._id,
+          time,
+          todayDate
+        );
+      };
+      setMessage("");
+      setStringAudio("");
+      return 0;
+    }
     socket.emit(
       "message-room",
       roomId,
-      message.trimEnd().trimStart(),
+      message,
       user?._id,
       time,
       todayDate
     );
-    setMessage("");
   };
+   
   useEffect(() => {
     socket.off("room-messages").on("room-messages", (roomMessages: any) => {
       setMessages(roomMessages);
@@ -300,7 +330,7 @@ return;
                                 : "bg-[#E4E6EB]"
                             } text-[1rem] rounded-2xl px-4 py-2 font-light flex flex-col`}
                           >
-                            {data?.content}
+                            {["mp3","mpeg","wav","ogg","webm","html"].includes(data!.content.split(';')[0].split('/')[1]) ? <audio controls><source src={data!.content} type={`audio/${data!.content.split(';')[0].split('/')[1]}`}/></audio> : data!.content}
                           </span>
                         </div>
                       </div>
@@ -337,7 +367,7 @@ return;
         </div>
         <form
           className="flex w-[95%] h-full  items-center relative justify-center"
-          onSubmit={handleSubmit}
+          onSubmit={(e) => handleSubmit(e,typeStatus.MESSAGE)}
         >
           <div className="h-full w-full flex items-center relative justify-center">
             <input
@@ -356,8 +386,8 @@ return;
               <i className="fa-solid fa-paper-plane text-[1.2em] text-[#5c07fc] cursor-pointer"></i>
             </button>
           </div>
-          <div style={style} className='w-full h-[5vh] absolute bottom-20 sm:-right-80 sm:left-94 left-80'>
-           <AudioTile />
+          <div style={style} className=' h-[5vh] absolute bottom-20 sm:-right-80 sm:-left-6 min-w-fit left-80'>
+           <AudioTile  setAudio={setStringAudio} submit={(e) => handleSubmit(e,typeStatus.AUDIO)}/>
           </div>
         </form>
       </div>

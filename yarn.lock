@@ -2070,6 +2070,11 @@
   "resolved" "https://registry.npmjs.org/json5/-/json5-2.2.1.tgz"
   "version" "2.2.1"
 
+"legendary-image-uploader@^1.0.1":
+  "integrity" "sha512-Gq05Dx59TRMpLxyVW6sXzW5N3WlPl58sgAvmAicc0V/2SfOLNPUU8bJdqKhJiFm9Wp3MG3wGIIH7ImlRCftF0Q=="
+  "resolved" "https://registry.npmjs.org/legendary-image-uploader/-/legendary-image-uploader-1.0.1.tgz"
+  "version" "1.0.1"
+
 "levn@^0.4.1":
   "integrity" "sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ=="
   "resolved" "https://registry.npmjs.org/levn/-/levn-0.4.1.tgz"
