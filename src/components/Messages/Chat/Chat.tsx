@@ -107,6 +107,8 @@ return;
       time,
       todayDate
     );
+    setMessage("");
+    setStringAudio("");
   };
    
   useEffect(() => {
