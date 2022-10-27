@@ -14,10 +14,13 @@ import Person from "./../../../assets/person/person.png";
 import { formatUrl, poster } from "../../../hooks";
 import HomePageContext from "../../../context/HomePageContext";
 import PhotoSkeleton from "../../Sketeleton/PhotoSkeleton/PhotoSkeleton";
+import AudioTile from "../../Audio/audioTile";
+import { AudioRecorder } from "react-audio-voice-recorder";
 const Chat: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const user = useSelector((state: any) => state.user.userData);
   const [message, setMessage] = useState<string>("");
+  const [style,setStyle] = useState<{display:string}>({display:'none'});
   const { users } = useContext<any>(HomePageContext);
   const {
     socket,
@@ -39,6 +42,19 @@ const Chat: React.FC = () => {
     return `${month}/${day}/${year}`;
   };
   const todayDate = getFormattedDate();
+  const handleSetStyle = () => {
+    if(style.display == 'none'){
+setStyle({display:'flex'});
+return;
+    }else{
+      setStyle({display:'none'})
+return;
+    }
+  }
+  const handleStartVoiceNote = () => {
+      handleSetStyle();
+  }
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!message) return;
@@ -334,11 +350,14 @@ const Chat: React.FC = () => {
             />
           </div>
           <div className="sm:w-[25%] lg:w-[20%] min-w-[6em] flex flex-shrink flex-grow justify-evenly  h-full items-center ">
-            <i className="fa-solid fa-microphone text-[1.3em] cursor-pointer"></i>
+            <i className="fa-solid fa-microphone text-[1.3em] cursor-pointer" onClick={handleStartVoiceNote}></i>
             <i className="fa-solid fa-paperclip text-[1.3em] cursor-pointer"></i>
             <button type="submit">
               <i className="fa-solid fa-paper-plane text-[1.2em] text-[#5c07fc] cursor-pointer"></i>
             </button>
+          </div>
+          <div style={style} className='w-full h-[5vh] absolute bottom-20 sm:-right-80 sm:left-94 left-80'>
+           <AudioTile />
           </div>
         </form>
       </div>
