@@ -1,4 +1,4 @@
-const backend: string = "https://twencon.herokuapp.com";
+const backend: string = "https://twencon.onrender.com/";
 export default backend;
 
 /*
